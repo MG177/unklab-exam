@@ -8,8 +8,9 @@ module.exports = {
         DM: ["DM Sans"],
         Jose: ["Josefin Sans"],
         montserrat: ["Montserrat"],
+        nunito: ["Nunito"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };
