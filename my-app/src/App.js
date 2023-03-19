@@ -6,6 +6,7 @@ import Login from "./page/Login";
 // import Option from "./components/Option";
 import ScoreCountdown from "./page/ScoreCountdown";
 import Exam from "./page/Exam";
+import Score from "./page/Score"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/score-countdown" element={<ScoreCountdown />} />
         <Route path="/exam" element={<Exam />} />
+        <Route path="/score" element={<Score />} />
       </Routes>
     </BrowserRouter>
   );

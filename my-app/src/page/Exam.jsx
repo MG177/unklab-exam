@@ -6,7 +6,6 @@ export default function Exam() {
   return (
     <body className="relative">
         <Header />
-        
         <Footer />
     </body>
   );
