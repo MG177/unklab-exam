@@ -9,7 +9,13 @@ module.exports = {
         Jose: ["Josefin Sans"],
         montserrat: ["Montserrat"],
         nunito: ["Nunito"],
+        Roboto: ["Roboto"]
       },
+      colors: {
+        black: '#37474F',
+        accent1: "#B55FFE",
+        accent2: '#FF6593',
+      }
     },
   },
   plugins: [require("@tailwindcss/forms")],
