@@ -8,9 +8,9 @@ export default function Form() {
           <h1 className="text-[#37474F]">Welcome</h1>
           <h1 className="text-[#FF6593]">!</h1>
         </div>
-        <p className="font-inter font-normal text-lg md:text-[24px] leading-[29.05px] ">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-          convallis ligula diam, sit amet hendrerit libero sodales quis.
+        <p className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] ">
+          Let's get you started with your exams. Enter your login details and
+          token to access your account.
         </p>
       </div>
       <div className="flex flex-col gap-6 w-full">
@@ -36,7 +36,6 @@ export default function Form() {
           />
         </div>
       </div>
-
       <button className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]">
         Login
       </button>
