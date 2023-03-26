@@ -7,6 +7,7 @@ import Getstarted from "./page/Getstarted";
 import ScoreCountdown from "./page/ScoreCountdown";
 import Exam from "./page/Exam";
 import Score from "./page/Score";
+import Testing from "./page/Testing";
 
 function App() {
   return (
