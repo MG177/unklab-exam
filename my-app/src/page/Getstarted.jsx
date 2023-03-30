@@ -3,8 +3,8 @@ import Start from "../components/Start";
 
 export default function Login() {
   return (
-    <body className="w-full h-screen bg-[url('./image/Background.svg')] bg-cover flex justify-center items-center">
+    <div className="w-full h-screen bg-[url('./image/Background.svg')] bg-cover flex justify-center items-center">
       <Start />
-    </body>
+    </div>
   );
 }

@@ -12,16 +12,20 @@ export default function Score() {
       </p>
       <div className="bg-taccent1 w-[29.151875rem] h-[35.6875rem] mt-16 rounded-[37px] flex justify-center items-center">
         <div className="bg-white w-[26.401875rem] h-[32.9375rem] rounded-[24px] flex flex-col justify-center items-center">
-          {/* <button className="w-9 h-9">
-            <img src={Cancel} className="w-9 h-9" alt=""></img>
-          </button> */}
-          <div className="drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)] relative">
+          <div className="relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
             <img src={ProgressBar} alt="" />
+<<<<<<< HEAD
             <div className="absolute top-[50%] left-[17.5%]">
               <p className="font-Nunito text-6xl font-bold text-black">
                 75/100
               </p>
               <p>Passing Grade</p>
+=======
+            <div className="absolute flex flex-col justify-center items-center mt-[70px]">
+              <p className="font-Nunito text-6xl font-bold text-black border-b-2 border-[#98A0A4] pb-3">75/100</p>
+              <p className="font-Roboto text-[17px] text-[#98A0A4] ">Passing Grade</p>
+              <p className="font-Nunito text-[29px] text-black font-bold">80/100</p>
+>>>>>>> a8cab4b6d361c448836065b1aaa3711f327f492c
             </div>
           </div>
           <div className="flex flex-row font-Nunito mt-9 gap-7">
