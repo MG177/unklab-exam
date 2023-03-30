@@ -6,16 +6,15 @@ import Header from "../components/Header";
 
 export default function Exam() {
   return (
-    <body className="relative">
+    <div className="relative">
       <Header />
-      <div className="flex flex-col w-[1920px] h-screen gap-[33px] justify-center items-center mt-[106px] bg-[#FAFAFA]">
+      <div className="flex flex-col w-full h-screen gap-[18px] justify-center items-center bg-[#FAFAFA] static">
         <Question />
-        <Option />
         <Option />
         <Option />
         <Option />
       </div>
       <Footer />
-    </body>
+    </div>
   );
 }

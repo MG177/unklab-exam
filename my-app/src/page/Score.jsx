@@ -5,7 +5,7 @@ import ProgressBar from "../image/progress_bar.svg";
 
 export default function Score() {
   return (
-    <body className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
+    <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
       <Header />
       <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
         YOUR SCORE
@@ -18,7 +18,9 @@ export default function Score() {
           <div className="drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)] relative">
             <img src={ProgressBar} alt="" />
             <div className="absolute top-[50%] left-[17.5%]">
-              <p className="font-Nunito text-6xl font-bold text-black">75/100</p>
+              <p className="font-Nunito text-6xl font-bold text-black">
+                75/100
+              </p>
               <p>Passing Grade</p>
             </div>
           </div>
@@ -34,6 +36,6 @@ export default function Score() {
           </div>
         </div>
       </div>
-    </body>
+    </div>
   );
 }

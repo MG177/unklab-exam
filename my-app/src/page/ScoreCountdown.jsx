@@ -5,7 +5,7 @@ import Warning from "../components/Warning";
 
 export default function ScoreCountdown() {
   return (
-    <body className="w-full min-h-screen flex flex-col bg-[#FCF9FF]">
+    <div className="w-full min-h-screen flex flex-col bg-[#FCF9FF]">
       <Header />
       <div className="flex flex-row justify-end">
         <Warning />
@@ -18,6 +18,6 @@ export default function ScoreCountdown() {
           </p>
         </div>
       </div>
-    </body>
+    </div>
   );
 }
