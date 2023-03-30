@@ -24,6 +24,7 @@ export default function Exam() {
     console.log(index);
   };
 
+  // This function is used to check whether the answer is correct or not
   const handleActive = (index) => {
     // check if the answer is the same as the index
     if (answer === index) {
