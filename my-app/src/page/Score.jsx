@@ -4,9 +4,9 @@ import ProgressBar from "../image/progress_bar.svg";
 
 export default function Score() {
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
+    <div className='relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]'>
       <Header />
-      <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
+      <p className='mt-[183px] text-black text-6xl font-Nunito font-bold'>
         YOUR SCORE
       </p>
       <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">

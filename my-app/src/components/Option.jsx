@@ -1,22 +1,19 @@
-import React from "react";
+import React from 'react';
+import check from '../image/check_small.svg';
 
-export default function Option() {
+export default function Option({ active, option, handleAnswer }) {
   return (
-    <div className="w-[586px] h-[70px] top-[114px] left-[20px] rounded-[24px] px-[15px] py-[20px] gap-[18px] bg-[#FFFFFF] hover:bg-[#B55FFE] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)] hover:text-white">
-      <div className="flex gap-2">
-        <form action="">
-          <input
-            type="radio"
-            id="check"
-            name="check"
-            className="w-[17.91px] h-[17.91px] rounded-full hover:bg-[#B55FFE]"
-          />
-        </form>
-        <label for="check" className="font-nunito text-[17px] leading-[20.4px]">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-          convallis ligula
-        </label>
-      </div>
+    <div
+      onClick={() => handleAnswer(option)}
+      className={`w-[586px] gap-[18px] flex rounded-[24px] px-[15px] py-[20px] hover:text-white hover:bg-accent1 shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]   ${
+        active ? 'bg-accent1 shadow-md shadow-accent1 ' : ' '
+      }`}>
+      {active ? (
+        <img src={check} alt='' />
+      ) : (
+        <div className='w-[29px] h-[29px] bg-white rounded-[50%] border'></div>
+      )}
+      <p className={`${active ? 'text-white ' : ''} text-[20px]`}>{option}</p>
     </div>
   );
 }
