@@ -11,7 +11,7 @@ export default function ScoreCountdown() {
         <Warning />
       </div> */}
       <div className="flex flex-row justify-center min-h-max">
-        <div className="bg-white p-[50px] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
+        <div className="bg-white p-[50px] w-[546px] h-[310px] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
           <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
             <Timer />
           </div>

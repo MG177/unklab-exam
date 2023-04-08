@@ -3,9 +3,8 @@ import Clock from "../image/clock_icon.svg";
 
 export default function Timer() {
   return (
-    <div className="flex flex-row justify-center text-7xl py-5 w-[23.2rem] bg-white rounded-[24px]">
-      <img src={Clock} alt="" className="animate-spin"/>
-      <p className="text-accent2 font-bold font-nunito ml-[16px]">90:59</p>
+    <div className="flex flex-row justify-center items-center text-[72px] gap-[16px] px-[20px] py-[28px] w-[351px] h-[112px] bg-white rounded-[24px]">
+      <p className="text-accent2 font-bold font-nunito">01:90:59</p>
     </div>
   );
 }
