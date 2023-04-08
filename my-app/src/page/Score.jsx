@@ -4,9 +4,9 @@ import ProgressBar from "../image/progress_bar.svg";
 
 export default function Score() {
   return (
-    <div className='relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]'>
+    <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
       <Header />
-      <p className='mt-[183px] text-black text-6xl font-Nunito font-bold'>
+      <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
         YOUR SCORE
       </p>
       <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
@@ -37,7 +37,9 @@ export default function Score() {
               </div>
             </div>
             <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl w-[377px] h-[111px] flex items-center justify-center">
-              <p className="text-6xl font-bold font-[Nunito] text-black">Mangerongkonda, Jason</p>
+              <p className="text-6xl font-bold font-[Nunito] text-black">
+                Mangerongkonda, Jason
+              </p>
             </div>
           </div>
         </div>
