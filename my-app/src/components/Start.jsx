@@ -70,7 +70,7 @@ export default function Start() {
 
           <label
             for="agree"
-            className="font-montserrat font-normal text-[14px] leading-[17.07px] text-[#37474F] border-[1px] border-[#FFFFFF] box-border"
+            className="font-montserrat font-normal text-[14px] leading-[17.07px] text-[#37474F] border-[1px] border-[#FFFFFF] box-border ml-2"
           >
             I agree to the Software Exam Test terms and conditions.
           </label>

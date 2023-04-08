@@ -3,7 +3,7 @@ import Clock from "../image/clock_icon.svg";
 
 export default function TimerSmall() {
   return (
-    <div className="flex flex-row justify-center items-center w-content h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[10px] py-[18px] rounded-[24px] shadow-lg">
+    <div className="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[10px] py-[20px] rounded-[24px] shadow-lg">
       {/* <img
         src={Clock}
         alt=""
