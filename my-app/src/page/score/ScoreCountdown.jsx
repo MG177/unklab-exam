@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/Header";
-import Timer from "../components/Timer";
+import Header from "../../components/Header";
+import Timer from "../../components/Timer";
 // import Warning from "../components/Warning";
 
 export default function ScoreCountdown() {
@@ -15,7 +15,7 @@ export default function ScoreCountdown() {
           <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
             <Timer />
           </div>
-          <p className="font-[nunito] font-bold text-black text-[35px] w-[471px] text-center">
+          <p className="font-Nunito font-bold text-black text-[35px] w-[471px] text-center">
             Wait until the exam time is over to see your score.
           </p>
         </div>

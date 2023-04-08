@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function Start() {
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChange = (event) => {
+    setIsChecked((current) => !current);
+  };
+
   return (
     <div className=" w-[695.27px] h-[651.92px] top-[188.54px] left-[372.37px] px-[84px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
       <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] font-montserrat text-[24px] leading-[24px] flex flex-col justify-center items-center text-center">
         <div className="flex">
-          <h1 className="font-bold">Welcome to our Software Exam Test!</h1>
-          <h1 className="text-[#FF6593]">!</h1>
+          <h1 className="font-bold font-Nunito text-black">Welcome to our Software Exam Test<span className="text-accent2">!</span></h1>
         </div>
       </div>
       <div className="w-[581px] h-auto p-2 text-[14px] font-montserrat font-normal leading-[17px] flex flex-col justify-start">
@@ -59,23 +63,26 @@ export default function Start() {
         </p>
       </div>
       <div className="flex flex-col items-center">
-        <form action="">
+        <form action="" className="flex gap-1">
           <input
             type="checkbox"
             id="agree"
             name="agreement"
-            value="Agree"
+            value={isChecked}
+            onChange={handleChange}
             className="w-[17.91px] h-[17.91px] rounded-full"
           />
-
           <label
             for="agree"
-            className="font-montserrat font-normal text-[14px] leading-[17.07px] text-[#37474F] border-[1px] border-[#FFFFFF] box-border"
+            className="font-montserrat font-bold text-[14px] leading-[17.07px] text-black"
           >
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-        <button className="w-[500px] h-[57px] mt-2 rounded-[25px] py-[10px] bg-[#E0E0E0] font-inter font-semibold text-[24px] leading-[29.05px] text-center text-[#FAFAFA]">
+        <button
+          disabled={!isChecked}
+          className="mt-[14.5px] font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
+        >
           START
         </button>
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/Header";
-import ProgressBar from "../image/progress_bar.svg";
+import Header from "../../components/Header";
+import ProgressBar from "../score/progress_bar.svg";
 
 export default function Score() {
   return (

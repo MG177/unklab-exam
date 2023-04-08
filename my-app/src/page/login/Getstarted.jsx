@@ -1,5 +1,5 @@
 import React from "react";
-import Start from "../components/Start";
+import Start from "../login/Start";
 
 export default function Login() {
   return (
