@@ -3,7 +3,7 @@ import React from "react";
 
 export default function TimerSmall() {
   return (
-    <div className="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[10px] py-[20px] rounded-[24px] shadow-lg">
+    <div className="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
       {/* <img
         src={Clock}
         alt=""
