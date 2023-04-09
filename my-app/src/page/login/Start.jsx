@@ -7,10 +7,10 @@ export default function Start() {
   };
 
   return (
-    <div className=" w-[695.27px] h-[651.92px] top-[188.54px] left-[372.37px] px-[84px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
-      <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] font-montserrat text-[24px] leading-[24px] flex flex-col justify-center items-center text-center">
+    <div className="p-[54px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
+      <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] flex flex-col justify-center items-center text-center">
         <div className="flex">
-          <h1 className="font-bold font-Nunito text-black">Welcome to our Software Exam Test<span className="text-accent2">!</span></h1>
+          <h1 className="font-bold font-Nunito text-[29px] text-black">Welcome to our Software Exam Test<span className="text-accent2">!</span></h1>
         </div>
       </div>
       <div className="w-[581px] h-auto p-2 text-[14px] font-montserrat font-normal leading-[17px] flex flex-col justify-start">

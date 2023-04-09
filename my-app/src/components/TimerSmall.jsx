@@ -1,5 +1,5 @@
 import React from "react";
-import Clock from "../image/clock_icon.svg";
+// import Clock from "../image/clock_icon.svg";
 
 export default function TimerSmall() {
   return (
