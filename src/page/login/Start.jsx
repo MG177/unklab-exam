@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Start() {
   const [isChecked, setIsChecked] = useState(false);
@@ -6,11 +8,27 @@ export default function Start() {
     setIsChecked((current) => !current);
   };
 
+  const shuffleQuestion = () => {
+    axios
+      .post(
+        "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/exam/shuffle?className=Elementary&noreg=s2200123"
+      )
+      .then((res) => {
+        console.log("success");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <div className=" w-[695.27px] h-[651.92px] top-[188.54px] left-[372.37px] px-[84px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
-      <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] font-montserrat text-[24px] leading-[24px] flex flex-col justify-center items-center text-center">
+    <div className="p-[54px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
+      <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] flex flex-col justify-center items-center text-center">
         <div className="flex">
-          <h1 className="font-bold font-Nunito text-black">Welcome to our Software Exam Test<span className="text-accent2">!</span></h1>
+          <h1 className="font-bold font-Nunito text-[29px] text-black">
+            Welcome to our Software Exam Test
+            <span className="text-accent2">!</span>
+          </h1>
         </div>
       </div>
       <div className="w-[581px] h-auto p-2 text-[14px] font-montserrat font-normal leading-[17px] flex flex-col justify-start">
@@ -79,12 +97,15 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-        <button
-          disabled={!isChecked}
-          className="mt-[14.5px] font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
-        >
-          START
-        </button>
+        <Link>
+          <button
+            onClick={shuffleQuestion}
+            disabled={!isChecked}
+            className="mt-[14.5px] font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
+          >
+            START
+          </button>
+        </Link>
       </div>
     </div>
   );
