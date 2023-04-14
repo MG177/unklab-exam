@@ -12,7 +12,7 @@ export default function Testing () {
     setIsSubscribed(current => !current);
   };
 
-  return (
+  return (  
     <div>
       <label htmlFor="subscribe">
         <input
