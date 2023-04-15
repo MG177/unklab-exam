@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export default function Sidebar() {
   const [isHidden, setIsHidden] = useState(true);
@@ -6,7 +8,22 @@ export default function Sidebar() {
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
+  const [exams, setExams] = useState([]);
 
+  useEffect(() => {
+    axios.get('http://localhost:3000/exam',{
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiIxMjMiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTY4MTU5MTYxMCwiZXhwIjoxNjgxNjc4MDEwfQ.pQn9JHFNo60bOQQboL_V2Jo5frprWUznA8KXtItryBM'
+      }
+    })
+      .then(response => {
+        setExams(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+  
   return (
     <div className='flex flex-col h-screen min-w-fit bg-white shadow-right z-20'>
       <div className='flex items-center justify-start p-3 h-16'>
@@ -22,41 +39,17 @@ export default function Sidebar() {
       </div>
       <nav className='flex-1 px-4'>
         <ul className='space-y-2 font-Nunito'>
+        {exams.map(exam => (
           <li
+            key={exam.id}
             className={`flex font-bold p-3 bg-accent2 text-white rounded-lg ${
               !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>1</span>
-            {isHidden && <a href='/'>Pre-Elementary english</a>}
+            }`}
+          >
+            <span className='flex justify-center items-center'>{exam.examName}</span>
+            {isHidden && <a href='/'>{exam.examName}</a>}
           </li>
-          <li
-            className={`flex font-bold text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>2</span>
-            {isHidden && <a href='/'>Elementary english</a>}
-          </li>
-          <li
-            className={`flex font-bold text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>3</span>
-            {isHidden && <a href='/'>Pre-Intermediate english I</a>}
-          </li>
-          <li
-            className={`flex font-bold text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>4</span>
-            {isHidden && <a href='/'>Pre-Intermediate english II</a>}
-          </li>
-          <li
-            className={`flex font-bold text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>5</span>
-            {isHidden && <a href='/'>Intermediate english</a>}
-          </li>
+        ))}
         </ul>
       </nav>
       <div className={`w-full flex p-5`}>

@@ -15,7 +15,7 @@ function App() {
         <Route path='/' element={<Login />} />
         <Route path='/started' element={<Getstarted />} />
         <Route path='/score-countdown' element={<ScoreCountdown />} />
-        <Route path='/exam/' element={<Exam />} />
+        <Route path='/exam' element={<Exam />} />
         <Route path='/score' element={<Score />} />
         <Route path='/testing' element={<Testing />} />
         <Route path='/dashboard' element={<PageDashboard />} />
