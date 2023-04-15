@@ -7,7 +7,7 @@ export default function Option({ active, option, handleAnswer, widthFit }) {
       onClick={() => handleAnswer(option)}
       className={` ${
         !widthFit ? 'w-[586px]' : 'w-full'
-      } gap-[18px] flex rounded-[24px] px-[15px] py-[20px] hover:text-white hover:bg-slate-300 shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]   ${
+      } gap-[18px] flex rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-95 shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]   ${
         active ? 'bg-accent1 shadow-md shadow-accent1 ' : ' '
       }`}>
       {active ? (
