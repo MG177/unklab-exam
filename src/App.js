@@ -2,14 +2,10 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './page/login/Login';
 import Getstarted from './page/login/Getstarted';
-// import Questions from "./components/Question";
-// import Option from "./components/Option";
 import ScoreCountdown from './page/score/ScoreCountdown';
 import Exam from './page/Exam';
-
 import Score from './page/score/Score';
 import Testing from './page/testing';
-// import Testing from "./page/Testing";
 import PageDashboard from './page/dashboard/PageDashboard';
 
 function App() {
