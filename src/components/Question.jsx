@@ -1,5 +1,5 @@
 import React from 'react';
-import music from '../audio/limya-puluhh.mp3';
+import sound from '../audio/limya-puluhh.mp3';
 
 export default function questions({ question, questions }) {
   // console.log('from question', question.text);
@@ -11,8 +11,8 @@ export default function questions({ question, questions }) {
       <p className='text-[#37474F] text-[20px] font-nunito leading-[24px] top-[68px] left-[28px]'>
         {questions[question].text}
       </p>
-      <audio controls className='mt-3'>
-        <source src={music} type='audio/mpeg' />
+      <audio controls className="w-full mt-10 bg-gray-100 rounded-md shadow-md outline-none">
+        <source src={sound} type="audio/mpeg" />
       </audio>
     </div>
   );
