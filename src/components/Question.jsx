@@ -11,8 +11,8 @@ export default function questions({ question, questions }) {
       <p className='text-[#37474F] text-[20px] font-nunito leading-[24px] top-[68px] left-[28px]'>
         {questions[question].text}
       </p>
-      <audio controls className="w-full mt-10 bg-gray-100 rounded-md shadow-md outline-none">
-        <source src={sound} type="audio/mpeg" />
+      <audio controls className='mt-3' style={{width: '100%', marginTop: '10px', backgroundColor: '#f5f5f5', borderRadius: '5px', boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)', outline: 'none'}}>
+        <source src={sound} type='audio/mpeg' />
       </audio>
     </div>
   );
