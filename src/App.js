@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './page/login/Login';
 import Getstarted from './page/login/Getstarted';
 import ScoreCountdown from './page/score/ScoreCountdown';
@@ -8,17 +8,80 @@ import Score from './page/score/Score';
 import Testing from './page/testing';
 import PageDashboard from './page/dashboard/PageDashboard';
 
+import ProtectedRoute from './utils/ProtectedRoute';
+import AuthContextLayout from './contexts/AuthContextLayout';
+
 function App() {
+  // return (
+  // <BrowserRouter>
+  //   <Routes>
+  //     <Route path='/' element={<Login />} />
+  //     <Route path='/started' element={<Getstarted />} />
+  //     <Route path='/score-countdown' element={<ScoreCountdown />} />
+  //     <Route path='/exam' element={<Exam />} />
+  //     <Route path='/score' element={<Score />} />
+  //     <Route path='/testing' element={<Testing />} />
+  //     <Route path='/dashboard' element={<PageDashboard />} />
+  //   </Routes>
+  // </BrowserRouter>
+  // );
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/'>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/started' element={<Getstarted />} />
-        <Route path='/score-countdown' element={<ScoreCountdown />} />
-        <Route path='/exam' element={<Exam />} />
-        <Route path='/score' element={<Score />} />
-        <Route path='/testing' element={<Testing />} />
-        <Route path='/dashboard' element={<PageDashboard />} />
+        <Route element={<AuthContextLayout />}>
+          <Route path='/' element={<Login />} />
+          <Route
+            path='/started'
+            element={
+              <ProtectedRoute>
+                <Getstarted />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/score-countdown'
+            element={
+              <ProtectedRoute>
+                <ScoreCountdown />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/exam/:examId'
+            element={
+              <ProtectedRoute>
+                <Exam />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/score'
+            element={
+              <ProtectedRoute>
+                <Score />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/testing'
+            element={
+              <ProtectedRoute>
+                <Testing />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/dashboard'
+            element={
+              <ProtectedRoute>
+                <PageDashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route path='/login' element={<Login />} /> */}
+          <Route path='*' element={<Navigate to='/' />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

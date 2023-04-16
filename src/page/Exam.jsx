@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../config';
 import Footer from '../components/Footer';
 import Question from '../components/Question';
 import Option from '../components/Option';
 import Header from '../components/Header';
 
-const questionsssss = [
-  {
-    question: 'What is the capital of Indonesia?',
-    options: ['Jakarta', 'Bandung', 'Surabaya', 'Medan'],
-    answer: 2,
-  },
-];
-
-
 export default function Exam() {
-  // This state is used to store the answer chosen by the user
+  const { examId } = useParams();
+  const navigate = useNavigate();
   const [answer, setAnswer] = useState('');
   const [questions, setQuestions] = useState([]);
-  const [customOrder, setCustomOrder] = useState([9, 2, 1, 7, 4, 5, 8, 6, 0, 3]);
+  const [question, setQuestion] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
-    axios.get('//localhost:3000/questions/exam/643b089a21c7035d5c8e26d4',{
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiIxMjMiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTY4MTYwNTA1OCwiZXhwIjoxNjgxNjkxNDU4fQ.zoSua-7Xn0esuox8kzw90GvOROrAE27o68w5NlacoIg'  
-      }
-    })
-      .then(response => {
-        setQuestions(response.data);
-        console.log(response.data)
+    api
+      .get('questions/exam/' + examId, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
       })
-      .catch(error => {
-        console.log(error);
+      .then((response) => {
+        if (!response.data) {
+          navigate('/started');
+        }
+        console.log('Hello bang', response.data);
+        setQuestions(response.data.questions);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log('Hello bang', error);
       });
-  });
+  }, [examId, navigate]);
+
+  useEffect(() => {
+    if (question === questions.length - 1) {
+      navigate('/score');
+    }
+  }, [question, questions.length, navigate]);
+
   // console.log(questions);
   // This function allows you to select an answer by passing in the index of the answer
   const handleAnswer = (index) => {
@@ -60,20 +65,26 @@ export default function Exam() {
   return (
     <>
       <Header />
-      <div className='flex flex-col w-full h-screen gap-[18px] justify-center items-center bg-[#FAFAFA]'>
-        <Question question={questions ? questions.questions[0]:"test"} />
-        <div className='flex flex-col gap-[18px]'>
-          {questions.questions[0].options.map((option, index) => (
-            <Option
-              key={index}
-              option={option}
-              active={handleActive(option)}
-              handleAnswer={handleAnswer}
-            />
-          ))}
+      {!loading && (
+        <div className='flex flex-col w-full h-screen gap-[18px] justify-center items-center bg-[#FAFAFA]'>
+          <Question question={question} questions={questions} />
+          <div className='flex flex-col gap-[18px]'>
+            {questions[question].options.map((option, index) => (
+              <Option
+                key={index}
+                option={option}
+                active={handleActive(option)}
+                handleAnswer={handleAnswer}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <Footer />
+      )}
+      <Footer
+        questions={questions}
+        question={question}
+        setQuestion={setQuestion}
+      />
     </>
   );
-} 
+}
