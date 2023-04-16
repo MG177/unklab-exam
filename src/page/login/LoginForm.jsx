@@ -36,25 +36,26 @@ export default function Form() {
   console.table({student, admin});
   // console.log(student);
   // console.log(admin);
-  const handleLogin = async (event) => {
-    // event.preventDefault();
-    // try {
-    //   const response = await axios.post(
-    //     "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/auth/student",
-    //     student
-    //   );
-    //   console.log(response.student);
-    //   // Perform any necessary actions upon successful login
-    // } catch (error) {
-    //   console.log(error);
-    //   // Perform any necessary actions upon failed login
-    // }
-    console.log("login student");
-  };
-  const handleLoginAdmin = () => {
+  const handleLogin = (event) => {
+    event.preventDefault();
     try {
       const response = axios.post(
-        "//localhost:3000/auth/login",
+        "//localhost:3000/auth/login/student",
+        student
+      );
+      console.log(response.student);
+      // Perform any necessary actions upon successful login
+    } catch (error) {
+      console.log(error);
+      // Perform any necessary actions upon failed login
+    }
+    console.log("login student");
+  };
+  const handleLoginAdmin = (event) => {
+    event.preventDefault();
+    try {
+      const response = axios.post(
+        "//localhost:3000/auth/login/admin",
         admin
       );
       console.log(response.admin);
