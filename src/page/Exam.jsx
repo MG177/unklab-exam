@@ -32,8 +32,7 @@ export default function Exam() {
       .catch((error) => {
         console.log('Hello bang', error);
       });
-  }, [examId, navigate]);
-
+    }, [examId, navigate]);
   useEffect(() => {
     if (question === questions.length - 1) {
       navigate('/score');
@@ -66,9 +65,9 @@ export default function Exam() {
     <>
       <Header />
       {!loading && (
-        <div className='flex flex-col w-full h-screen gap-[18px] justify-center items-center bg-[#FAFAFA]'>
+        <div className='flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen'>
           <Question question={question} questions={questions} />
-          <div className='flex flex-col gap-[18px]'>
+          <div className='flex flex-col gap-[18px] mb-10'>
             {questions[question].options.map((option, index) => (
               <Option
                 key={index}

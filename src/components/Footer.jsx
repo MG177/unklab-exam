@@ -18,7 +18,7 @@ export default function Footer({ question, setQuestion, questions }) {
   };
 
   return (
-    <div className='fixed bottom-0 w-full h-max bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between'>
+    <div className='fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between'>
       <div className='font-nunito my-[40.26px] ml-28 w-content'>
         <p className='text-accent1 text-[29px] font-bold'>Pre-Intermediate</p>
         <p className='text-[20px] text-black font-normal'>
