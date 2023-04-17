@@ -12,7 +12,7 @@ export default function Sidebar() {
 
   useEffect(() => {
     axios
-      .get('http://unklab-exam-api.vercel.app/exam', {
+      .get('https://unklab-exam-api.vercel.app/exam', {
         headers: {
           Authorization:
             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiIxMjMiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTY4MTU5MTYxMCwiZXhwIjoxNjgxNjc4MDEwfQ.pQn9JHFNo60bOQQboL_V2Jo5frprWUznA8KXtItryBM',
