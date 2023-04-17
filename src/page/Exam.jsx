@@ -40,7 +40,8 @@ export default function Exam() {
     };
     fetchQuestions();
   }, [examId, navigate]);
-
+  console.log(localStorage.getItem('token'))
+  console.log(questions);
   useEffect(() => {
     if (question === questions.length - 1) {
       if (question === 0) {
