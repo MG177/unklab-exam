@@ -7,7 +7,7 @@ export default function Footer({ question, setQuestion, questions }) {
 
   const handleNext = () => {
     console.log('clicked');
-    setQuestion(question + 1);
+    setQuestion((prev) => prev + 1);
   };
 
   const displayQuestionOf = () => {

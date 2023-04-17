@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import Question from '../components/Question';
 import Option from '../components/Option';
 import Header from '../components/Header';
+import sound from '../media/no7.mp3';
+import img from '../media/gunting.jpg';
 
 export default function Exam() {
   const { examId } = useParams();
@@ -13,7 +15,10 @@ export default function Exam() {
   const [questions, setQuestions] = useState([]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
-
+  const media = {
+    audio: sound,
+    image: img
+  }
   useEffect(() => {
     api
       .get('questions/exam/' + examId, {
@@ -66,7 +71,7 @@ export default function Exam() {
       <Header />
       {!loading && (
         <div className='flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen'>
-          <Question question={question} questions={questions} />
+          <Question question={question} questions={questions} media={media}/>
           <div className='flex flex-col gap-[18px] mb-10'>
             {questions[question].options.map((option, index) => (
               <Option
