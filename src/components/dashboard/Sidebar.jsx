@@ -11,7 +11,7 @@ export default function Sidebar() {
   const [exams, setExams] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/exam',{
+    axios.get('http://localhost:8080/exam',{
       headers: {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiIxMjMiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTY4MTU5MTYxMCwiZXhwIjoxNjgxNjc4MDEwfQ.pQn9JHFNo60bOQQboL_V2Jo5frprWUznA8KXtItryBM'
       }
