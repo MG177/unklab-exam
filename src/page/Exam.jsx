@@ -10,7 +10,7 @@ import img from '../media/gunting.jpg';
 
 const media = {
   audio: sound,
-  image: img
+  image: img,
 };
 
 export default function Exam() {
@@ -20,14 +20,15 @@ export default function Exam() {
   const [questions, setQuestions] = useState([]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         const response = await api.get(`questions/exam/${examId}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         });
         if (!response.data) {
           navigate('/started');
@@ -38,9 +39,26 @@ export default function Exam() {
         console.log(error);
       }
     };
+
+    const fetchTime = async () => {
+      try {
+        const response = await api.get(`time/${examId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        setTime(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTime();
     fetchQuestions();
   }, [examId, navigate]);
-  console.log(localStorage.getItem('token'))
+
+  console.log(time);
+  console.log(localStorage.getItem('token'));
   console.log(questions);
   useEffect(() => {
     if (question === questions.length - 1) {
@@ -63,9 +81,9 @@ export default function Exam() {
     <>
       <Header />
       {!loading && (
-        <div className='flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen'>
+        <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} questions={questions} media={media} />
-          <div className='flex flex-col gap-[18px] mb-10'>
+          <div className="flex flex-col gap-[18px] mb-10">
             {questions[question].options.map((option, index) => (
               <Option
                 key={index}
@@ -81,6 +99,7 @@ export default function Exam() {
         questions={questions}
         question={question}
         setQuestion={setQuestion}
+        time={time}
       />
     </>
   );
