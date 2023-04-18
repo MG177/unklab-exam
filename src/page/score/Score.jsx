@@ -58,7 +58,7 @@ export default function Score() {
             </div>
             <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl w-[377px] h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
               <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
-                Mangerongkonda, Jason
+                Tester Account
               </p>
             </div>
           </div>
