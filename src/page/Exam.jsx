@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import api from '../config';
-import Footer from '../components/Footer';
-import Question from '../components/Question';
-import Option from '../components/Option';
-import Header from '../components/Header';
-import sound from '../media/no7.mp3';
-import img from '../media/gunting.jpg';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import api from "../config";
+import Footer from "../components/Footer";
+import Question from "../components/Question";
+import Option from "../components/Option";
+import Header from "../components/Header";
+import sound from "../media/no7.mp3";
+import img from "../media/gunting.jpg";
 
 const media = {
   audio: sound,
-  image: img
+  image: img,
 };
 
 export default function Exam() {
   const { examId } = useParams();
   const navigate = useNavigate();
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
   const [questions, setQuestions] = useState([]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -26,11 +26,13 @@ export default function Exam() {
       try {
         const response = await api.get(`questions/exam/${examId}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("access_token")
+            )}`,
+          },
         });
         if (!response.data) {
-          navigate('/started');
+          navigate("/started");
         }
         setQuestions(response.data.questions);
         setLoading(false);
@@ -40,14 +42,12 @@ export default function Exam() {
     };
     fetchQuestions();
   }, [examId, navigate]);
-  console.log(localStorage.getItem('token'))
-  console.log(questions);
   useEffect(() => {
     if (question === questions.length - 1) {
       if (question === 0) {
         return;
       }
-      navigate('/score');
+      navigate("/score");
     }
   }, [question, questions.length, navigate]);
 
@@ -63,9 +63,9 @@ export default function Exam() {
     <>
       <Header />
       {!loading && (
-        <div className='flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen'>
+        <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} questions={questions} media={media} />
-          <div className='flex flex-col gap-[18px] mb-10'>
+          <div className="flex flex-col gap-[18px] mb-10">
             {questions[question].options.map((option, index) => (
               <Option
                 key={index}
