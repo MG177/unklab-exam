@@ -1,4 +1,5 @@
 import React, { createContext, useState, useMemo } from 'react';
+import api from '../config/index';
 
 const QuestionContext = createContext();
 
@@ -23,6 +24,7 @@ export function QuestionProvider({ children }) {
 
   const handleSave = () => {
     localStorage.setItem('questions', JSON.stringify(questions));
+    postQuestions();
   };
 
   // calculate file size of image and music in questions
@@ -38,6 +40,17 @@ export function QuestionProvider({ children }) {
     });
     return total;
   }, [questions]);
+
+  const postQuestions = async () => {
+    api
+      .patch('/questions/643b089a21c7035d5c8e26d4', questions)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   console.log(`totalFileSize: ${totalFileSize}`);
 
