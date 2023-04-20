@@ -2,25 +2,39 @@ import React from 'react';
 import TimerSmall from './TimerSmall';
 import Arrow from '../image/arrow_next.svg';
 
-export default function Footer({ question, setQuestion, questions, time }) {
-  console.log('question', question);
+export default function Footer({
+  question,
+  setQuestion,
+  questions,
+  time,
+  answer,
+}) {
+  // console.log("question", question);
 
   const handleNext = () => {
-    console.log('clicked');
-    setQuestion((prev) => prev + 1);
+    console.log("clicked");
+    if (answer) {
+      setQuestion((prev) => prev + 1);
+    } else {
+      alert("Please select an answer");
+    }
   };
 
   const displayQuestionOf = () => {
     if (question < 9) {
       return `Question ${question + 1} of 10`;
     }
-    return 'Question 10 of 10';
+    return "Question 10 of 10";
   };
+  // console.log("index :", question);
+  // console.log("answer :", answer);
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
       <div className="font-nunito my-[40.26px] ml-28 w-content">
-        <p className="text-accent1 text-[29px] font-bold">Pre-Intermediate</p>
+        <p className="text-accent1 text-[29px] font-bold">
+          {JSON.parse(localStorage.getItem("examName"))}
+        </p>
         <p className="text-[20px] text-black font-normal">
           {displayQuestionOf()}
         </p>
