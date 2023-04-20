@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
     JSON.parse(localStorage.getItem("access_token")) || null
   );
 
-  console.log("user", user);
+  // console.log("user", user);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 

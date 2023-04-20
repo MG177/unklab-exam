@@ -13,7 +13,6 @@ export default function Start() {
   const logout = async () => {
     //clear local storage
     localStorage.clear();
-    await api.patch("/auth/login/student");
     window.location.href = "/";
   };
 

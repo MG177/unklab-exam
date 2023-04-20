@@ -17,7 +17,7 @@ export default function Exam() {
   const { examId } = useParams();
   const navigate = useNavigate();
   const [answer, setAnswer] = useState("");
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([1]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
@@ -67,11 +67,10 @@ export default function Exam() {
     fetchQuestions();
   }, [examId, navigate]);
   useEffect(() => {
-    if (question === questions.length - 1) {
+    if (question === questions.length) {
       if (question === 0) {
         return;
       }
-      navigate("/score");
     }
   }, [question, questions.length, navigate]);
   // console.log("answer luar", questions);

@@ -1,6 +1,7 @@
-import React from 'react';
-import TimerSmall from './TimerSmall';
-import Arrow from '../image/arrow_next.svg';
+import React, { useEffect, useState } from "react";
+import TimerSmall from "./TimerSmall";
+import Arrow from "../image/arrow_next.svg";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer({
   question,
@@ -9,25 +10,23 @@ export default function Footer({
   time,
   answer,
 }) {
-  // console.log("question", question);
+  console.log("question :", question);
+  console.log("questions length :", questions.length);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     console.log("clicked");
-    if (answer) {
-      setQuestion((prev) => prev + 1);
-    } else {
-      alert("Please select an answer");
-    }
-  };
+    setQuestion((prev) => prev + 1);
 
-  const displayQuestionOf = () => {
-    if (question < 9) {
-      return `Question ${question + 1} of 10`;
+    if (question === questions.length - 1) {
+      // handleTimeOut();
+      navigate("/waiting");
     }
-    return "Question 10 of 10";
   };
-  // console.log("index :", question);
-  // console.log("answer :", answer);
+  const handleTimeOut = () => {
+    console.log("time out");
+    navigate("/score");
+  };
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
@@ -36,10 +35,10 @@ export default function Footer({
           {JSON.parse(localStorage.getItem("examName"))}
         </p>
         <p className="text-[20px] text-black font-normal">
-          {displayQuestionOf()}
+          {`Question ${question + 1} of ${questions.length}`}
         </p>
       </div>
-      <TimerSmall time={time} />
+      <TimerSmall time={time} onTimeUp={handleTimeOut} />
       {question < questions.length && (
         <button
           type="button"
