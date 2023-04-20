@@ -1,10 +1,10 @@
 import React from "react";
 import Header from "../../components/Header";
 import ProgressBar from "../score/progress_bar.svg";
+import FooterScore from "../score/FooterScore";
 import axios from "axios";
 
 export default function Score() {
-
   const getScore = () => {
     axios
       .get(
@@ -59,9 +59,7 @@ export default function Score() {
           </div>
         </div>
       </div>
-      <button className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10">
-        Logout
-      </button>
+      <FooterScore />
     </div>
   );
 }

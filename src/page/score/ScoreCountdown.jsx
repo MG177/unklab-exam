@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../components/Header";
 import Timer from "../../components/Timer";
+import FooterScore from "../score/FooterScore";
 // import Warning from "../components/Warning";
 
 export default function ScoreCountdown() {
@@ -20,6 +21,7 @@ export default function ScoreCountdown() {
           </p>
         </div>
       </div>
+      <FooterScore />
     </div>
   );
 }

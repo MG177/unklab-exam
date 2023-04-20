@@ -6,31 +6,41 @@ export default function Form() {
     noreg: "",
     token: "",
   });
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setData({
+      ...data,
+      [e.target.name]: value,
+    });
   };
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post(
-        "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/auth/student",
-        data
-      );
-      console.log(response.data);
-      // Perform any necessary actions upon successful login
-    } catch (error) {
-      console.log(error);
-      // Perform any necessary actions upon failed login
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      noreg: data.noreg,
+      token: data.token,
+    };
+    axios
+      .post(
+        "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/auth/admin",
+        userData
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error.response);
+          console.log("server responded");
+        } else if (error.request) {
+          console.log("network error");
+        } else {
+          console.log(error);
+        }
+      });
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
       <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
         <div className="flex flex-col justify-center items-center">
           <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
@@ -49,9 +59,8 @@ export default function Form() {
             </label>
             <input
               name="noreg"
-              id="noreg"
               value={data.noreg}
-              onChange={handleInputChange}
+              onChange={handleChange}
               type="text"
               placeholder="S2200000"
               className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -63,10 +72,9 @@ export default function Form() {
             </label>
             <input
               name="token"
-              id="token"
               value={data.token}
-              onChange={handleInputChange}
-              type="number"
+              onChange={handleChange}
+              type="password"
               placeholder="Token"
               className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
             />
