@@ -1,0 +1,33 @@
+audio {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #fafafa;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  outline: none;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #fafafa;
+  border-radius: 5px; 
+  display: hidden;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+audio::-webkit-media-controls-current-time-display {
+  display: none;
+}
+audio::-webkit-media-controls-time-remaining-display {
+  display: none;
+}
+
+audio::-webkit-media-controls-speedometer-button{
+  display: none !important;
+}
+
+/* audio::-webkit-media-controls-volume-slider::-webkit-slider-thumb {
+  background-color: #b55ffe;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+} */

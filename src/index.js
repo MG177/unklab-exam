@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 //theme
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/themes/fluent-light/theme.css';
 //core
 import 'primereact/resources/primereact.min.css';
 //icons

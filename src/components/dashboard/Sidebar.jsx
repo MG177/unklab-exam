@@ -1,63 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { useEffect } from "react";
+import api from "../../config";
 
 export default function Sidebar() {
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
+  const [exams, setExams] = useState([]);
+
+  useEffect(() => {
+    api
+      .get(`/exam`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("access_token")
+          )}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setExams(response.data);
+      });
+  }, []);
 
   return (
-    <div className='flex flex-col h-screen w-fit bg-white shadow-2xl'>
-      <div className='flex items-center justify-center h-16'>
-        <h1 className='font-bold text-3xl'>
-          {isHidden ? 'Unklab Exams' : 'UE'}
-        </h1>
+    <div className="z-20 flex flex-col h-screen bg-white min-w-fit shadow-right">
+      <div className="flex items-center justify-start h-16 p-3">
+        {isHidden ? (
+          <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
+            Unklab <span className="text-black">Exams</span>
+          </h1>
+        ) : (
+          <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
+            U<span className="text-black">E</span>
+          </h1>
+        )}
       </div>
-      <nav className='flex-1 px-4'>
-        <ul className='space-y-2'>
-          <li
-            className={`flex font-mediu p-3 bg-accent2 text-white rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>1</span>
-            {isHidden && <a href='/'>Pre-Elementary english</a>}
-          </li>
-          <li
-            className={`flex font-medium text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>2</span>
-            {isHidden && <a href='/'>Elementary english</a>}
-          </li>
-          <li
-            className={`flex font-medium text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>3</span>
-            {isHidden && <a href='/'>Pre-Intermediate english I</a>}
-          </li>
-          <li
-            className={`flex font-medium text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>4</span>
-            {isHidden && <a href='/'>Pre-Intermediate english II</a>}
-          </li>
-          <li
-            className={`flex font-medium text-slate-400 p-3 bg-slate-100 rounded-lg ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-3'
-            }`}>
-            <span className='flex justify-center items-center'>5</span>
-            {isHidden && <a href='/'>Intermediate english</a>}
-          </li>
+      <nav className="flex-1 px-4">
+        <ul className="space-y-2 font-Nunito">
+          {exams.map((exam, index) => (
+            <li
+              key={exam._id}
+              className={`flex font-bold p-3 bg-accent2 text-white rounded-lg ${
+                !isHidden ? "gap-0 justify-center" : "gap-3"
+              }`}
+            >
+              {!isHidden && <a href="/">{index + 1}</a>}
+              <span className="flex items-center justify-center">
+                {isHidden && exam.examName}
+              </span>
+            </li>
+          ))}
         </ul>
       </nav>
       <div className={`w-full flex p-5`}>
         <button
           onClick={toggleHidden}
-          className='text-white bg-accent2 w-8 h-8 rounded-full hover:bg-accent1'>
-          <i className='fa-solid fa-bars' />
+          className="w-8 h-8 text-white rounded-full bg-accent2 hover:bg-accent1"
+        >
+          <i className="fa-solid fa-bars" />
         </button>
       </div>
     </div>
