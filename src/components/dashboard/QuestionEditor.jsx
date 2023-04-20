@@ -1,24 +1,46 @@
 import React, { useState } from 'react';
-import Option from '../../components/Option';
+import QuestionEditorItem from './QuestionEditorItem';
 
 const questions = [
   {
-    question: 'What is the capital of Indonesia?',
-    options: ['Jakarta', 'Bandung', 'Surabaya', 'Medan'],
-    answer: 2
+    question: '',
+    options: ['', ''],
+    answer: 0,
+    music: null,
+    image: null
   }
 ];
 
-export default function Sidebar() {
+export default function QuestionEditor() {
   // This state is used to store the answer chosen by the user
   const [answer, setAnswer] = useState('');
+  const [data, setData] = useState(
+    JSON.parse(localStorage.getItem('questions')) ?? questions
+  );
+
+  const handleOptionsChange = (index, value) => {
+    const newData = [...data];
+    // console.log('newData ', newData);
+    newData[index] = { ...newData[index], options: value };
+    // setData(newData);
+  };
+
+  const handleOverwriteDataQuestion = (index, value) => {
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[index] = { ...newData[index], question: value };
+      return newData;
+    });
+  };
+
+  console.log(data);
 
   // This function allows you to select an answer by passing in the index of the answer
   const handleAnswer = (index) => {
     // This sets the answer state to the index of the answer chosen
     setAnswer(index);
     // This logs the index of the answer chosen to the console
-    console.log(index);
+    // console.log(index);
   };
 
   // This function is used to check whether the answer is correct or not
@@ -34,59 +56,131 @@ export default function Sidebar() {
     }
   };
 
+  const handleMusicFileChange = (e, currentQuestion) => {
+    const file = e.target.files[0];
+    if (file.size > 5000000) {
+      alert('File size exceeds 5MB limit');
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64String = reader.result;
+      setData((prevData) => {
+        const newData = prevData.map((question, index) => {
+          if (index === currentQuestion) {
+            return { ...question, music: base64String };
+          } else {
+            return question;
+          }
+        });
+        return newData;
+      });
+    };
+  };
+
+  const handleImageFileChange = (e, i) => {
+    const file = e.target.files[0];
+    if (file.size > 5000000) {
+      alert('File size exceeds 5MB limit');
+      return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64String = reader.result;
+      setData((prevData) => {
+        const newData = [...prevData];
+        newData[i] = { ...newData[i], image: base64String };
+        newData[i].music = null;
+        return newData;
+      });
+    };
+  };
+
+  // This function is used to remove the selected music file
+  const handleRemoveMusicFile = (i) => {
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[i].music = null;
+      return newData;
+    });
+  };
+
+  // This function is used to remove the selected image file
+  const handleRemoveImageFile = (i) => {
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[i].image = null;
+      return newData;
+    });
+  };
+
+  const handleSave = () => {
+    localStorage.setItem('questions', JSON.stringify(data));
+  };
+
+  const handleAddQuestion = () => {
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData.push({
+        question: '',
+        options: [''],
+        answer: 0,
+        music: null,
+        image: null
+      });
+      return newData;
+    });
+  };
+
+  const handleAddOptions = (index) => {
+    const newData = [...data];
+    console.log('newData ', newData[index]);
+    newData[index].options.push('');
+    setData(newData);
+  };
+
+  const handleDeleteQuestion = (index) => {
+    const newData = [...data];
+    newData.splice(index, 1);
+    setData(newData);
+  };
+
   return (
-    <div className='flex flex-col font-Nunito h-screen min-w-fit bg-white shadow-right z-20'>
-      <div className='flex flex-col items-center justify-start p-3 h-16 max-w-lg'>
+    <div className='flex flex-col font-Nunito h-screen overflow-y-scroll min-w-fit bg-white shadow-right z-20'>
+      <div className='flex flex-col items-center justify-start p-3 max-w-lg'>
         <h1 className='text-3xl w-full text-center font-bold text-white bg-accent1 p-4 rounded-2xl mb-3'>
           QUESTION EDITOR
         </h1>
-        <div className='flex gap-3 mb-6'>
-          <div className=' w-full flex flex-col gap-6'>
-            <div className='bg-white shadow-right p-3 rounded-2xl'>
-              <div className='flex gap-3 mb-3'>
-                <button className='py-1 px-4 rounded-full bg-accent1 text-white font-bold text-sm'>
-                  Listening
-                </button>
-                <button className='py-1 px-4 rounded-full bg-slate-300 text-white font-bold text-sm'>
-                  Reading
-                </button>
-                <button className='py-1 px-4 rounded-full bg-slate-300 text-white font-bold text-sm'>
-                  Grammar
-                </button>
-                <button className='py-1 px-4 rounded-full bg-slate-300 text-white font-bold text-sm'>
-                  Vocabulary
-                </button>
-              </div>
-              <h3 className='text-2xl font-bold text-accent1'>Question #1</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa
-                fugit placeat reprehenderit esse incidunt officiis deleniti
-                assumenda neque est labore!
-              </p>
-            </div>
-            <div className='flex flex-col gap-[18px] min-w-full'>
-              {questions[0].options.map((option, index) => (
-                <Option
-                  key={index}
-                  option={option}
-                  active={handleActive(option)}
-                  handleAnswer={handleAnswer}
-                  widthFit
-                />
-              ))}
-            </div>
-          </div>
-          <div className='flex flex-col gap-3'>
-            <button className='p-2 bg-accent2 rounded-full leading-none shadow-right'>
-              <i className='fa-regular fa-trash-can text-white' />
-            </button>
-            <button className='p-2 bg-white rounded-full leading-none shadow-right'>
-              <i className='fa-solid fa-music text-black' />
-            </button>
-            <button className='p-2 bg-white rounded-full leading-none shadow-right'>
-              <i className='fa-regular fa-image text-black' />
-            </button>
-          </div>
+        {data.map((question, index) => (
+          <QuestionEditorItem
+            key={index}
+            data={data}
+            currentQuestion={index}
+            handleOverwriteDataQuestion={handleOverwriteDataQuestion}
+            handleActive={handleActive}
+            handleAnswer={handleAnswer}
+            handleOptionsChange={handleOptionsChange}
+            handleRemoveMusicFile={handleRemoveMusicFile}
+            handleRemoveImageFile={handleRemoveImageFile}
+            handleMusicFileChange={handleMusicFileChange}
+            handleImageFileChange={handleImageFileChange}
+            handleAddOptions={handleAddOptions}
+            handleDeleteQuestion={handleDeleteQuestion}
+          />
+        ))}
+        <div className='flex w-full gap-3'>
+          <button
+            className='bg-accent1 flex-1 w-full text-white rounded-full py-3 text-3 font-medium'
+            onClick={handleSave}>
+            Save
+          </button>
+          <button
+            className='bg-accent1 w-12 text-white rounded-full py-3 text-3 font-medium'
+            onClick={handleAddQuestion}>
+            <i className='fa-solid fa-plus' />
+          </button>
         </div>
       </div>
     </div>

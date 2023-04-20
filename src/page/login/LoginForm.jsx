@@ -28,14 +28,12 @@ export default function Form() {
       ...prevState,
       username: event.target.value,
     }));
-    // handleInputChange(event);
   };
   const handlePasswordInput = (event) => {
     setAdmin((prevState) => ({
       ...prevState,
       password: event.target.value,
     }));
-    // handleInputChange(event);
   };
   const handleLogin = (event) => {
     event.preventDefault();
@@ -53,8 +51,8 @@ export default function Form() {
         .post(
           `/students/start/${JSON.parse(localStorage.getItem("examId"))}`,
           {
-            noreg: JSON.parse(localStorage.getItem("noreg")),
             name: JSON.parse(localStorage.getItem("username")),
+            noreg: JSON.parse(localStorage.getItem("noreg")),
           },
           {
             headers: {
@@ -65,9 +63,11 @@ export default function Form() {
           }
         )
         .then((response) => {
-          console.log(response);
-          if (response.id) {
-            navigate("/started");
+          // console.log("AAAA" + JSON.stringify(response));
+          // console.log("BBBB" + JSON.stringify(response.data));
+          if (response.data) {
+            localStorage.setItem("studentId", JSON.stringify(response.data.id));
+            // navigate("/started");
           }
         });
     });
@@ -91,7 +91,7 @@ export default function Form() {
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
           <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
               <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
                 <h1 className="text-[#37474F]">Welcome Admin</h1>
                 <h1 className="text-[#FF6593]">!</h1>
@@ -101,7 +101,7 @@ export default function Form() {
                 and token to access your account.
               </p>
             </div>
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col w-full gap-6">
               <div className="flex flex-col items-start ">
                 <label htmlFor="noreg" className="mb-2">
                   Username
@@ -109,7 +109,7 @@ export default function Form() {
                 <input
                   name="noreg"
                   id="noreg"
-                  value={student.noreg}
+                  value={admin.noreg}
                   onChange={handleUsernameInput}
                   type="text"
                   placeholder="John"
@@ -123,7 +123,7 @@ export default function Form() {
                 <input
                   name="token"
                   id="token"
-                  value={student.token}
+                  value={admin.token}
                   onChange={handlePasswordInput}
                   type="password"
                   placeholder="********"
@@ -148,7 +148,7 @@ export default function Form() {
       ) : (
         <form onSubmit={handleLogin}>
           <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
               <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
                 <h1 className="text-[#37474F]">Welcome</h1>
                 <h1 className="text-[#FF6593]">!</h1>
@@ -158,7 +158,7 @@ export default function Form() {
                 and token to access your account.
               </p>
             </div>
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col w-full gap-6">
               <div className="flex flex-col items-start ">
                 <label htmlFor="noreg" className="mb-2">
                   Registration Number

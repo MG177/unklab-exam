@@ -82,7 +82,7 @@ export default function Start() {
           not take the test.
         </p>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center justify-between h-7">
         <form action="" className="flex gap-1">
           <input
             type="checkbox"
@@ -103,7 +103,7 @@ export default function Start() {
           <button
             onClick={shuffleQuestion}
             disabled={!isChecked}
-            className="mt-[14.5px] font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
+            className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
           >
             START
           </button>

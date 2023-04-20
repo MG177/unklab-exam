@@ -1,6 +1,6 @@
-import React from 'react';
-import Header from '../../components/Header';
-import ProgressBar from '../score/progress_bar.svg';
+import React from "react";
+import Header from "../../components/Header";
+import ProgressBar from "../score/progress_bar.svg";
 // import axios from 'axios';
 
 export default function Score() {
@@ -20,7 +20,7 @@ export default function Score() {
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   return (
@@ -33,22 +33,16 @@ export default function Score() {
         <div className="bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]">
           <div className="relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
             <img src={ProgressBar} alt="" />
-            <div className="absolute flex flex-col justify-center items-center mt-[70px]">
-              <p className="font-Nunito text-6xl font-bold text-black border-b-2 border-[#98A0A4] pb-3">
+            <div className="absolute flex flex-col items-center justify-center">
+              <p className="text-6xl font-bold text-black font-Nunito">
                 75/100
-              </p>
-              <p className="font-Roboto text-[17px] text-[#98A0A4] ">
-                Passing Grade
-              </p>
-              <p className="font-Nunito text-[29px] text-black font-bold">
-                80/100
               </p>
             </div>
           </div>
           <div className="flex flex-col gap-6">
-            <div className="flex flex-row justify-between font-Nunito mt-9 gap-[10px]">
-              <div className="text-black bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] w-[239px] h-[111px] py-4 pl-4">
-                <p className="text-5xl font-bold">85/100</p>
+            <div className="flex flex-row font-Nunito gap-[10px] ">
+              <div className="text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4">
+                <p className="text-5xl font-bold">8/10</p>
                 <p className="text-2xl">Right answers</p>
               </div>
               <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7">
@@ -56,7 +50,7 @@ export default function Score() {
                 <p className="text-2xl font-bold">Grade</p>
               </div>
             </div>
-            <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl w-[377px] h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
+            <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
               <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
                 Tester Account
               </p>

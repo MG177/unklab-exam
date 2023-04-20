@@ -20,26 +20,50 @@ export default function Exam() {
   const [questions, setQuestions] = useState([]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await api.get(`questions/exam/${examId}`, {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("access_token")
-            )}`,
-          },
-        });
+        const response = await api.get(
+          `students/exam/${JSON.parse(localStorage.getItem("noreg"))}`,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("access_token")
+              )}`,
+            },
+          }
+        );
         if (!response.data) {
           navigate("/started");
         }
-        setQuestions(response.data.questions);
+        setQuestions(response.data.questionList);
         setLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
+
+    const fetchTime = async () => {
+      try {
+        const response = await api.get(
+          `time/${JSON.parse(localStorage.getItem("examId"))}`,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("access_token")
+              )}`,
+            },
+          }
+        );
+        setTime(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTime();
     fetchQuestions();
   }, [examId, navigate]);
   useEffect(() => {
@@ -50,6 +74,7 @@ export default function Exam() {
       navigate("/score");
     }
   }, [question, questions.length, navigate]);
+  // console.log("answer luar", questions);
 
   const handleAnswer = (index) => {
     setAnswer(index);
@@ -66,7 +91,7 @@ export default function Exam() {
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} questions={questions} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
-            {questions[question].options.map((option, index) => (
+            {questions[question].option.map((option, index) => (
               <Option
                 key={index}
                 option={option}
@@ -80,7 +105,9 @@ export default function Exam() {
       <Footer
         questions={questions}
         question={question}
+        answer={answer}
         setQuestion={setQuestion}
+        time={time}
       />
     </>
   );
