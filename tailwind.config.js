@@ -18,7 +18,7 @@ module.exports = {
         accent1: '#B55FFE',
         accent2: '#FF6593',
         taccent1: '#BA69FF99',
-        gray: '#98A0A4'
+        gray: '#98A0A4',
       }
     }
   },
