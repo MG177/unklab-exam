@@ -1,16 +1,16 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './page/login/Login';
-import Getstarted from './page/login/Getstarted';
-import ScoreCountdown from './page/score/ScoreCountdown';
-import Exam from './page/Exam';
-import Score from './page/score/Score';
-import Testing from './page/testing';
-import PageDashboard from './page/dashboard/PageDashboard';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./page/login/Login";
+import Getstarted from "./page/login/Getstarted";
+import ScoreCountdown from "./page/score/ScoreCountdown";
+import Exam from "./page/Exam";
+import Score from "./page/score/Score";
+import Testing from "./page/testing";
+import PageDashboard from "./page/dashboard/PageDashboard";
 
-import ProtectedRoute from './utils/ProtectedRoute';
-import AuthContextLayout from './contexts/AuthContextLayout';
-import QuestionContextLayout from './contexts/QuestionContextLayout';
+import ProtectedRoute from "./utils/ProtectedRoute";
+import AuthContextLayout from "./contexts/AuthContextLayout";
+import QuestionContextLayout from "./contexts/QuestionContextLayout";
 
 function App() {
   // return (
@@ -28,12 +28,12 @@ function App() {
   // );
 
   return (
-    <BrowserRouter basename='/'>
+    <BrowserRouter basename="/">
       <Routes>
         <Route element={<AuthContextLayout />}>
-          <Route path='/' element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route
-            path='/started'
+            path="/started"
             element={
               <ProtectedRoute>
                 <Getstarted />
@@ -41,7 +41,7 @@ function App() {
             }
           />
           <Route
-            path='/score-countdown'
+            path="/waiting"
             element={
               <ProtectedRoute>
                 <ScoreCountdown />
@@ -49,7 +49,7 @@ function App() {
             }
           />
           <Route
-            path='/exam/:examId'
+            path="/exam/:examId"
             element={
               <ProtectedRoute>
                 <Exam />
@@ -57,7 +57,7 @@ function App() {
             }
           />
           <Route
-            path='/score'
+            path="/score"
             element={
               <ProtectedRoute>
                 <Score />
@@ -65,7 +65,7 @@ function App() {
             }
           />
           <Route
-            path='/testing'
+            path="/testing"
             element={
               <ProtectedRoute>
                 <Testing />
@@ -74,7 +74,7 @@ function App() {
           />
           <Route element={<QuestionContextLayout />}>
             <Route
-              path='/dashboard'
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <PageDashboard />
@@ -83,7 +83,7 @@ function App() {
             />
           </Route>
           {/* <Route path='/login' element={<Login />} /> */}
-          <Route path='*' element={<Navigate to='/' />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
     </BrowserRouter>

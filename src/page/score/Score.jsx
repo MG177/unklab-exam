@@ -1,22 +1,8 @@
 import React from "react";
 import Header from "../../components/Header";
 import ProgressBar from "../score/progress_bar.svg";
-// import axios from 'axios';
 
 export default function Score() {
-  // const getScore = () => {
-  //   axios
-  //     .get(
-  //       "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/exam/score?className=Elementary&noreg=s2200123"
-  //     )
-  //     .then((res) => {
-  //       console.log("success");
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();

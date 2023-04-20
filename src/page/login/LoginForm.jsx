@@ -5,7 +5,7 @@ import AuthContext from "../../contexts/AuthContext";
 
 export default function Form() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [student, setStudent] = useState({
     noreg: "",
     token: "",
@@ -16,78 +16,82 @@ export default function Form() {
   });
   const [adminForm, setAdminForm] = useState(false);
 
-  const handleInputChange = (event) => {
+  const handleAdminInputChange = (event) => {
+    const { name, value } = event.target;
+    setAdmin((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleStudentInputChange = (event) => {
     const { name, value } = event.target;
     setStudent((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-  const handleUsernameInput = (event) => {
-    setAdmin((prevState) => ({
-      ...prevState,
-      username: event.target.value,
-    }));
-  };
-  const handlePasswordInput = (event) => {
-    setAdmin((prevState) => ({
-      ...prevState,
-      password: event.target.value,
-    }));
-  };
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    console.log(student);
     localStorage.clear();
-    api.post("/auth/login/student", student).then((response) => {
-      console.log(response);
-      const userData = response.data.data;
-      Object.entries(userData).forEach(([key, value]) => {
-        localStorage.setItem(key, JSON.stringify(value));
-      });
-      setUser(response.data);
-      console.log("access_token : " + localStorage.getItem("access_token")); // move this here
-      api
-        .post(
-          `/students/start/${JSON.parse(localStorage.getItem("examId"))}`,
-          {
-            name: JSON.parse(localStorage.getItem("username")),
-            noreg: JSON.parse(localStorage.getItem("noreg")),
+    try {
+      const studentData = await api.post("/auth/login/student", student);
+      const startResponse = await api.post(
+        `/students/start/${studentData.data.data.examId}`,
+        {
+          name: studentData.data.data.username,
+          noreg: studentData.data.data.noreg,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${studentData.data.data.access_token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("access_token")
-              )}`,
-            },
-          }
-        )
-        .then((response) => {
-          // console.log("AAAA" + JSON.stringify(response));
-          // console.log("BBBB" + JSON.stringify(response.data));
-          if (response.data) {
-            localStorage.setItem("studentId", JSON.stringify(response.data.id));
-            // navigate("/started");
-          }
+        }
+      );
+      if (startResponse.data.id) {
+        localStorage.setItem(
+          "studentId",
+          JSON.stringify(startResponse.data.id)
+        );
+        console.log(studentData.data.data);
+        Object.entries(studentData.data.data).forEach(([key, value]) => {
+          localStorage.setItem(key, JSON.stringify(value));
         });
-    });
+      } else {
+        throw new Error("Student not found");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleLoginAdmin = (event) => {
     event.preventDefault();
+    localStorage.clear();
     try {
       api.post("/auth/login/admin", admin).then((response) => {
-        console.log(response);
+        const admin = response.data.data;
+        Object.entries(admin).forEach(([key, value]) => {
+          localStorage.setItem(key, JSON.stringify(value));
+        });
+        setUser(response.data);
+        navigate("/dashboard");
       });
-      // Perform any necessary actions upon successful login
     } catch (error) {
       console.log(error);
-      // Perform any necessary actions upon failed login
     }
     console.log("login admin");
   };
 
+  const toggleForm = () => {
+    setAdminForm(!adminForm);
+  };
   return (
     <div>
+      <button
+        type="button"
+        className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
+        onClick={() => toggleForm()}
+      ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
           <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
@@ -103,28 +107,28 @@ export default function Form() {
             </div>
             <div className="flex flex-col w-full gap-6">
               <div className="flex flex-col items-start ">
-                <label htmlFor="noreg" className="mb-2">
+                <label htmlFor="username" className="mb-2">
                   Username
                 </label>
                 <input
-                  name="noreg"
-                  id="noreg"
-                  value={admin.noreg}
-                  onChange={handleUsernameInput}
+                  name="username"
+                  id="username"
+                  value={admin.username}
+                  onChange={handleAdminInputChange}
                   type="text"
                   placeholder="John"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
-                <label htmlFor="token" className="mb-2">
+                <label htmlFor="password" className="mb-2">
                   Token
                 </label>
                 <input
-                  name="token"
-                  id="token"
-                  value={admin.token}
-                  onChange={handlePasswordInput}
+                  name="password"
+                  id="password"
+                  value={admin.password}
+                  onChange={handleAdminInputChange}
                   type="password"
                   placeholder="********"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -138,11 +142,6 @@ export default function Form() {
             >
               Login as admin
             </button>
-            <button
-              type="button"
-              className="uppercase py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
-              onClick={() => setAdminForm(false)}
-            ></button>
           </div>
         </form>
       ) : (
@@ -167,7 +166,7 @@ export default function Form() {
                   name="noreg"
                   id="noreg"
                   value={student.noreg}
-                  onChange={handleInputChange}
+                  onChange={handleStudentInputChange}
                   type="text"
                   placeholder="S2200000"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -181,7 +180,7 @@ export default function Form() {
                   name="token"
                   id="token"
                   value={student.token}
-                  onChange={handleInputChange}
+                  onChange={handleStudentInputChange}
                   type="text"
                   placeholder="Token"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -195,11 +194,6 @@ export default function Form() {
             >
               Login
             </button>
-            <button
-              type="button"
-              className="uppercase py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
-              onClick={() => setAdminForm(true)}
-            ></button>
           </div>
         </form>
       )}

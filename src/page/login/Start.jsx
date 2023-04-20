@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import AuthContext from "../../contexts/AuthContext";
 
 export default function Start() {
@@ -10,21 +9,19 @@ export default function Start() {
     setIsChecked((current) => !current);
   };
 
-  const shuffleQuestion = () => {
-    axios
-      .post(
-        "https://33f10474-0db4-4900-872d-54da6bf75c67.mock.pstmn.io/api/exam/shuffle?className=Elementary&noreg=s2200123"
-      )
-      .then((res) => {
-        console.log("success");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const logout = () => {
+    //clear local storage
+    localStorage.clear();
+    window.location.href = "/";
   };
 
   return (
     <div className="p-[54px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
+      <button
+        type="button"
+        className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
+        onClick={logout}
+      ></button>
       <div className="w-[584px] h-[72px] top-[54px] left-[55.63px] flex flex-col justify-center items-center text-center">
         <div className="flex">
           <h1 className="font-bold font-Nunito text-[29px] text-black">
@@ -101,7 +98,6 @@ export default function Start() {
         </form>
         <Link to={"/exam/" + JSON.parse(localStorage.getItem("examId"))}>
           <button
-            onClick={shuffleQuestion}
             disabled={!isChecked}
             className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
           >
