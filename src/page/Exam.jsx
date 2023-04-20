@@ -26,7 +26,7 @@ export default function Exam() {
     const fetchQuestions = async () => {
       try {
         const response = await api.get(
-          `students/exam/${JSON.parse(localStorage.getItem("noreg"))}`,
+          `students/${JSON.parse(localStorage.getItem("noreg"))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
+import api from "../../config";
 
 export default function Start() {
   const { user } = useContext(AuthContext);
@@ -9,9 +10,10 @@ export default function Start() {
     setIsChecked((current) => !current);
   };
 
-  const logout = () => {
+  const logout = async () => {
     //clear local storage
     localStorage.clear();
+    await api.patch("/auth/login/student");
     window.location.href = "/";
   };
 
