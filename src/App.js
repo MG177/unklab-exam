@@ -10,6 +10,7 @@ import PageDashboard from './page/dashboard/PageDashboard';
 
 import ProtectedRoute from './utils/ProtectedRoute';
 import AuthContextLayout from './contexts/AuthContextLayout';
+import QuestionContextLayout from './contexts/QuestionContextLayout';
 
 function App() {
   // return (
@@ -71,14 +72,16 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path='/dashboard'
-            element={
-              <ProtectedRoute>
-                <PageDashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={<QuestionContextLayout />}>
+            <Route
+              path='/dashboard'
+              element={
+                <ProtectedRoute>
+                  <PageDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Route>
           {/* <Route path='/login' element={<Login />} /> */}
           <Route path='*' element={<Navigate to='/' />} />
         </Route>

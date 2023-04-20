@@ -1,10 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import QuestionContext from '../../contexts/QuestionContext';
 
-export default function SelectableButtons() {
+export default function SelectableButtons({ questionId }) {
+  const { questions, setQuestions } = useContext(QuestionContext);
   const [selectedButton, setSelectedButton] = useState('Listening');
+
+  useEffect(() => {
+    const question = questions.find((question) => question.id === questionId);
+    setSelectedButton(question.type);
+  }, [questionId, questions]);
 
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
+
+    setQuestions((prevData) => {
+      const index = prevData.findIndex(
+        (question) => question.id === questionId
+      );
+      if (index === -1) return prevData;
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        type: buttonName
+      };
+      return newData;
+    });
   };
 
   return (
