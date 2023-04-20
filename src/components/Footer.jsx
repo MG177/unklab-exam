@@ -1,6 +1,6 @@
 import React from 'react';
 import TimerSmall from './TimerSmall';
-import Arrow from '../image/arrow_right.svg';
+import Arrow from '../image/arrow_next.svg';
 
 export default function Footer({ question, setQuestion, questions, time }) {
   console.log('question', question);
@@ -32,7 +32,7 @@ export default function Footer({ question, setQuestion, questions, time }) {
           onClick={handleNext}
           className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
         >
-          <img src={Arrow} alt="" className="w-[26.52px] h-[43px]" />
+          <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
         </button>
       )}
     </div>
