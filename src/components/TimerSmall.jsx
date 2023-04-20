@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function TimerSmall({ time }) {
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -12,9 +12,9 @@ export default function TimerSmall({ time }) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 0) {
+        if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate("/score");
+          navigate('/score');
         } else {
           return prevTimeRemaining - 1;
         }
@@ -24,7 +24,7 @@ export default function TimerSmall({ time }) {
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [navigate]);
 
   const hours = Math.floor(timeRemaining / 3600);
   const minutes = Math.floor((timeRemaining % 3600) / 60);
