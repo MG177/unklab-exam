@@ -5,9 +5,12 @@ import classHeader from "../../image/class-header.svg";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ProductService } from "./ProductService";
+import api from "../../config/index";
 
 export default function PageDashboard() {
   const [products, setProducts] = useState([]);
+  const [exams, setExams] = useState([]);
+  const [dbQuestions, setDbQuestions] = useState([]);
 
   useEffect(() => {
     ProductService.getProductsMini().then((data) => setProducts(data));
@@ -26,9 +29,28 @@ export default function PageDashboard() {
     });
   };
 
+  const handleStartExam = () => {
+    console.log("start exam");
+    api
+      .post(`/exam/start/`, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(
+            localStorage.getItem("access_token")
+          )}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      });
+  };
+
   return (
     <div className="relative flex w-full">
-      <Sidebar />
+      <Sidebar
+        exams={exams}
+        setExams={setExams}
+        setDbQuestions={setDbQuestions}
+      />
       <div className="container p-4 w-full bg-[#FCF9FF] flex-1">
         <div className="mb-12">
           <div className="relative flex justify-start">
@@ -40,11 +62,14 @@ export default function PageDashboard() {
             <h1 className="z-10 text-[60px] max-w-xl font-Nunito p-4 text-white font-bold leading-tight">
               Business English Communication
             </h1>
-            <div className="absolute z-10 flex gap-2 font-Nunito right-4 bottom-4 text-accent1">
+            <div className="absolute z-10 flex flex-row gap-2 font-Nunito right-4 bottom-4 text-accent1 ">
               <button className="px-4 py-2 text-2xl font-bold bg-white rounded-2xl">
                 <i className="fa-solid fa-bars " />
               </button>
-              <button className="px-4 py-2 text-2xl font-bold bg-white rounded-2xl">
+              <button
+                className="px-4 py-2 text-2xl font-bold bg-white rounded-2xl"
+                onClick={handleStartExam}
+              >
                 Click here to start
               </button>
             </div>
@@ -82,7 +107,7 @@ export default function PageDashboard() {
           </DataTable>
         </div>
       </div>
-      <QuestionEditor />
+      <QuestionEditor dbQuestions={dbQuestions} />
     </div>
   );
 }

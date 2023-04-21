@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import EditableOptions from "./EditableOptions";
 import QuestionContext from "../../contexts/QuestionContext";
 import SelectableButtons from "./SelectableButtons";
@@ -15,7 +15,7 @@ export default function QuestionEditorItem({ question }) {
 
   const handleOverwriteDataQuestion = (questionId, value) => {
     let newData = [...questions];
-    newData.find((question) => question.id === questionId).question = value;
+    newData.find((question) => question.id === questionId).text = value;
     setQuestions(newData);
   };
 
@@ -38,14 +38,14 @@ export default function QuestionEditorItem({ question }) {
         const newData = [...prevData];
         newData[index] = {
           ...newData[index],
-          music: base64String,
+          audio: base64String,
           image: null,
         };
         return newData;
       });
     };
 
-    // remove the the music file from input
+    // remove the the audio file from input
     e.target.value = "";
   };
 
@@ -69,20 +69,20 @@ export default function QuestionEditorItem({ question }) {
         newData[index] = {
           ...newData[index],
           image: base64String,
-          music: null,
+          audio: null,
         };
         return newData;
       });
     };
 
-    // remove the the music file from input
+    // remove the the audio file from input
     e.target.value = "";
   };
 
   const handleRemoveMusicFile = (questionId) => {
     setQuestions((prevData) => {
       const newData = [...prevData];
-      newData.find((question) => question.id === questionId).music = null;
+      newData.find((question) => question.id === questionId).audio = null;
       return newData;
     });
   };
@@ -112,18 +112,26 @@ export default function QuestionEditorItem({ question }) {
       return newData;
     });
   };
+  const textareaRef = useRef(null);
+
+  const setTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
 
   return (
     <div className="flex w-full gap-3 mb-6">
-      <div className="flex flex-col w-full gap-6">
-        <div className="flex flex-col gap-3 p-3 bg-whitePlus shadow-right rounded-2xl">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-3 p-3 bg-whitePlus h-fit shadow-right rounded-2xl">
           <SelectableButtons questionId={question.id} />
           <h3 className="text-2xl font-bold text-accent1">
             Question #{question.id}
           </h3>
-          {question.music && typeof question.music === "string" && (
+          {question.audio && typeof question.audio === "string" && (
             <div className="flex items-center gap-2">
-              <audio src={question.music} controls />
+              <audio src={question.audio} controls />
             </div>
           )}
           {question.image && typeof question.image === "string" && (
@@ -136,15 +144,20 @@ export default function QuestionEditorItem({ question }) {
               />
             </div>
           )}
-          <textarea
-            placeholder="Question..."
-            onChange={(e) =>
-              handleOverwriteDataQuestion(question.id, e.target.value)
-            }
-            className="w-full text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
-          />
+          <div className="grid grid-cols-1 grid-rows-1 after:whitespace-pre-wrap after:content-[attr(data-replicated-value)] after:invisible ">
+            <textarea
+              placeholder="Question..."
+              value={questions.find((q) => q.id === question.id).text}
+              onChange={(e) =>
+                handleOverwriteDataQuestion(question.id, e.target.value)
+              }
+              className="w-full col-start-1 row-start-1 resize-none overflow-hidden text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
+              ref={textareaRef}
+              onInput={setTextareaHeight} // call setTextareaHeight when the textarea is loaded
+            />
+          </div>
         </div>
-        <div className="flex flex-col gap-[18px] min-w-full">
+        <div className="flex flex-col gap-[18px] min-w-full ">
           {question.options &&
             question.options.map((option, index) => (
               <EditableOptions
@@ -171,12 +184,12 @@ export default function QuestionEditorItem({ question }) {
           {/* <i className='fa-solid fa-trash' /> */}
           <img src={Delete} />
         </button>
-        {!question.music ? (
+        {!question.audio ? (
           <label
-            htmlFor={`music-file-input${question.id}`}
+            htmlFor={`audio-file-input${question.id}`}
             className="w-[37px] h-[37px] flex justify-center items-center rounded-full bg-whitePlus shadow-right"
           >
-            {/* <i className='text-black fa-solid fa-music' /> */}
+            {/* <i className='text-black fa-solid fa-audio' /> */}
             <img src={AddAudio} />
           </label>
         ) : (
@@ -188,7 +201,7 @@ export default function QuestionEditorItem({ question }) {
           </button>
         )}
         <input
-          id={`music-file-input${question.id}`}
+          id={`audio-file-input${question.id}`}
           type="file"
           accept="audio/*"
           onChange={(e) => handleMusicFileChange(e, question.id)}

@@ -7,10 +7,10 @@ export default function Option({ active, option, handleAnswer, widthFit }) {
       onClick={() => handleAnswer(option)}
       className={` ${
         !widthFit ? "w-[586px]" : "w-full"
-      } gap-[18px]  flex rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-95  shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]   ${
+      } gap-[18px] flex rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-95  shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]   ${
         active
           ? "bg-accent1 shadow-md shadow-accent1 transition ease-out duration-300"
-          : "bg-whitePlus"
+          : "bg-whitePlus cursor-pointer"
       }`}
     >
       {active ? (
@@ -20,7 +20,9 @@ export default function Option({ active, option, handleAnswer, widthFit }) {
       )}
       <p
         className={`${
-          active ? "text-white transition ease-out duration-300" : ""
+          active
+            ? "text-white transition ease-out duration-300 cursor-default"
+            : ""
         } text-[20px]`}
       >
         {option}

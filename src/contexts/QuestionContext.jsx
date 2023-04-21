@@ -1,38 +1,38 @@
-import React, { createContext, useState, useMemo } from 'react';
-import api from '../config/index';
+import React, { createContext, useState, useMemo } from "react";
+import api from "../config/index";
 
 const QuestionContext = createContext();
 
 const questionsInitial = [
   {
     id: 1,
-    question: '',
-    options: [''],
+    text: "",
+    options: [""],
     answer: -1,
-    music: null,
+    audio: null,
     image: null,
-    type: 'Listening'
-  }
+    type: "Listening",
+  },
 ];
 
 export function QuestionProvider({ children }) {
   const [questions, setQuestions] = useState(
-    JSON.parse(localStorage.getItem('questions')) ?? questionsInitial
+    JSON.parse(localStorage.getItem("questions")) ?? questionsInitial
   );
 
-  console.log('questions', questions);
+  console.log("questions", questions);
 
   const handleSave = () => {
-    localStorage.setItem('questions', JSON.stringify(questions));
+    localStorage.setItem("questions", JSON.stringify(questions));
     postQuestions();
   };
 
-  // calculate file size of image and music in questions
+  // calculate file size of image and audio in questions
   const totalFileSize = useMemo(() => {
     let total = 0;
     questions.forEach((question) => {
-      if (question.music) {
-        total += question.music.length;
+      if (question.audio) {
+        total += question.audio.length;
       }
       if (question.image) {
         total += question.image.length;
@@ -43,7 +43,7 @@ export function QuestionProvider({ children }) {
 
   const postQuestions = async () => {
     api
-      .patch('/questions/643b089a21c7035d5c8e26d4', questions)
+      .patch("/questions/643b089a21c7035d5c8e26d4", questions)
       .then((res) => {
         console.log(res.data);
       })
@@ -58,7 +58,7 @@ export function QuestionProvider({ children }) {
     () => ({
       questions,
       setQuestions,
-      handleSave
+      handleSave,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [questions]
