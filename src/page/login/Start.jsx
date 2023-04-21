@@ -57,7 +57,6 @@ export default function Start() {
           {/* { !isChecked? <ErrorCheck />} */}
           <button
             disabled={!isChecked}
-            onClick={handleclick}
             className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
           >
             START
