@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TimerSmall from "./TimerSmall";
 import Arrow from "../image/arrow_next.svg";
 import { useNavigate } from "react-router-dom";

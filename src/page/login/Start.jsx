@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
 import api from "../../config";
-import TermsConditions from "../../image/terms and conditions.svg"
+import TermsConditions from "../../image/terms and conditions.svg";
 
 export default function Start() {
   const { user } = useContext(AuthContext);
@@ -25,10 +25,13 @@ export default function Start() {
         onClick={logout}
       ></button>
       <div className="font-Nunito text-[29px] font-bold text-black">
-        <p>Welcome to the English Exam Test<span className="text-accent2">!</span></p>
+        <p>
+          Welcome to the English Exam Test
+          <span className="text-accent2">!</span>
+        </p>
       </div>
       <div className="mt-[31px]">
-        <img src={TermsConditions} alt=""/>
+        <img src={TermsConditions} alt="" />
       </div>
       <div className="flex flex-col items-center justify-between h-7 mt-[31.5px] mb-[54px]">
         <form action="" className="flex gap-1 mb-[14.5px]">
@@ -47,9 +50,14 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-        <Link to={"/exam/" + JSON.parse(localStorage.getItem("examId"))} className="mb-[54px]">
+        <Link
+          to={"/exam/" + JSON.parse(localStorage.getItem("examId"))}
+          className="mb-[54px]"
+        >
+          {/* { !isChecked? <ErrorCheck />} */}
           <button
             disabled={!isChecked}
+            onClick={handleclick}
             className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
           >
             START
