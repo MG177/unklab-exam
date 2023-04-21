@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
-import api from "../../config";
 import TermsConditions from "../../image/terms and conditions.svg";
 
 export default function Start() {
