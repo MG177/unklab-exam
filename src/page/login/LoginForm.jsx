@@ -57,7 +57,7 @@ export default function Form() {
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });
-        navigate("/started");
+        window.location.reload();
       } else {
         throw new Error("Student not found");
       }
