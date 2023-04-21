@@ -47,12 +47,12 @@ export default function Score() {
       </div>
       {/* <Footer classtime="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)] hidden" /> */}
       <FooterScore />
-      {/* <button
+      <button
         className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10"
         onClick={handleLogout}
       >
         Logout
-      </button> */}
+      </button>
     </div>
   );
 }

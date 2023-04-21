@@ -25,12 +25,17 @@ export default function Footer({
     console.log("time out");
     navigate("/score");
   };
+  const handleLogout = () => {
+    //clear local storage
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
-  const validateUrlPath = () => {
+  const vaidateExamUrl = () => {
     const rootExamPath = "/exam";
     return window.location.pathname.startsWith(rootExamPath);
   };
-  console.log(validateUrlPath());
+  console.log(vaidateExamUrl());
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
@@ -38,20 +43,29 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">
           {JSON.parse(localStorage.getItem("examName"))}
         </p>
-        {validateUrlPath() && (
+        {vaidateExamUrl() && (
           <p className="text-[20px] text-black font-normal">
             {`Question ${question + 1} of ${questions.length}`}
           </p>
         )}
       </div>
-      {validateUrlPath() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
-      {validateUrlPath() && question < questions.length && (
+      {vaidateExamUrl() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
+      {vaidateExamUrl() ? (
+        question < questions.length && (
+          <button
+            type="button"
+            onClick={handleNext}
+            className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
+          >
+            <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
+          </button>
+        )
+      ) : (
         <button
-          type="button"
-          onClick={handleNext}
-          className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
+          className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10"
+          onClick={handleLogout}
         >
-          <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
+          Logout
         </button>
       )}
 
