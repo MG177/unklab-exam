@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
-import api from "../../config";
 import TermsConditions from "../../image/terms and conditions.svg";
 
 export default function Start() {
@@ -57,7 +56,6 @@ export default function Start() {
           {/* { !isChecked? <ErrorCheck />} */}
           <button
             disabled={!isChecked}
-            onClick={handleclick}
             className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
           >
             START

@@ -10,8 +10,6 @@ export default function Footer({
   time,
   answer,
 }) {
-  console.log("question :", question);
-  console.log("questions length :", questions.length);
   const navigate = useNavigate();
 
   const handleNext = () => {
@@ -34,19 +32,27 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">
           {JSON.parse(localStorage.getItem("examName"))}
         </p>
-        <p className="text-[20px] text-black font-normal">
-          {`Question ${question + 1} of ${questions.length}`}
-        </p>
+        {question && (
+          <p className="text-[20px] text-black font-normal">
+            {`Question ${question + 1} of ${questions.length}`}
+          </p>
+        )}
       </div>
-      <TimerSmall time={time} onTimeUp={handleTimeOut} />
-      {question < questions.length && (
-        <button
-          type="button"
-          onClick={handleNext}
-          className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
-        >
-          <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
-        </button>
+      {question ? (
+        <div>
+          <TimerSmall time={time} onTimeUp={handleTimeOut} />
+          {question < questions.length && (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
+            >
+              <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
+            </button>
+          )}
+        </div>
+      ) : (
+        <div></div>
       )}
     </div>
   );
