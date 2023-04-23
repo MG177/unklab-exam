@@ -35,7 +35,18 @@ export default function Footer({
     const rootExamPath = "/exam";
     return window.location.pathname.startsWith(rootExamPath);
   };
-  console.log(vaidateExamUrl());
+  console.log(validateUrlPath());
+  const validateUrlPath1 = () => {
+    const rootExamPath = "/waiting";
+    return window.location.pathname.startsWith(rootExamPath);
+  };
+  console.log(validateUrlPath1());
+
+  const validateUrlPath2 = () => {
+    const rootExamPath2 = "/score";
+    return window.location.pathname.startsWith(rootExamPath2);
+  };
+  console.log(validateUrlPath2());
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
@@ -49,20 +60,27 @@ export default function Footer({
           </p>
         )}
       </div>
-      {vaidateExamUrl() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
-      {vaidateExamUrl() ? (
-        question < questions.length && (
-          <button
-            type="button"
-            onClick={handleNext}
-            className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
-          >
-            <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
-          </button>
-        )
-      ) : (
+      {validateUrlPath() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
+      {validateUrlPath() && question < questions.length && (
         <button
-          className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10"
+          type="button"
+          onClick={handleNext}
+          className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
+        >
+          <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
+        </button>
+      )}
+      {validateUrlPath1() && (
+        <button
+          className="bg-accent2 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      )}
+      {validateUrlPath2() && (
+        <button
+          className="bg-accent2 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
           onClick={handleLogout}
         >
           Logout
