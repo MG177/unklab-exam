@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import Timer from "../../components/Timer";
-// import Warning from "../components/Warning";
+import Footer from "../../components/Footer";
+import api from "../../config";
+import { useParams, useNavigate } from "react-router-dom";
+// import Warning from "../components/Warning"
 
 export default function ScoreCountdown() {
+  const [time, setTime] = useState(0);
+  const { examId } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const response = await api.get(
+          `time/${JSON.parse(localStorage.getItem("examId"))}`,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("access_token")
+              )}`,
+            },
+          }
+        );
+        setTime(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTime();
+  }, [examId, navigate]);
   return (
     <div className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]">
       <Header />
@@ -20,6 +47,7 @@ export default function ScoreCountdown() {
           </p>
         </div>
       </div>
+      <Footer time={time} />
     </div>
   );
 }

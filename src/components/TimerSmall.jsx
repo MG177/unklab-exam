@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { isValidDateValue } from "@testing-library/user-event/dist/utils";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function TimerSmall({ time }) {
+export default function TimerSmall({ time, classTime }) {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
 
@@ -14,7 +15,7 @@ export default function TimerSmall({ time }) {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate('/score');
+          navigate("/score");
         } else {
           return prevTimeRemaining - 1;
         }
@@ -35,11 +36,15 @@ export default function TimerSmall({ time }) {
   // const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
 
   return (
-    <div className="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
-      <p className="text-accent2 font-bold font-nunito text-[41px]">
+    <div className="flex flex-row justify-center items-center max-h-[60px] bg-white gap-[10px] mt-[40px] mb-[40px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
+      <p className="text-accent2 font-bold font-nunito text-[30px]">
         {/* {hours > 0 ? `${hoursStr} : ` : ''}
         {`${minutesStr} : ${secondsStr}`} */}
-        {hours === 0 ? `00 : ${minutesStr}` : `${hoursStr} : ${minutesStr}`}
+        {hours === 0
+          ? `00 Hour ${minutesStr} Minute`
+          : `${hoursStr} Hour${hours === 1 ? "" : "s"} ${minutesStr} Minute${
+              minutes === 1 ? "" : "s"
+            }`}
       </p>
     </div>
   );

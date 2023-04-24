@@ -73,7 +73,6 @@ export default function Exam() {
       }
     }
   }, [question, questions.length, navigate]);
-  // console.log("answer luar", questions);
 
   const handleAnswer = (index) => {
     setAnswer(index);

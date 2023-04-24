@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import api from "../../config";
 
-export default function Sidebar() {
+export default function Sidebar({ exams, setExams, setDbQuestions }) {
   const [isHidden, setIsHidden] = useState(false);
+  const [examActive, setExamActive] = useState();
 
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
-  const [exams, setExams] = useState([]);
 
   useEffect(() => {
     api
@@ -25,8 +25,36 @@ export default function Sidebar() {
       });
   }, []);
 
+  const getDbQuestions = async (id) => {
+    try {
+      await api
+        .get(`/questions/exam/${id}`, {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("access_token")
+            )}`,
+          },
+        })
+        .then((response) => {
+          console.log("/exam/id = " + response.data);
+          setDbQuestions(response.data);
+          setExamActive(id);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(examActive);
+  const isExamActive = (id) => {
+    if (examActive === id) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
-    <div className="z-20 flex flex-col h-screen bg-white min-w-fit shadow-right">
+    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right">
       <div className="flex items-center justify-start h-16 p-3">
         {isHidden ? (
           <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
@@ -39,19 +67,30 @@ export default function Sidebar() {
         )}
       </div>
       <nav className="flex-1 px-4">
-        <ul className="space-y-2 font-Nunito">
+        <ul
+          className={`space-y-2 font-Nunito ${
+            examActive === "exam._id" ? "text-black" : "text-white"
+          }`}
+        >
           {exams.map((exam, index) => (
-            <li
+            <button
               key={exam._id}
-              className={`flex font-bold p-3 bg-accent2 text-white rounded-lg ${
+              className={`cursor-pointer flex font-bold w-full p-3 shadow-right rounded-lg ${
                 !isHidden ? "gap-0 justify-center" : "gap-3"
-              }`}
+              } ${
+                examActive === exam._id
+                  ? "bg-white text-black"
+                  : "bg-accent2 text-white"
+              }}`}
+              onClick={() => {
+                getDbQuestions(exam._id);
+              }}
             >
-              {!isHidden && <a href="/">{index + 1}</a>}
+              <a>{index + 1}</a>
               <span className="flex items-center justify-center">
                 {isHidden && exam.examName}
               </span>
-            </li>
+            </button>
           ))}
         </ul>
       </nav>

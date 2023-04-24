@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import api from "../../config";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../contexts/AuthContext";
@@ -6,36 +6,20 @@ import AuthContext from "../../contexts/AuthContext";
 export default function Form() {
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
-  const [student, setStudent] = useState({
-    noreg: "",
-    token: "",
-  });
-  const [admin, setAdmin] = useState({
-    username: "",
-    password: "",
-  });
+  const studentNoregRef = useRef(null);
+  const studentTokenRef = useRef(null);
+  const adminUsernameRef = useRef(null);
+  const adminPasswordRef = useRef(null);
   const [adminForm, setAdminForm] = useState(false);
 
-  const handleAdminInputChange = (event) => {
-    const { name, value } = event.target;
-    setAdmin((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleStudentInputChange = (event) => {
-    const { name, value } = event.target;
-    setStudent((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
   const handleLogin = async (event) => {
     event.preventDefault();
     localStorage.clear();
     try {
-      const studentData = await api.post("/auth/login/student", student);
+      const studentData = await api.post("/auth/login/student", {
+        noreg: studentNoregRef.current.value,
+        token: studentTokenRef.current.value,
+      });
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
         {
@@ -57,7 +41,7 @@ export default function Form() {
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });
-        navigate("/started");
+        window.location.reload();
       } else {
         throw new Error("Student not found");
       }
@@ -65,18 +49,24 @@ export default function Form() {
       console.log(error);
     }
   };
+
   const handleLoginAdmin = (event) => {
     event.preventDefault();
     localStorage.clear();
     try {
-      api.post("/auth/login/admin", admin).then((response) => {
-        const admin = response.data.data;
-        Object.entries(admin).forEach(([key, value]) => {
-          localStorage.setItem(key, JSON.stringify(value));
+      api
+        .post("/auth/login/admin", {
+          username: adminUsernameRef.current.value,
+          password: adminPasswordRef.current.value,
+        })
+        .then((response) => {
+          const admin = response.data.data;
+          Object.entries(admin).forEach(([key, value]) => {
+            localStorage.setItem(key, JSON.stringify(value));
+          });
+          setUser(response.data);
+          navigate("/dashboard");
         });
-        setUser(response.data);
-        navigate("/dashboard");
-      });
     } catch (error) {
       console.log(error);
     }
@@ -86,6 +76,7 @@ export default function Form() {
   const toggleForm = () => {
     setAdminForm(!adminForm);
   };
+
   return (
     <div>
       <button
@@ -114,11 +105,11 @@ export default function Form() {
                 <input
                   name="username"
                   id="username"
-                  value={admin.username}
-                  onChange={handleAdminInputChange}
+                  ref={adminUsernameRef}
                   type="text"
                   placeholder="John"
-                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
+                  pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
@@ -128,8 +119,7 @@ export default function Form() {
                 <input
                   name="password"
                   id="password"
-                  value={admin.password}
-                  onChange={handleAdminInputChange}
+                  ref={adminPasswordRef}
                   type="password"
                   placeholder="********"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -139,7 +129,7 @@ export default function Form() {
             <button
               type="submit"
               className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
-              onClick={() => setAdminForm(true)}
+              // onClick={() => (adminFormRef.current = true)}
             >
               Login as admin
             </button>
@@ -166,8 +156,7 @@ export default function Form() {
                 <input
                   name="noreg"
                   id="noreg"
-                  value={student.noreg}
-                  onChange={handleStudentInputChange}
+                  ref={studentNoregRef}
                   type="text"
                   placeholder="S2200000"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
@@ -180,8 +169,7 @@ export default function Form() {
                 <input
                   name="token"
                   id="token"
-                  value={student.token}
-                  onChange={handleStudentInputChange}
+                  ref={studentTokenRef}
                   type="text"
                   placeholder="Token"
                   className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
