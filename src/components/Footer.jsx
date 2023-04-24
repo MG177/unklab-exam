@@ -21,11 +21,13 @@ export default function Footer({
       navigate("/waiting");
     }
   };
+
   const handleTimeOut = () => {
     console.log("time out");
     navigate("/score");
   };
 
+<<<<<<< HEAD
   const validateUrlPath = () => {
     const rootExamPath = "/exam";
     return window.location.pathname.startsWith(rootExamPath);
@@ -51,11 +53,31 @@ export default function Footer({
   };
   console.log(validateUrlPath2());
 
+=======
+>>>>>>> c57d22ca06b063c525aebea747156e923921cc75
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
     window.location.href = "/";
   };
+
+  const validateUrlExam = () => {
+    const rootExamPath = "/exam";
+    return window.location.pathname.startsWith(rootExamPath);
+  };
+  console.log("Score? " + validateUrlExam());
+
+  const validateUrlPathFinish = () => {
+    const rootExamPathWaiting = "/waiting";
+    const rootExamPathScore = "/score";
+    if (
+      window.location.pathname.startsWith(rootExamPathWaiting) ||
+      window.location.pathname.startsWith(rootExamPathScore)
+    ) {
+      return true;
+    }
+  };
+  console.log("Finish? " + validateUrlPathFinish());
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
@@ -63,14 +85,14 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">
           {JSON.parse(localStorage.getItem("examName"))}
         </p>
-        {validateUrlPath() && (
+        {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
             {`Question ${question + 1} of ${questions.length}`}
           </p>
         )}
       </div>
-      {validateUrlPath() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
-      {validateUrlPath() && question < questions.length && (
+      {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
+      {validateUrlExam() && question < questions.length && (
         <button
           type="button"
           onClick={handleNext}
@@ -79,7 +101,7 @@ export default function Footer({
           <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
         </button>
       )}
-      {validateUrlPath1() && (
+      {validateUrlPathFinish() && (
         <button
           className="bg-accent2 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
           onClick={handleLogout}
@@ -87,6 +109,7 @@ export default function Footer({
           Logout
         </button>
       )}
+<<<<<<< HEAD
       {validateUrlPath2() && (
         <button
           className="bg-accent2 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
@@ -112,6 +135,8 @@ export default function Footer({
           <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
         </button>
       )} */}
+=======
+>>>>>>> c57d22ca06b063c525aebea747156e923921cc75
     </div>
   );
 }
