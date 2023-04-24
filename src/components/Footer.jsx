@@ -43,6 +43,14 @@ export default function Footer({
   };
   console.log(validateUrlPath2());
 
+  const validateUrlPath3 = () => {
+    const rootExamPath3 = "/exam";
+    if (question === question.length - 1) {
+      return window.location.pathname.startsWith(rootExamPath3);
+    }
+  };
+  console.log(validateUrlPath2());
+
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
@@ -87,6 +95,12 @@ export default function Footer({
           Logout
         </button>
       )}
+
+      {/* {validateUrlPath3() && (
+        <button className="bg-accent1 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]">
+          Submit
+        </button>
+      )} */}
 
       {/* {validateUrlPath() ? (
       ) : (
