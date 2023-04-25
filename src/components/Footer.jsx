@@ -41,6 +41,7 @@ export default function Footer({
     const rootExamPath = "/exam";
     return window.location.pathname.startsWith(rootExamPath);
   };
+  console.log("Score? " + validateUrlExam());
 
   const validateUrlPathFinish = () => {
     const rootExamPathWaiting = "/waiting";
@@ -52,6 +53,7 @@ export default function Footer({
       return true;
     }
   };
+  console.log("Finish? " + validateUrlPathFinish());
 
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">

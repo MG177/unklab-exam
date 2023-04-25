@@ -1,14 +1,41 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import ProgressBar from "../score/progress_bar.svg";
 import Footer from "../../components/Footer";
-
+import api from "../../config";
+import Answer from "../score/Answer";
 export default function Score() {
-  const handleLogout = () => {
-    //clear local storage
-    localStorage.clear();
-    window.location.href = "/";
-  };
+  const [time, setTime] = useState(0);
+  const { examId } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchTime = async () => {
+      try {
+        const response = await api.get(
+          `time/${JSON.parse(localStorage.getItem("examId"))}`,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem("access_token")
+              )}`,
+            },
+          }
+        );
+        setTime(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTime();
+  }, [examId, navigate]);
+
+  // const handleLogout = () => {
+  //   //clear local storage
+  //   localStorage.clear();
+  //   window.location.href = "/";
+  // };
 
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
@@ -45,7 +72,15 @@ export default function Score() {
           </div>
         </div>
       </div>
-      <Footer />
+      <Answer />
+      {/* <Footer classtime="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)] hidden" /> */}
+      <Footer time={time} />
+      {/* <button
+        className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10"
+        onClick={handleLogout}
+      >
+        Logout
+      </button> */}
     </div>
   );
 }
