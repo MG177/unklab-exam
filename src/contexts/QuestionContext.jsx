@@ -20,7 +20,7 @@ export function QuestionProvider({ children }) {
     JSON.parse(localStorage.getItem("questions")) ?? questionsInitial
   );
 
-  console.log("questions", questions);
+  // console.log("questions", questions);
 
   const handleSave = () => {
     localStorage.setItem("questions", JSON.stringify(questions));
@@ -52,7 +52,7 @@ export function QuestionProvider({ children }) {
       });
   };
 
-  console.log(`totalFileSize: ${totalFileSize}`);
+  // console.log(`totalFileSize: ${totalFileSize}`);
 
   const value = useMemo(
     () => ({

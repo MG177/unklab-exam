@@ -39,7 +39,7 @@ export default function Score() {
 
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
-      <Header />
+      <Header/>
       <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
         YOUR SCORE
       </p>

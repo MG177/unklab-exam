@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from "react";
 
 const AuthContext = createContext();
 
@@ -7,11 +13,22 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem('access_token')) || null
-  );
+  function getAllLocalStorage() {
+    if (!localStorage.length) return null;
+    const localStorageData = {};
 
-  console.log('user', user);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = JSON.parse(localStorage.getItem(key));
+      localStorageData[key] = value;
+    }
+
+    return localStorageData;
+  }
+
+  const [user, setUser] = useState(getAllLocalStorage() || null);
+
+  console.log("user from authContext = ", user);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 

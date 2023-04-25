@@ -66,6 +66,7 @@ export default function Exam() {
     fetchTime();
     fetchQuestions();
   }, [examId, navigate]);
+  
   useEffect(() => {
     if (question === questions.length) {
       if (question === 0) {

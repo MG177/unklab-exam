@@ -1,8 +1,8 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import api from '../config';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+import api from "../config";
+import { useNavigate } from "react-router-dom";
 // import Clock from "../image/clock_icon.svg";
 
 export default function Timer() {
@@ -14,11 +14,11 @@ export default function Timer() {
     const fetchTime = async () => {
       try {
         const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem('examId'))}`,
+          `time/${JSON.parse(localStorage.getItem("examId"))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('access_token')
+                localStorage.getItem("access_token")
               )}`,
             },
           }
@@ -37,7 +37,7 @@ export default function Timer() {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate('/score');
+          navigate("/score");
         } else {
           return prevTimeRemaining - 1;
         }

@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useEffect } from "react";
 import api from "../../config";
 
-export default function Sidebar({ exams, setExams, setDbQuestions }) {
+export default function Sidebar({
+  examlist,
+  setExamList,
+  setExam,
+  setDbQuestions,
+  setExamActive,
+  examActive,
+  user,
+  fetchTime,
+  setToken,
+}) {
   const [isHidden, setIsHidden] = useState(false);
-  const [examActive, setExamActive] = useState();
 
   const toggleHidden = () => {
     setIsHidden(!isHidden);
@@ -20,8 +29,11 @@ export default function Sidebar({ exams, setExams, setDbQuestions }) {
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setExams(response.data);
+        fetchTime(response.data[0]._id);
+        setExamList(response.data);
+        setExamActive(response.data[0]._id);
+        setToken(response.data[0].token);
+        handleSidebarButton(response.data[0]);
       });
   }, []);
 
@@ -36,7 +48,6 @@ export default function Sidebar({ exams, setExams, setDbQuestions }) {
           },
         })
         .then((response) => {
-          console.log("/exam/id = " + response.data);
           setDbQuestions(response.data);
           setExamActive(id);
         });
@@ -44,62 +55,53 @@ export default function Sidebar({ exams, setExams, setDbQuestions }) {
       console.log(error);
     }
   };
-  console.log(examActive);
-  const isExamActive = (id) => {
-    if (examActive === id) {
-      return true;
-    } else {
-      return false;
-    }
+
+  const handleSidebarButton = (exam) => {
+    fetchTime(exam._id);
+    setExam(exam);
+    setToken(exam.token);
+    getDbQuestions(exam._id);
   };
 
   return (
     <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right">
-      <div className="flex items-center justify-start h-16 p-3">
+      <div className="flex items-center justify-center h-16 p-3">
         {isHidden ? (
           <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
             Unklab <span className="text-black">Exams</span>
           </h1>
         ) : (
-          <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
+          <h1 className="font-bold text-3xl font-Nunito text-center text-[29px] text-accent1">
             U<span className="text-black">E</span>
           </h1>
         )}
       </div>
       <nav className="flex-1 px-4">
-        <ul
-          className={`space-y-2 font-Nunito ${
-            examActive === "exam._id" ? "text-black" : "text-white"
-          }`}
-        >
-          {exams.map((exam, index) => (
+        <ul className={`space-y-2 font-Nunito text-gray bg-white`}>
+          {examlist.map((exam, index) => (
             <button
               key={exam._id}
-              className={`cursor-pointer flex font-bold w-full p-3 shadow-right rounded-lg ${
-                !isHidden ? "gap-0 justify-center" : "gap-3"
-              } ${
-                examActive === exam._id
-                  ? "bg-white text-black"
-                  : "bg-accent2 text-white"
-              }}`}
               onClick={() => {
-                getDbQuestions(exam._id);
+                handleSidebarButton(exam);
               }}
+              className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
+                !isHidden ? "gap-0 justify-center" : "gap-4 px-4 justify-start"
+              } ${examActive === exam._id && `bg-accent2 text-white`}`}
             >
               <a>{index + 1}</a>
-              <span className="flex items-center justify-center">
-                {isHidden && exam.examName}
-              </span>
+              <a>{isHidden && exam.examName}</a>
             </button>
           ))}
         </ul>
       </nav>
-      <div className={`w-full flex p-5`}>
+      <div className="w-full flex p-5 justify-end">
         <button
           onClick={toggleHidden}
-          className="w-8 h-8 text-white rounded-full bg-accent2 hover:bg-accent1"
+          className="w-8 h-8 text-white rounded-full bg-accent2"
         >
-          <i className="fa-solid fa-bars" />
+          <i
+            className={isHidden ? "pi pi-chevron-left" : "pi pi-chevron-right"}
+          />
         </button>
       </div>
     </div>

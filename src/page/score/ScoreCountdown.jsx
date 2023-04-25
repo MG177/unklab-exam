@@ -34,18 +34,14 @@ export default function ScoreCountdown() {
   return (
     <div className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]">
       <Header />
-      {/* <div className="flex flex-row justify-end">
-        <Warning />
-      </div> */}
-      <div className="flex flex-row justify-center min-h-max">
-        <div className="bg-white p-[50px] w-[546px] h-[310px] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
-          <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
-            <Timer />
-          </div>
-          <p className="font-Nunito font-bold text-black text-[35px] w-[471px] text-center">
-            Wait until the exam time is over to see your score.
-          </p>
+      <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
+        <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
+          <Timer />
         </div>
+        <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
+          Your score will be visible after the exam duration ends, or you can
+          choose to log out at this time.
+        </p>
       </div>
       <Footer time={time} />
     </div>
