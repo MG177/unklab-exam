@@ -56,22 +56,47 @@ export default function Score() {
     }
   };
 
-  console.log(score.questions);
-  const rest = 100 - score.totalScore;
-  console.log("score.questions" + score.totalScore);
-  console.log("rest" + rest);
+  function convertName(fullName) {
+    // check if fullName is a non-empty string and contains a comma
+    if (
+      typeof fullName !== "string" ||
+      fullName.trim().length === 0 ||
+      !fullName.includes(",")
+    ) {
+      return fullName;
+    }
 
-  const data = {
-    labels: ["Score", "empty"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [score.totalScore, rest],
-        backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)"],
-        borderWidth: 1,
-      },
-    ],
-  };
+    // split the full name into last name and given names
+    const nameParts = fullName.split(", ");
+    let lastName = nameParts[0];
+    let givenNames = nameParts[1];
+
+    // if the left side of the comma is empty, get the last two words of the given names
+    if (!lastName) {
+      const nameWords = givenNames.split(" ");
+      if (nameWords.length === 1) {
+        return nameWords[0];
+      } else if (nameWords.length >= 2) {
+        givenNames = nameWords.slice(-2).join(" ");
+      } else {
+        return "";
+      }
+      return givenNames;
+    }
+
+    // get the first two words of the given names
+    const givenNameWords = givenNames.split(" ");
+    if (givenNameWords.length === 1) {
+      return fullName;
+    } else if (givenNameWords.length >= 2) {
+      givenNames = givenNameWords.slice(0, 2).join(" ");
+    } else {
+      return lastName;
+    }
+
+    // combine the modified last name and given names
+    return lastName + ", " + givenNames;
+  }
 
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
@@ -104,7 +129,7 @@ export default function Score() {
             </div>
             <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
               <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
-                {user.username}
+                {convertName(user.username)}
               </p>
             </div>
           </div>
