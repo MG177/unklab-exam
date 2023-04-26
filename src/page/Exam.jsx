@@ -38,7 +38,7 @@ export default function Exam() {
         if (!response.data) {
           navigate("/started");
         }
-        setQuestions(response.data.questionList);
+        setQuestions(response.data);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -66,7 +66,7 @@ export default function Exam() {
     fetchTime();
     fetchQuestions();
   }, [examId, navigate]);
-  
+
   useEffect(() => {
     if (question === questions.length) {
       if (question === 0) {
@@ -82,6 +82,7 @@ export default function Exam() {
   const handleActive = (index) => {
     return answer === index;
   };
+  console.log("answer = " + answer);
 
   return (
     <>
@@ -105,6 +106,7 @@ export default function Exam() {
         questions={questions}
         question={question}
         answer={answer}
+        setAnswer={setAnswer}
         setQuestion={setQuestion}
         time={time}
       />

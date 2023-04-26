@@ -63,6 +63,12 @@ export default function Sidebar({
     getDbQuestions(exam._id);
   };
 
+  const handleLogout = () => {
+    //clear local storage
+    localStorage.clear();
+    window.location.href = "/";
+  };
+
   return (
     <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right">
       <div className="flex items-center justify-center h-16 p-3">
@@ -74,6 +80,14 @@ export default function Sidebar({
           <h1 className="font-bold text-3xl font-Nunito text-center text-[29px] text-accent1">
             U<span className="text-black">E</span>
           </h1>
+        )}
+        {isHidden && (
+          <button
+            onClick={handleLogout}
+            className="w-8 h-8 text-white items-center rounded-full bg-accent2 ml-5"
+          >
+            <i className="pi pi-sign-out " style={{ fontSize: "1rem" }} />
+          </button>
         )}
       </div>
       <nav className="flex-1 px-4">

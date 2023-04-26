@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useMemo,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useMemo } from "react";
 
 const AuthContext = createContext();
 
@@ -22,6 +16,7 @@ export function AuthProvider({ children }) {
       const value = JSON.parse(localStorage.getItem(key));
       localStorageData[key] = value;
     }
+    console.log("AuthContext refreshed = ", localStorageData);
 
     return localStorageData;
   }

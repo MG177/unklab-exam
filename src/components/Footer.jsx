@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TimerSmall from "./TimerSmall";
 import Arrow from "../image/arrow_next.svg";
 import { useNavigate } from "react-router-dom";
@@ -9,16 +9,23 @@ export default function Footer({
   questions,
   time,
   answer,
+  setAnswer,
 }) {
   const navigate = useNavigate();
 
-  if (answer) {
-    console.log("answer: " + answer);
-  }
+  // if (answer) {
+  //   console.log("answer: " + answer);
+  // }
 
   const handleNext = () => {
     console.log("clicked");
-    setQuestion((prev) => prev + 1);
+    if (!answer) {
+      console.log("no answer");
+    } else {
+      console.log("answer: " + answer);
+      setAnswer(null);
+      setQuestion((prev) => prev + 1);
+    }
 
     if (question === questions.length - 1) {
       // handleTimeOut();
@@ -41,7 +48,6 @@ export default function Footer({
     const rootExamPath = "/exam";
     return window.location.pathname.startsWith(rootExamPath);
   };
-  console.log("Score? " + validateUrlExam());
 
   const validateUrlPathFinish = () => {
     const rootExamPathWaiting = "/waiting";
@@ -53,10 +59,9 @@ export default function Footer({
       return true;
     }
   };
-  console.log("Finish? " + validateUrlPathFinish());
 
   return (
-    <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between">
+    <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50">
       <div className="font-nunito my-[40.26px] ml-28 w-content">
         <p className="text-accent1 text-[29px] font-bold">
           {JSON.parse(localStorage.getItem("examName"))}

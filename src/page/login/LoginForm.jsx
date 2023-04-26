@@ -23,8 +23,7 @@ export default function Form() {
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
         {
-          name: studentData.data.data.username,
-          noreg: studentData.data.data.noreg,
+          token: studentData.data.data.access_token,
         },
         {
           headers: {
@@ -32,12 +31,21 @@ export default function Form() {
           },
         }
       );
-      if (startResponse.data.id) {
-        localStorage.setItem(
-          "studentId",
-          JSON.stringify(startResponse.data.id)
-        );
-        console.log(studentData.data.data);
+      if (startResponse.status >= 200 && startResponse.status < 300) {
+        if (startResponse.data.isScore) {
+          // alert("You already finish the exam");
+          setUser({ ...user, score: startResponse.data.score });
+          localStorage.setItem(
+            "isScore",
+            JSON.stringify(startResponse.data.isScore)
+          );
+        }
+        if (startResponse.data.id) {
+          localStorage.setItem(
+            "studentId",
+            JSON.stringify(startResponse.data.id)
+          );
+        }
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });

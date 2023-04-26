@@ -142,14 +142,6 @@ export default function PageDashboard() {
                     ? `00:${minutesStr}:${secondsStr}`
                     : `${hoursStr}:${minutesStr}:${secondsStr} `}
                 </div>
-                {/* <button
-                  className={`px-4 py-2 font-bold min-w-full text-accent1 text-3xl bg-white rounded-2xl`}
-                  onClick={handleStartExam}
-                >
-                  {exam.token === undefined || !(time > 0)
-                    ? "Click here to start exam"
-                    : token}
-                </button> */}
                 {token === undefined || !(time > 0) ? (
                   <button
                     className="px-4 py-2 font-bold min-w-full text-accent1 text-3xl bg-white rounded-2xl"
