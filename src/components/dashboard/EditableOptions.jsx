@@ -30,13 +30,14 @@ export default function EditableOptions({ active, index, questionId, option }) {
 
   return (
     <div
-      onClick={() => handleAnswer(questionId, index)}
       className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus cursor-pointer shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}>
-      {active ? (
-        <img src={check} alt='' />
-      ) : (
-        <div className='w-[29px] h-[29px] bg-whitePlus rounded-[50%] border'></div>
-      )}
+      <button type='button' onClick={() => handleAnswer(questionId, index)}>
+        {active ? (
+          <img src={check} alt='' />
+        ) : (
+          <div className='w-[29px] h-[29px] bg-whitePlus rounded-[50%] border'></div>
+        )}
+      </button>
       <input
         type='text'
         className='text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0'
