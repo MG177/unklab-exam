@@ -2,9 +2,9 @@ import React, {
   createContext,
   useContext,
   useState,
-  useMemo,
-  useEffect,
-} from "react";
+  useMemo
+  // useEffect,
+} from 'react';
 
 const AuthContext = createContext();
 
@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
 
   const [user, setUser] = useState(getAllLocalStorage() || null);
 
-  console.log("user from authContext = ", user);
+  console.log('user from authContext = ', user);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 

@@ -125,7 +125,7 @@ export default function QuestionEditorItem({ question }) {
     <div className='flex w-full gap-3 mb-6'>
       <div className='flex flex-col w-full gap-6'>
         <div className='flex flex-col gap-3 p-3 bg-whitePlus shadow-right rounded-2xl'>
-          <SelectableButtons questionId={question.id} />
+          <SelectableButtons question={question} />
           <h3 className='text-2xl font-bold text-accent1'>
             Question #{question.id}
           </h3>
@@ -180,14 +180,14 @@ export default function QuestionEditorItem({ question }) {
           className='w-[37px] h-[37px] text-white rounded-full bg-accent2 flex justify-center items-center'
           onClick={() => handleDeleteQuestion(question.id)}>
           {/* <i className='fa-solid fa-trash' /> */}
-          <img src={Delete} />
+          <img src={Delete} alt='' />
         </button>
         {!question.audio ? (
           <label
             htmlFor={`audio-file-input${question.id}`}
             className='w-[37px] h-[37px] flex justify-center items-center rounded-full bg-whitePlus shadow-right'>
             {/* <i className='text-black fa-solid fa-audio' /> */}
-            <img src={AddAudio} />
+            <img src={AddAudio} alt='' />
           </label>
         ) : (
           <button
@@ -208,7 +208,7 @@ export default function QuestionEditorItem({ question }) {
             htmlFor={`image-file-input${question.id}`}
             className='w-[37px] h-[37px] flex justify-center items-center rounded-full bg-whitePlus shadow-right'>
             {/* <i className='text-black fa-regular fa-image' /> */}
-            <img src={AddImage} />
+            <img src={AddImage} alt='' />
           </label>
         ) : (
           <button

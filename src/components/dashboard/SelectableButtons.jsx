@@ -1,21 +1,21 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import QuestionContext from '../../contexts/QuestionContext';
 
-export default function SelectableButtons({ questionId }) {
-  const { questions, setQuestions } = useContext(QuestionContext);
-  const [selectedButton, setSelectedButton] = useState('Listening');
+export default function SelectableButtons({ question }) {
+  const { setQuestions } = useContext(QuestionContext);
+  // const [selectedButton, setSelectedButton] = useState('Listening');
 
-  useEffect(() => {
-    const question = questions.find((question) => question.id === questionId);
-    setSelectedButton(question.type);
-  }, [questionId, questions]);
+  // useEffect(() => {
+  //   const question = questions.find((question) => question.id === questionId);
+  //   setSelectedButton(question.type);
+  // }, [questionId, questions]);
 
   const handleButtonClick = (buttonName) => {
-    setSelectedButton(buttonName);
+    // setSelectedButton(buttonName);
 
     setQuestions((prevData) => {
       const index = prevData.findIndex(
-        (question) => question.id === questionId
+        (findQuestion) => findQuestion.id === question.id
       );
       if (index === -1) return prevData;
       const newData = [...prevData];
@@ -31,38 +31,38 @@ export default function SelectableButtons({ questionId }) {
     <div className='flex gap-3 mb-3'>
       <button
         className={`py-1 px-4 rounded-full ${
-          selectedButton === 'Grammar'
+          question.type.toLowerCase() === 'grammar'
             ? 'bg-accent1 text-white'
             : 'bg-white text-gray '
         } font-bold text-sm font-Roboto`}
-        onClick={() => handleButtonClick('Grammar')}>
+        onClick={() => handleButtonClick('grammar')}>
         Grammar
       </button>
       <button
         className={`py-1 px-4 rounded-full ${
-          selectedButton === 'Listening'
+          question.type.toLowerCase() === 'listening'
             ? 'bg-accent1 text-white'
             : 'bg-white text-gray'
         } font-bold text-sm`}
-        onClick={() => handleButtonClick('Listening')}>
+        onClick={() => handleButtonClick('listening')}>
         Listening
       </button>
       <button
         className={`py-1 px-4 rounded-full ${
-          selectedButton === 'Reading'
+          question.type.toLowerCase() === 'reading'
             ? 'bg-accent1 text-white'
             : 'bg-white text-gray'
         } font-bold text-sm`}
-        onClick={() => handleButtonClick('Reading')}>
+        onClick={() => handleButtonClick('reading')}>
         Reading
       </button>
       <button
         className={`py-1 px-4 rounded-full ${
-          selectedButton === 'Vocabulary'
+          question.type.toLowerCase() === 'vocabulary'
             ? 'bg-accent1 text-white'
             : 'bg-white text-gray'
         } font-bold text-sm`}
-        onClick={() => handleButtonClick('Vocabulary')}>
+        onClick={() => handleButtonClick('vocabulary')}>
         Vocabulary
       </button>
     </div>
