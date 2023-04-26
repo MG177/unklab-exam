@@ -57,22 +57,47 @@ export default function Score() {
     }
   };
 
-  console.log(score.questions);
-  const rest = 100 - score.totalScore;
-  console.log('score.questions' + score.totalScore);
-  console.log('rest' + rest);
+  function convertName(fullName) {
+    // check if fullName is a non-empty string and contains a comma
+    if (
+      typeof fullName !== 'string' ||
+      fullName.trim().length === 0 ||
+      !fullName.includes(',')
+    ) {
+      return fullName;
+    }
 
-  // const data = {
-  //   labels: ["Score", "empty"],
-  //   datasets: [
-  //     {
-  //       label: "# of Votes",
-  //       data: [score.totalScore, rest],
-  //       backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)"],
-  //       borderWidth: 1,
-  //     },
-  //   ],
-  // };
+    // split the full name into last name and given names
+    const nameParts = fullName.split(', ');
+    let lastName = nameParts[0];
+    let givenNames = nameParts[1];
+
+    // if the left side of the comma is empty, get the last two words of the given names
+    if (!lastName) {
+      const nameWords = givenNames.split(' ');
+      if (nameWords.length === 1) {
+        return nameWords[0];
+      } else if (nameWords.length >= 2) {
+        givenNames = nameWords.slice(-2).join(' ');
+      } else {
+        return '';
+      }
+      return givenNames;
+    }
+
+    // get the first two words of the given names
+    const givenNameWords = givenNames.split(' ');
+    if (givenNameWords.length === 1) {
+      return fullName;
+    } else if (givenNameWords.length >= 2) {
+      givenNames = givenNameWords.slice(0, 2).join(' ');
+    } else {
+      return lastName;
+    }
+
+    // combine the modified last name and given names
+    return lastName + ', ' + givenNames;
+  }
 
   return (
     <div className='relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]'>
@@ -80,38 +105,38 @@ export default function Score() {
       <p className='mt-[183px] text-black text-6xl font-Nunito font-bold'>
         YOUR SCORE
       </p>
-      <div className='bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]'>
-        <div className='bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]'>
-          <div className='relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]'>
-            <img src={ProgressBar} alt='' />
-            <div className='absolute flex flex-col items-center justify-center'>
-              <p className='text-6xl font-bold text-black font-Nunito'>
-                {`${score.totalScore}/100`}
-              </p>
-            </div>
-          </div>
-          <div className='flex flex-col gap-6'>
-            <div className='flex flex-row font-Nunito gap-[10px] '>
-              <div className='text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4'>
-                <p className='text-5xl font-bold'>
-                  {`${score.totalCorrect}/${score.totalQuestion}`}
+      <div className='mb-[30vh] flex flex-col justify-center items-center'>
+        <div className='bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]'>
+          <div className='bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]'>
+            <div className='relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]'>
+              <img src={ProgressBar} alt='' />
+              <div className='absolute flex flex-col items-center justify-center'>
+                <p className='text-6xl font-bold text-black font-Nunito'>
+                  {`${score.totalScore}/100`}
                 </p>
-                <p className='text-2xl'>Right answers</p>
-              </div>
-              <div className='text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7'>
-                <p className='text-5xl font-bold'>{score.grade}</p>
-                <p className='text-2xl font-bold'>Grade</p>
               </div>
             </div>
-            <div className='bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]'>
-              <p className='text-[35px] font-bold font-[Nunito] text-black text-center'>
-                {user.username}
-              </p>
+            <div className='flex flex-col gap-6'>
+              <div className='flex flex-row font-Nunito gap-[10px] '>
+                <div className='text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4'>
+                  <p className='text-5xl font-bold'>
+                    {`${score.totalCorrect}/${score.totalQuestion}`}
+                  </p>
+                  <p className='text-2xl'>Right answers</p>
+                </div>
+                <div className='text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7'>
+                  <p className='text-5xl font-bold'>{score.grade}</p>
+                  <p className='text-2xl font-bold'>Grade</p>
+                </div>
+              </div>
+              <div className='bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]'>
+                <p className='text-[35px] font-bold font-[Nunito] text-black text-center'>
+                  {convertName(user.username)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className='mb-[30vh]'>
         {score.questions &&
           score.questions.map((question) => {
             return <Answer key={question.index} question={question} />;

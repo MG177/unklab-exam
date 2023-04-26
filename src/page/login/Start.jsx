@@ -1,9 +1,5 @@
-import React, {
-  useState,
-  // useContext,
-  useEffect
-} from 'react';
-// import AuthContext from '../../contexts/AuthContext';
+import React, { useState, useContext, useEffect } from 'react';
+import AuthContext from '../../contexts/AuthContext';
 import TermsConditions from '../../image/terms and conditions.svg';
 import { useNavigate } from 'react-router-dom';
 
@@ -67,7 +63,6 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-        {/* { !isChecked? <ErrorCheck />} */}
         <button
           disabled={!isChecked}
           onClick={handleAgree}
