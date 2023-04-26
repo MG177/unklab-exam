@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from "react";
+import React, { createContext, useContext, useState, useMemo } from 'react';
 
 const AuthContext = createContext();
 
@@ -16,14 +16,14 @@ export function AuthProvider({ children }) {
       const value = JSON.parse(localStorage.getItem(key));
       localStorageData[key] = value;
     }
-    console.log("AuthContext refreshed = ", localStorageData);
+    console.log('AuthContext refreshed = ', localStorageData);
 
     return localStorageData;
   }
 
   const [user, setUser] = useState(getAllLocalStorage() || null);
 
-  console.log("user from authContext = ", user);
+  console.log('user from authContext = ', user);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
