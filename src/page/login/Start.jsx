@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {
   useState
   // useContext
@@ -5,18 +6,39 @@ import React, {
 import { Link } from 'react-router-dom';
 // import AuthContext from "../../contexts/AuthContext";
 import TermsConditions from '../../image/terms and conditions.svg';
+=======
+import React, { useState, useContext, useEffect } from "react";
+import AuthContext from "../../contexts/AuthContext";
+import TermsConditions from "../../image/terms and conditions.svg";
+import { useNavigate } from "react-router-dom";
+>>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
 
 export default function Start() {
   // const { user } = useContext(AuthContext);
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (event) => {
     setIsChecked((current) => !current);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("isScore")) {
+      navigate("/score");
+    }
+    if (localStorage.getItem("agree")) {
+      navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    }
+  }, []);
 
   const logout = async () => {
     //clear local storage
     localStorage.clear();
     window.location.href = '/';
+  };
+
+  const handleAgree = () => {
+    localStorage.setItem("agree", true);
+    navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
   };
 
   return (
@@ -50,6 +72,7 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
+<<<<<<< HEAD
         <Link
           to={'/exam/' + JSON.parse(localStorage.getItem('examId'))}
           className='mb-[54px]'>
@@ -60,6 +83,16 @@ export default function Start() {
             START
           </button>
         </Link>
+=======
+        {/* { !isChecked? <ErrorCheck />} */}
+        <button
+          disabled={!isChecked}
+          onClick={handleAgree}
+          className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
+        >
+          START
+        </button>
+>>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
       </div>
     </div>
   );

@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import ProgressBar from "../score/progress_bar.svg";
 import Footer from "../../components/Footer";
 import api from "../../config";
 import Answer from "../score/Answer";
+import AuthContext from "../../contexts/AuthContext";
+
 export default function Score() {
+  const { user } = useContext(AuthContext);
   const [time, setTime] = useState(0);
   const { examId } = useParams();
   const navigate = useNavigate();
+  const [score, setScore] = useState([]);
   useEffect(() => {
     const fetchTime = async () => {
       try {
@@ -27,19 +31,51 @@ export default function Score() {
         console.log(error);
       }
     };
-
     fetchTime();
   }, [examId, navigate]);
 
-  // const handleLogout = () => {
-  //   //clear local storage
-  //   localStorage.clear();
-  //   window.location.href = "/";
-  // };
+  useEffect(() => {
+    fetchScore();
+  }, []);
+
+  const fetchScore = async () => {
+    try {
+      const response = await api.get("/students/score/" + user.noreg, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      if (!response.data) {
+        localStorage.clear();
+        navigate("/started");
+      } else {
+        setScore(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(score.questions);
+  const rest = 100 - score.totalScore;
+  console.log("score.questions" + score.totalScore);
+  console.log("rest" + rest);
+
+  const data = {
+    labels: ["Score", "empty"],
+    datasets: [
+      {
+        label: "# of Votes",
+        data: [score.totalScore, rest],
+        backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)"],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
-      <Header/>
+      <Header />
       <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
         YOUR SCORE
       </p>
@@ -49,38 +85,38 @@ export default function Score() {
             <img src={ProgressBar} alt="" />
             <div className="absolute flex flex-col items-center justify-center">
               <p className="text-6xl font-bold text-black font-Nunito">
-                75/100
+                {`${score.totalScore}/100`}
               </p>
             </div>
           </div>
           <div className="flex flex-col gap-6">
             <div className="flex flex-row font-Nunito gap-[10px] ">
               <div className="text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4">
-                <p className="text-5xl font-bold">8/10</p>
+                <p className="text-5xl font-bold">
+                  {`${score.totalCorrect}/${score.totalQuestion}`}
+                </p>
                 <p className="text-2xl">Right answers</p>
               </div>
               <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7">
-                <p className="text-5xl font-bold">A+</p>
+                <p className="text-5xl font-bold">{score.grade}</p>
                 <p className="text-2xl font-bold">Grade</p>
               </div>
             </div>
             <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
               <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
-                Tester Account
+                {user.username}
               </p>
             </div>
           </div>
         </div>
       </div>
-      <Answer />
-      {/* <Footer classtime="flex flex-row justify-center items-center w-[204.5px] h-[61px] bg-white gap-[10px] mt-[41.5px] mb-[41px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)] hidden" /> */}
+      <div className="mb-[30vh]">
+        {score.questions &&
+          score.questions.map((question) => {
+            return <Answer key={question.index} question={question} />;
+          })}
+      </div>
       <Footer time={time} />
-      {/* <button
-        className="bg-accent2 font-[Nunito] font-bold text-2xl text-[#FAFAFA] rounded-[34px] px-[112.5px] py-[18px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mt-10"
-        onClick={handleLogout}
-      >
-        Logout
-      </button> */}
     </div>
   );
 }
