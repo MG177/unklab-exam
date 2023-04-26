@@ -1,17 +1,11 @@
-<<<<<<< HEAD
 import React, {
-  useState
-  // useContext
+  useState,
+  // useContext,
+  useEffect
 } from 'react';
-import { Link } from 'react-router-dom';
-// import AuthContext from "../../contexts/AuthContext";
+// import AuthContext from '../../contexts/AuthContext';
 import TermsConditions from '../../image/terms and conditions.svg';
-=======
-import React, { useState, useContext, useEffect } from "react";
-import AuthContext from "../../contexts/AuthContext";
-import TermsConditions from "../../image/terms and conditions.svg";
-import { useNavigate } from "react-router-dom";
->>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
+import { useNavigate } from 'react-router-dom';
 
 export default function Start() {
   // const { user } = useContext(AuthContext);
@@ -22,12 +16,13 @@ export default function Start() {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("isScore")) {
-      navigate("/score");
+    if (localStorage.getItem('isScore')) {
+      navigate('/score');
     }
-    if (localStorage.getItem("agree")) {
-      navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    if (localStorage.getItem('agree')) {
+      navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = async () => {
@@ -37,8 +32,8 @@ export default function Start() {
   };
 
   const handleAgree = () => {
-    localStorage.setItem("agree", true);
-    navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    localStorage.setItem('agree', true);
+    navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
   };
 
   return (
@@ -72,27 +67,13 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-<<<<<<< HEAD
-        <Link
-          to={'/exam/' + JSON.parse(localStorage.getItem('examId'))}
-          className='mb-[54px]'>
-          {/* { !isChecked? <ErrorCheck />} */}
-          <button
-            disabled={!isChecked}
-            className='font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1'>
-            START
-          </button>
-        </Link>
-=======
         {/* { !isChecked? <ErrorCheck />} */}
         <button
           disabled={!isChecked}
           onClick={handleAgree}
-          className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
-        >
+          className='font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1'>
           START
         </button>
->>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
       </div>
     </div>
   );

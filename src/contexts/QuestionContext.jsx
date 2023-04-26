@@ -60,13 +60,17 @@ export function QuestionProvider({ children }) {
 
   const postQuestions = async () => {
     api
-      .patch(`/questions/${examActive}`, questions, {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem('access_token')
-          )}`
+      .patch(
+        `/questions/${examActive}`,
+        { question: questions },
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem('access_token')
+            )}`
+          }
         }
-      })
+      )
       .then((res) => {
         console.log(res.data);
       })

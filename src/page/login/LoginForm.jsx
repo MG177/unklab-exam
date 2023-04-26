@@ -5,10 +5,7 @@ import AuthContext from '../../contexts/AuthContext';
 
 export default function Form() {
   const navigate = useNavigate();
-  const {
-    // user,
-    setUser
-  } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const studentNoregRef = useRef(null);
   const studentTokenRef = useRef(null);
   const adminUsernameRef = useRef(null);
@@ -26,12 +23,7 @@ export default function Form() {
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
         {
-<<<<<<< HEAD
-          name: studentData.data.data.username,
-          noreg: studentData.data.data.noreg
-=======
-          token: studentData.data.data.access_token,
->>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
+          token: studentData.data.data.access_token
         },
         {
           headers: {
@@ -39,30 +31,21 @@ export default function Form() {
           }
         }
       );
-<<<<<<< HEAD
-      if (startResponse.data.id) {
-        localStorage.setItem(
-          'studentId',
-          JSON.stringify(startResponse.data.id)
-        );
-        console.log(studentData.data.data);
-=======
       if (startResponse.status >= 200 && startResponse.status < 300) {
         if (startResponse.data.isScore) {
           // alert("You already finish the exam");
           setUser({ ...user, score: startResponse.data.score });
           localStorage.setItem(
-            "isScore",
+            'isScore',
             JSON.stringify(startResponse.data.isScore)
           );
         }
         if (startResponse.data.id) {
           localStorage.setItem(
-            "studentId",
+            'studentId',
             JSON.stringify(startResponse.data.id)
           );
         }
->>>>>>> 9e1634de1b6fdd524553d7b3ca4777c3352a941b
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });

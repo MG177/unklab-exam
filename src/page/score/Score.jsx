@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import ProgressBar from "../score/progress_bar.svg";
-import Footer from "../../components/Footer";
-import api from "../../config";
-import Answer from "../score/Answer";
-import AuthContext from "../../contexts/AuthContext";
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Header from '../../components/Header';
+import ProgressBar from '../score/progress_bar.svg';
+import Footer from '../../components/Footer';
+import api from '../../config';
+import Answer from '../score/Answer';
+import AuthContext from '../../contexts/AuthContext';
 
 export default function Score() {
   const { user } = useContext(AuthContext);
@@ -17,13 +17,13 @@ export default function Score() {
     const fetchTime = async () => {
       try {
         const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem("examId"))}`,
+          `time/${JSON.parse(localStorage.getItem('examId'))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("access_token")
-              )}`,
-            },
+                localStorage.getItem('access_token')
+              )}`
+            }
           }
         );
         setTime(response.data);
@@ -36,18 +36,19 @@ export default function Score() {
 
   useEffect(() => {
     fetchScore();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchScore = async () => {
     try {
-      const response = await api.get("/students/score/" + user.noreg, {
+      const response = await api.get('/students/score/' + user.noreg, {
         headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
+          Authorization: `Bearer ${user.access_token}`
+        }
       });
       if (!response.data) {
         localStorage.clear();
-        navigate("/started");
+        navigate('/started');
       } else {
         setScore(response.data);
       }
@@ -58,59 +59,59 @@ export default function Score() {
 
   console.log(score.questions);
   const rest = 100 - score.totalScore;
-  console.log("score.questions" + score.totalScore);
-  console.log("rest" + rest);
+  console.log('score.questions' + score.totalScore);
+  console.log('rest' + rest);
 
-  const data = {
-    labels: ["Score", "empty"],
-    datasets: [
-      {
-        label: "# of Votes",
-        data: [score.totalScore, rest],
-        backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)"],
-        borderWidth: 1,
-      },
-    ],
-  };
+  // const data = {
+  //   labels: ["Score", "empty"],
+  //   datasets: [
+  //     {
+  //       label: "# of Votes",
+  //       data: [score.totalScore, rest],
+  //       backgroundColor: ["rgba(255, 99, 132, 0.6)", "rgba(54, 162, 235, 0.6)"],
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // };
 
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]">
+    <div className='relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]'>
       <Header />
-      <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
+      <p className='mt-[183px] text-black text-6xl font-Nunito font-bold'>
         YOUR SCORE
       </p>
-      <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
-        <div className="bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]">
-          <div className="relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
-            <img src={ProgressBar} alt="" />
-            <div className="absolute flex flex-col items-center justify-center">
-              <p className="text-6xl font-bold text-black font-Nunito">
+      <div className='bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]'>
+        <div className='bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]'>
+          <div className='relative flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]'>
+            <img src={ProgressBar} alt='' />
+            <div className='absolute flex flex-col items-center justify-center'>
+              <p className='text-6xl font-bold text-black font-Nunito'>
                 {`${score.totalScore}/100`}
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-row font-Nunito gap-[10px] ">
-              <div className="text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4">
-                <p className="text-5xl font-bold">
+          <div className='flex flex-col gap-6'>
+            <div className='flex flex-row font-Nunito gap-[10px] '>
+              <div className='text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4'>
+                <p className='text-5xl font-bold'>
                   {`${score.totalCorrect}/${score.totalQuestion}`}
                 </p>
-                <p className="text-2xl">Right answers</p>
+                <p className='text-2xl'>Right answers</p>
               </div>
-              <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7">
-                <p className="text-5xl font-bold">{score.grade}</p>
-                <p className="text-2xl font-bold">Grade</p>
+              <div className='text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7'>
+                <p className='text-5xl font-bold'>{score.grade}</p>
+                <p className='text-2xl font-bold'>Grade</p>
               </div>
             </div>
-            <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
-              <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
+            <div className='bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl min-w-[350px] w-full h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]'>
+              <p className='text-[35px] font-bold font-[Nunito] text-black text-center'>
                 {user.username}
               </p>
             </div>
           </div>
         </div>
       </div>
-      <div className="mb-[30vh]">
+      <div className='mb-[30vh]'>
         {score.questions &&
           score.questions.map((question) => {
             return <Answer key={question.index} question={question} />;
