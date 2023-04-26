@@ -1,36 +1,36 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react';
-import api from '../config/index';
+import React, { createContext, useState, useEffect, useMemo } from "react";
+import api from "../config/index";
 
 const QuestionContext = createContext();
 
 const questionsInitial = [
   {
     id: 1,
-    text: '',
-    options: [''],
+    text: "",
+    options: [""],
     answer: -1,
     audio: null,
     image: null,
-    type: 'Listening'
-  }
+    type: "Listening",
+  },
 ];
 
 export function QuestionProvider({ children }) {
   const [questions, setQuestions] = useState(
-    JSON.parse(localStorage.getItem('questions')) ?? questionsInitial
+    JSON.parse(localStorage.getItem("questions")) ?? questionsInitial
   );
-  const [examActive, setExamActive] = useState('');
+  const [examActive, setExamActive] = useState("");
 
-  console.log('questions in context', questions);
+  console.log("questions in context", questions);
 
   useEffect(() => {
     api
       .get(`/exam`, {
         headers: {
           Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem('access_token')
-          )}`
-        }
+            localStorage.getItem("access_token")
+          )}`,
+        },
       })
       .then((response) => {
         setExamActive(response.data[0]._id);
@@ -38,7 +38,7 @@ export function QuestionProvider({ children }) {
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('questions', JSON.stringify(questions));
+    localStorage.setItem("questions", JSON.stringify(questions));
     postQuestions();
   };
 
@@ -56,17 +56,21 @@ export function QuestionProvider({ children }) {
     return total;
   }, [questions]);
 
-  console.log('totalFileSize', totalFileSize);
+  console.log("totalFileSize", totalFileSize);
 
   const postQuestions = async () => {
     api
-      .patch(`/questions/${examActive}`, questions, {
-        headers: {
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem('access_token')
-          )}`
+      .patch(
+        `/questions/${examActive}`,
+        { questions: questions },
+        {
+          headers: {
+            Authorization: `Bearer ${JSON.parse(
+              localStorage.getItem("access_token")
+            )}`,
+          },
         }
-      })
+      )
       .then((res) => {
         console.log(res.data);
       })
@@ -81,7 +85,7 @@ export function QuestionProvider({ children }) {
     () => ({
       questions,
       setQuestions,
-      handleSave
+      handleSave,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [questions]
