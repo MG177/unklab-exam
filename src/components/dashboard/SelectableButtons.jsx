@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import QuestionContext from '../../contexts/QuestionContext';
 
 export default function SelectableButtons({ question }) {
-  const { setQuestions } = useContext(QuestionContext);
+  const { setQuestions, setSaveStatus } = useContext(QuestionContext);
   // const [selectedButton, setSelectedButton] = useState('Listening');
 
   // useEffect(() => {
@@ -25,6 +25,7 @@ export default function SelectableButtons({ question }) {
       };
       return newData;
     });
+    setSaveStatus(false);
   };
 
   return (
