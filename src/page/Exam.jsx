@@ -73,17 +73,18 @@ export default function Exam() {
         return;
       }
     }
-    // console.log("answer form db = " + JSON.stringify(questions[question]));
+    console.log("answer form db = " + JSON.stringify(questions[question]));
     // if (questions[question].answer) {
-    //   console.log("answer = null");
     //   if (questions[question].answer === "") {
     //     console.log("answer = empty");
     //     return;
     //   } else {
-    //     console.log("answer = " + questions[question].answer);
+    //     console.log("answer = #" + questions[question].answer);
     //     setAnswer(null);
     //     setQuestion((prev) => prev + 1);
     //   }
+    // } else {
+    //   console.log("ciluk baa");
     // }
   }, [question, questions.length, navigate]);
 
