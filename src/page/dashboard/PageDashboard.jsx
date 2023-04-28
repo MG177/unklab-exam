@@ -101,7 +101,7 @@ export default function PageDashboard() {
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
 
   return (
-    <div className="relative flex w-full">
+    <div className='relative flex w-full justify-center'>
       <Sidebar
         examlist={examlist}
         setExamList={setExamList}

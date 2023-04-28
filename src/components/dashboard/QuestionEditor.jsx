@@ -3,7 +3,8 @@ import QuestionEditorItem from './QuestionEditorItem';
 import QuestionContext from '../../contexts/QuestionContext';
 
 export default function QuestionEditor(dbQuestions) {
-  const { handleSave, questions, setQuestions } = useContext(QuestionContext);
+  const { handleSave, questions, setQuestions, setSaveStatus, saveStatus } =
+    useContext(QuestionContext);
 
   const handleAddQuestion = () => {
     setQuestions((prevData) => {
@@ -19,6 +20,7 @@ export default function QuestionEditor(dbQuestions) {
       });
       return newData;
     });
+    setSaveStatus(false);
   };
 
   // const handleAddQuestion = () => {
@@ -50,8 +52,9 @@ export default function QuestionEditor(dbQuestions) {
       </div>
       <div className='sticky bottom-0 flex w-full gap-3 p-3 bg-opacity-25 rounded bg-whitePlus backdrop-blur-sm backdrop-filter'>
         <button
-          className='flex-1 py-3 font-medium text-white rounded-full px-44 bg-accent1 text-3'
-          onClick={handleSave}>
+          className='flex-1 py-3 font-medium text-white rounded-full px-44 bg-accent1 text-3 disabled:opacity-50 disabled:cursor-not-allowed'
+          onClick={handleSave}
+          disabled={saveStatus}>
           Save
         </button>
         <button

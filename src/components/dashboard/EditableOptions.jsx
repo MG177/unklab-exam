@@ -1,51 +1,76 @@
-import React, { useContext } from "react";
-import check from "../../image/check_small.svg";
-import QuestionContext from "../../contexts/QuestionContext";
-import { Button } from "primereact/button";
+import React, { useState, useContext } from 'react';
+import check from '../../image/check_small.svg';
+import QuestionContext from '../../contexts/QuestionContext';
+import { Button } from 'primereact/button';
 
 export default function EditableOptions({ active, index, questionId, option }) {
-  const { questions, setQuestions } = useContext(QuestionContext);
+  const { setQuestions, setSaveStatus } = useContext(QuestionContext);
+  const [optionValue, setOptionValue] = useState(option);
 
-  const handleOptionsChange = (index, questionId, value) => {
-    let newData = [...questions];
-    newData.find((question) => question.id === questionId).options[index] =
-      value;
-    setQuestions(newData);
+  const handleAnswerChange = () => {
+    setQuestions((prevData) => {
+      const newData = [...prevData];
+      newData.find((question) => question.id === questionId).correctAnswer =
+        optionValue;
+      return newData;
+    });
+    setSaveStatus(false);
   };
 
-  const handleAnswer = (questionId, index) => {
-    let newData = [...questions];
-    newData.find((question) => question.id === questionId).answer = index;
-    setQuestions(newData);
+  const handleOptionChange = (e) => {
+    setOptionValue(e.target.value);
+
+    setQuestions((prevData) => {
+      const newData = [...prevData];
+      // if the changed option is the correct answer, update the correct answer
+      if (
+        newData.find((question) => question.id === questionId).correctAnswer ===
+        option
+      ) {
+        newData.find((question) => question.id === questionId).correctAnswer =
+          e.target.value;
+      }
+      newData.find((question) => question.id === questionId).options[index] =
+        e.target.value;
+
+      return newData;
+    });
+    setSaveStatus(false);
   };
 
-  const handleDeleteOptions = (questionId, optionIndex) => {
+  // const handleAnswer = () => {
+  //   let newData = [...questions];
+
+  //   setQuestions(newData);
+  // };
+
+  const handleDeleteOptions = () => {
     setQuestions((prevData) => {
       const newData = [...prevData];
       newData
         .find((question) => question.id === questionId)
-        .options.splice(optionIndex, 1);
+        .options.splice(index, 1);
       return newData;
     });
+    setSaveStatus(false);
   };
 
   return (
     <div
-      className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}
-    >
-      <button type="button" onClick={() => handleAnswer(questionId, index)}>
+      className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}>
+      <button type='button' onClick={() => handleAnswerChange()}>
         {active ? (
-          <img src={check} alt="" />
+          <img src={check} alt='' />
         ) : (
-          <div className="w-[29px] h-[29px] bg-whitePlus rounded-[50%] border"></div>
+          <div className='w-[29px] h-[29px] bg-whitePlus rounded-[50%] border'></div>
         )}
       </button>
       <input
-        type="text"
-        className="text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
-        placeholder="Option..."
-        value={option}
-        onChange={(e) => handleOptionsChange(index, questionId, e.target.value)}
+        type='text'
+        className='text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0'
+        placeholder='Option...'
+        value={optionValue}
+        onChange={handleOptionChange}
       />
       {/* <button
         type="button"
@@ -53,12 +78,12 @@ export default function EditableOptions({ active, index, questionId, option }) {
         onClick={() => handleDeleteOptions(questionId, index)}
       > */}
       <Button
-        icon="pi pi-times"
+        icon='pi pi-times'
         rounded
         text
-        style={{ color: "#FF6593" }}
-        onClick={() => handleDeleteOptions(questionId, index)}
-        aria-label="Cancel"
+        style={{ color: '#FF6593' }}
+        onClick={() => handleDeleteOptions()}
+        aria-label='Cancel'
       />
       {/* </button> */}
     </div>

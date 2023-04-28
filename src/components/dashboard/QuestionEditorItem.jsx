@@ -7,7 +7,8 @@ import AddAudio from '../../image/audio.svg';
 import Delete from '../../image/trash.svg';
 
 export default function QuestionEditorItem({ question }) {
-  const { questions, setQuestions } = useContext(QuestionContext);
+  const { questions, setQuestions, setSaveStatus } =
+    useContext(QuestionContext);
   const questionRef = useRef(null);
 
   const resizeTextArea = () => {
@@ -17,14 +18,15 @@ export default function QuestionEditorItem({ question }) {
 
   useEffect(resizeTextArea, [question.question]);
 
-  const handleSetActive = (index) => {
-    return question.answer === index;
+  const handleSetActive = (value) => {
+    return question.correctAnswer === value;
   };
 
   const handleOverwriteDataQuestion = (questionId, value) => {
     let newData = [...questions];
     newData.find((question) => question.id === questionId).text = value;
     setQuestions(newData);
+    setSaveStatus(false);
   };
 
   const handleMusicFileChange = (e, questionId) => {
@@ -55,6 +57,7 @@ export default function QuestionEditorItem({ question }) {
 
     // remove the the music file from input
     e.target.value = '';
+    setSaveStatus(false);
   };
 
   const handleImageFileChange = (e, questionId) => {
@@ -85,6 +88,7 @@ export default function QuestionEditorItem({ question }) {
 
     // remove the the music file from input
     e.target.value = '';
+    setSaveStatus(false);
   };
 
   const handleRemoveMusicFile = (questionId) => {
@@ -93,6 +97,7 @@ export default function QuestionEditorItem({ question }) {
       newData.find((question) => question.id === questionId).audio = null;
       return newData;
     });
+    setSaveStatus(false);
   };
 
   // This function is used to remove the selected image file
@@ -102,12 +107,14 @@ export default function QuestionEditorItem({ question }) {
       newData.find((question) => question.id === questionId).image = null;
       return newData;
     });
+    setSaveStatus(false);
   };
 
   const handleAddOptions = (questionId) => {
     const newData = [...questions];
     newData.find((question) => question.id === questionId).options.push('');
     setQuestions(newData);
+    setSaveStatus(false);
   };
 
   const handleDeleteQuestion = (questionId) => {
@@ -119,6 +126,7 @@ export default function QuestionEditorItem({ question }) {
       );
       return newData;
     });
+    setSaveStatus(false);
   };
 
   return (
@@ -163,7 +171,7 @@ export default function QuestionEditorItem({ question }) {
               <EditableOptions
                 key={index}
                 option={option}
-                active={handleSetActive(index)}
+                active={handleSetActive(option)}
                 index={index}
                 questionId={question.id}
               />

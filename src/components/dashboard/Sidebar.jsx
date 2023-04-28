@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import api from "../../config";
+import React, { useState, useContext } from 'react';
+import { useEffect } from 'react';
+import api from '../../config';
+import AuthContext from '../../contexts/AuthContext';
 
 export default function Sidebar({
   examlist,
@@ -9,10 +10,11 @@ export default function Sidebar({
   setDbQuestions,
   setExamActive,
   examActive,
-  user,
+  // user,
   fetchTime,
   setToken,
 }) {
+  const { user } = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false);
 
   const toggleHidden = () => {
@@ -23,9 +25,8 @@ export default function Sidebar({
     api
       .get(`/exam`, {
         headers: {
-          Authorization: `Bearer ${JSON.parse(
-            localStorage.getItem("access_token")
-          )}`,
+          Authorization: `Bearer ${user.access_token}`
+        }
         },
       })
       .then((response) => {
@@ -44,9 +45,8 @@ export default function Sidebar({
       await api
         .get(`/questions/exam/${id}`, {
           headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem("access_token")
-            )}`,
+            Authorization: `Bearer ${user.access_token}`
+          }`,
           },
         })
         .then((response) => {
@@ -69,7 +69,7 @@ export default function Sidebar({
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   return (
@@ -87,9 +87,8 @@ export default function Sidebar({
         {isHidden && (
           <button
             onClick={handleLogout}
-            className="w-8 h-8 text-white items-center rounded-full bg-accent2 ml-5"
-          >
-            <i className="pi pi-sign-out " style={{ fontSize: "1rem" }} />
+            className='w-8 h-8 text-white items-center rounded-full bg-accent2 ml-5'>
+            <i className='pi pi-sign-out ' style={{ fontSize: '1rem' }} />
           </button>
         )}
       </div>
@@ -102,11 +101,10 @@ export default function Sidebar({
                 handleSidebarButton(exam);
               }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
-                !isHidden ? "gap-0 justify-center" : "gap-4 px-4 justify-start"
-              } ${examActive === exam._id && `bg-accent2 text-white`}`}
-            >
-              <a href=".">{index + 1}</a>
-              <a href=".">{isHidden && exam.examName}</a>
+                !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
+              } ${examActive === exam._id && `bg-accent2 text-white`}`}>
+              <p>{index + 1}</p>
+              <p>{isHidden && exam.examName}</p>
             </button>
           ))}
         </ul>
