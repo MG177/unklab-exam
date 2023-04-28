@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/dashboard/Sidebar";
 import QuestionEditor from "../../components/dashboard/QuestionEditor";
 import classHeader from "../../image/class-header.svg";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { ProductService } from "./ProductService";
+import { Button } from "primereact/button";
 import AuthContext from "../../contexts/AuthContext";
 import api from "../../config/index";
 // import TimerSmall from "../../components/TimerSmall";
@@ -20,6 +20,75 @@ export default function PageDashboard() {
   const [time, setTime] = useState(0);
   const [token, setToken] = useState("");
   const [dataGrid, setDataGrid] = useState([]);
+  const dt = useRef(null);
+  console.log("dataGrid = ", dataGrid);
+
+  document.body.style.overflow = "hidden";
+
+  const cols = [
+    { field: "subjectCode", header: "Code" },
+    { field: "subjectName", header: "Subject name" },
+    { field: "parallel", header: "Parallel" },
+    { field: "credit", header: "Credits" },
+    { field: "lecturerName", header: "Lecturer" },
+    { field: "roomName", header: "Room" },
+    { field: "schedule", header: "Schedule" },
+    { field: "status", header: "Status" },
+    { field: "capacity", header: "Capacity" },
+  ];
+
+  const exportColumns = cols.map((col) => ({
+    title: col.header,
+    dataKey: col.field,
+  }));
+
+  const exportCSV = (selectionOnly) => {
+    dt.current.exportCSV({ selectionOnly });
+  };
+
+  const exportPdf = () => {
+    import("jspdf").then((jsPDF) => {
+      import("jspdf-autotable").then(() => {
+        const doc = new jsPDF.default({
+          orientation: "landscape",
+        });
+
+        doc.autoTable(exportColumns, dataGrid);
+        doc.save(`Exam_export_${exam.examName}_${new Date().getTime()}.pdf`);
+      });
+    });
+  };
+
+  const exportExcel = () => {
+    import("xlsx").then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(dataGrid);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
+      const excelBuffer = xlsx.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+
+      saveAsExcelFile(excelBuffer, `Exam_export_${exam.examName}`);
+    });
+  };
+
+  const saveAsExcelFile = (buffer, fileName) => {
+    import("file-saver").then((module) => {
+      if (module && module.default) {
+        let EXCEL_TYPE =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        let EXCEL_EXTENSION = ".xlsx";
+        const data = new Blob([buffer], {
+          type: EXCEL_TYPE,
+        });
+
+        module.default.saveAs(
+          data,
+          fileName + "_" + new Date().getTime() + EXCEL_EXTENSION
+        );
+      }
+    });
+  };
 
   useEffect(() => {
     if (!user) {
@@ -100,8 +169,62 @@ export default function PageDashboard() {
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
 
+  const footer = (
+    <div className="flex align-items-center justify-end gap-2">
+      <Button
+        type="button"
+        icon="pi pi-file"
+        rounded
+        text
+        raised
+        onClick={() => exportCSV(false)}
+        data-pr-tooltip="CSV"
+      />
+      <Button
+        type="button"
+        icon="pi pi-file-excel"
+        severity="success"
+        rounded
+        text
+        raised
+        onClick={exportExcel}
+        data-pr-tooltip="XLS"
+      />
+      <Button
+        type="button"
+        icon="pi pi-file-pdf"
+        severity="warning"
+        rounded
+        text
+        raised
+        onClick={exportPdf}
+        data-pr-tooltip="PDF"
+      />
+    </div>
+  );
+
+  const handleImport = (event) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("file", event.target.file.files[0]);
+    formData.append("examId", examActive);
+    api
+      .post("/students", formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
-    <div className='relative flex w-full justify-center'>
+    <div className="relative flex w-full justify-center">
       <Sidebar
         examlist={examlist}
         setExamList={setExamList}
@@ -114,6 +237,7 @@ export default function PageDashboard() {
         user={user}
         fetchTime={fetchTime}
         setToken={setToken}
+        setDataGrid={setDataGrid}
       />
       <div className="container p-4 w-full bg-[#FCF9FF] flex-1">
         <div className="mb-12">
@@ -128,7 +252,19 @@ export default function PageDashboard() {
             </h1>
             <div className="z-10 flex flex-row items-end gap-3">
               <div className="flex flex-row gap-3  font-Nunito right-4 bottom-4">
-                <button className="px-4 py-2 text-2xl font-bold bg-white text-accent1 rounded-2xl">
+                {/* <form
+                  className="px-4 py-2 text-2xl font-bold bg-white text-accent1 rounded-2xl"
+                  onSubmit={handleImport}
+                >
+                  <i className="fa-solid fa-bars" />
+                  <label htmlFor="file">Choose a file:</label>
+                  <input type="file" id="file" name="file" />
+                  <button type="submit">Upload</button>
+                </form> */}
+                <button
+                  className="px-4 py-2 text-2xl font-bold bg-white text-accent1 rounded-2xl"
+                  onClick={handleImport}
+                >
                   <i className="fa-solid fa-bars" />
                 </button>
               </div>
@@ -166,7 +302,7 @@ export default function PageDashboard() {
               placeholder="Search"
               aria-label="Search"
               aria-describedby="button-addon2"
-              onChange={handleSearch}
+              // onChange={handleSearch}
             />
             <span
               className="input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-black dark:text-neutral-200"
@@ -176,17 +312,34 @@ export default function PageDashboard() {
             </span>
           </div>
         </div>
-        <div>
-          <DataTable value={dataGrid} className="shadow-md">
+        <div className="relative rounded-[24px] overflow-hidden shadow-lg border-[#fafafade]">
+          <DataTable
+            value={dataGrid}
+            className="shadow-md"
+            ref={dt}
+            paginator
+            rows={15}
+            rowsPerPageOptions={[15, 25, 50]}
+            tableStyle={{ minWidth: "50rem" }}
+            size="sm"
+            sortMode="multiple"
+            sortOrder={-1}
+            removableSort
+            scrollable
+            scrollHeight="60vh"
+            rounded
+            paginatorRight={footer}
+            paginatorLeft={<div></div>}
+          >
             <Column field="noreg" header="Nomor registrasi"></Column>
             <Column field="name" header="Name"></Column>
-            <Column field="grade" header="Grade"></Column>
-            <Column field="totalScore" header="Total Score"></Column>
-            <Column field="vocab" header="Vocab"></Column>
-            <Column field="reading" header="Reading"></Column>
-            <Column field="listening" header="Listening"></Column>
-            <Column field="status" header="Status"></Column>
-            <Column field="reset" header="Reset"></Column>
+            <Column field="score.grade" header="Grade"></Column>
+            <Column field="score.totalScore" header="Total Score"></Column>
+            <Column field="score.vocabulary.score" header="Vocab"></Column>
+            <Column field="score.reading.score" header="Reading"></Column>
+            <Column field="score.listening.score" header="Listening"></Column>
+            <Column field="score.grammar.score" header="grammar"></Column>
+            <Column field="status" header="status"></Column>
           </DataTable>
         </div>
       </div>
