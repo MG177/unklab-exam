@@ -10,6 +10,7 @@ export default function QuestionEditor(dbQuestions) {
     setQuestions((prevData) => {
       const newData = [...prevData];
       let newId = newData.length + 1;
+      // eslint-disable-next-line no-loop-func
       while (newData.some((question) => question.id === newId)) {
         newId++;
       }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import EditableOptions from './EditableOptions';
 import QuestionContext from '../../contexts/QuestionContext';
 import SelectableButtons from './SelectableButtons';
@@ -10,6 +10,24 @@ export default function QuestionEditorItem({ question }) {
   const { questions, setQuestions, setSaveStatus } =
     useContext(QuestionContext);
   const questionRef = useRef(null);
+  const [audioSrc, setAudioSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+
+  const handleReadAudioFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAudioSrc(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleReadImageFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImageSrc(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const resizeTextArea = () => {
     questionRef.current.style.height = 'auto';
@@ -30,12 +48,13 @@ export default function QuestionEditorItem({ question }) {
   };
 
   const handleMusicFileChange = (e, questionId) => {
-    console.log('questionId(handleMusicFileChange): ', questionId);
     const file = e.target.files[0];
     if (file.size > 1000000) {
       alert('File size exceeds 1MB limit');
       return;
     }
+    handleReadAudioFile(file);
+
     setQuestions((prevData) => {
       const index = prevData.findIndex(
         (question) => question.id === questionId
@@ -50,18 +69,18 @@ export default function QuestionEditorItem({ question }) {
       return newData;
     });
 
-    // remove the music file from input
     e.target.value = '';
     setSaveStatus(false);
   };
 
   const handleImageFileChange = (e, questionId) => {
-    console.log('questionId: ', questionId);
     const file = e.target.files[0];
     if (file.size > 1000000) {
       alert('File size exceeds 1MB limit');
       return;
     }
+    handleReadImageFile(file);
+
     setQuestions((prevData) => {
       const index = prevData.findIndex(
         (question) => question.id === questionId
@@ -76,7 +95,6 @@ export default function QuestionEditorItem({ question }) {
       return newData;
     });
 
-    // remove the music file from input
     e.target.value = '';
     setSaveStatus(false);
   };
@@ -87,16 +105,17 @@ export default function QuestionEditorItem({ question }) {
       newData.find((question) => question.id === questionId).audio = null;
       return newData;
     });
+    setAudioSrc(null);
     setSaveStatus(false);
   };
 
-  // This function is used to remove the selected image file
   const handleRemoveImageFile = (questionId) => {
     setQuestions((prevData) => {
       const newData = [...prevData];
       newData.find((question) => question.id === questionId).image = null;
       return newData;
     });
+    setImageSrc(null);
     setSaveStatus(false);
   };
 
@@ -104,6 +123,7 @@ export default function QuestionEditorItem({ question }) {
     setQuestions((prevData) => {
       const newData = prevData.map((question) => {
         let newId = 1;
+        // eslint-disable-next-line no-loop-func
         while (question.options.find((option) => option.id === newId)) {
           newId++;
         }
@@ -149,13 +169,13 @@ export default function QuestionEditorItem({ question }) {
           </h3>
           {question.audio && (
             <div className='flex items-center gap-2'>
-              <audio src={question.audio} controls />
+              <audio src={audioSrc} controls />
             </div>
           )}
           {question.image && (
             <div className='flex items-center gap-2'>
               <img
-                src={question.image}
+                src={imageSrc}
                 alt='Selected'
                 className='object-cover w-full h-auto'
                 style={{ maxHeight: '300px' }}
