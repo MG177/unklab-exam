@@ -3,9 +3,14 @@ import check from '../../image/check_small.svg';
 import QuestionContext from '../../contexts/QuestionContext';
 import { Button } from 'primereact/button';
 
-export default function EditableOptions({ active, index, questionId, option }) {
+export default function EditableOptions({
+  active,
+  questionId,
+  option,
+  optionId
+}) {
   const { setQuestions, setSaveStatus } = useContext(QuestionContext);
-  const [optionValue, setOptionValue] = useState(option);
+  const [optionValue, setOptionValue] = useState(option.text);
 
   const handleAnswerChange = () => {
     setQuestions((prevData) => {
@@ -22,19 +27,22 @@ export default function EditableOptions({ active, index, questionId, option }) {
 
     setQuestions((prevData) => {
       const newData = [...prevData];
-      // if the changed option is the correct answer, update the correct answer
-      if (
-        newData.find((question) => question.id === questionId).correctAnswer ===
-        option
-      ) {
-        newData.find((question) => question.id === questionId).correctAnswer =
-          e.target.value;
+      const question = newData.find((question) => question.id === questionId);
+      if (!question) return prevData;
+
+      // If the changed option is the correct answer, update the correct answer
+      if (question.correctAnswer === optionId) {
+        question.correctAnswer = e.target.value;
       }
-      newData.find((question) => question.id === questionId).options[index] =
-        e.target.value;
+
+      const option = question.options.find((opt) => opt.id === optionId);
+      if (option) {
+        option.text = e.target.value;
+      }
 
       return newData;
     });
+
     setSaveStatus(false);
   };
 
@@ -44,14 +52,28 @@ export default function EditableOptions({ active, index, questionId, option }) {
   //   setQuestions(newData);
   // };
 
-  const handleDeleteOptions = () => {
+  const handleDeleteOption = () => {
     setQuestions((prevData) => {
       const newData = [...prevData];
-      newData
-        .find((question) => question.id === questionId)
-        .options.splice(index, 1);
+      const questionIndex = newData.findIndex(
+        (question) => question.id === questionId
+      );
+      if (questionIndex === -1) return prevData;
+
+      const question = newData[questionIndex];
+      const updatedOptions = question.options.filter(
+        (opt) => opt.id !== option.id
+      );
+      question.options = updatedOptions;
+
+      // If the deleted option was the correct answer, reset the correct answer
+      if (question.correctAnswer === option.id) {
+        question.correctAnswer = '';
+      }
+
       return newData;
     });
+
     setSaveStatus(false);
   };
 
@@ -82,7 +104,7 @@ export default function EditableOptions({ active, index, questionId, option }) {
         rounded
         text
         style={{ color: '#FF6593' }}
-        onClick={() => handleDeleteOptions()}
+        onClick={() => handleDeleteOption()}
         aria-label='Cancel'
       />
       {/* </button> */}

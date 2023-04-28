@@ -15,10 +15,16 @@ const questionsInitial = [
   {
     id: 1,
     text: '',
-    options: [''],
+    options: [
+      {
+        id: 1,
+        text: ''
+      }
+    ],
     audio: null,
     image: null,
-    type: 'Listening'
+    type: 'Listening',
+    correctAnswer: ''
   }
 ];
 

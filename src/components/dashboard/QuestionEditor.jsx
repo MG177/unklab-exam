@@ -9,10 +9,19 @@ export default function QuestionEditor(dbQuestions) {
   const handleAddQuestion = () => {
     setQuestions((prevData) => {
       const newData = [...prevData];
+      let newId = newData.length + 1;
+      while (newData.some((question) => question.id === newId)) {
+        newId++;
+      }
       newData.push({
-        id: newData.length + 1,
+        id: newId,
         question: '',
-        options: [''],
+        options: [
+          {
+            id: 1,
+            text: ''
+          }
+        ],
         answer: 0,
         audio: null,
         image: null,

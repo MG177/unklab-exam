@@ -30,32 +30,27 @@ export default function QuestionEditorItem({ question }) {
   };
 
   const handleMusicFileChange = (e, questionId) => {
-    console.log('questionId(handleMusicfileChange): ', questionId);
+    console.log('questionId(handleMusicFileChange): ', questionId);
     const file = e.target.files[0];
     if (file.size > 1000000) {
       alert('File size exceeds 1MB limit');
       return;
     }
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64String = reader.result;
-      setQuestions((prevData) => {
-        const index = prevData.findIndex(
-          (question) => question.id === questionId
-        );
-        if (index === -1) return prevData;
-        const newData = [...prevData];
-        newData[index] = {
-          ...newData[index],
-          audio: base64String,
-          image: null
-        };
-        return newData;
-      });
-    };
+    setQuestions((prevData) => {
+      const index = prevData.findIndex(
+        (question) => question.id === questionId
+      );
+      if (index === -1) return prevData;
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        audio: file,
+        image: null
+      };
+      return newData;
+    });
 
-    // remove the the music file from input
+    // remove the music file from input
     e.target.value = '';
     setSaveStatus(false);
   };
@@ -67,26 +62,21 @@ export default function QuestionEditorItem({ question }) {
       alert('File size exceeds 1MB limit');
       return;
     }
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64String = reader.result;
-      setQuestions((prevData) => {
-        const index = prevData.findIndex(
-          (question) => question.id === questionId
-        );
-        if (index === -1) return prevData;
-        const newData = [...prevData];
-        newData[index] = {
-          ...newData[index],
-          image: base64String,
-          audio: null
-        };
-        return newData;
-      });
-    };
+    setQuestions((prevData) => {
+      const index = prevData.findIndex(
+        (question) => question.id === questionId
+      );
+      if (index === -1) return prevData;
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        image: file,
+        audio: null
+      };
+      return newData;
+    });
 
-    // remove the the music file from input
+    // remove the music file from input
     e.target.value = '';
     setSaveStatus(false);
   };
@@ -110,11 +100,31 @@ export default function QuestionEditorItem({ question }) {
     setSaveStatus(false);
   };
 
-  const handleAddOptions = (questionId) => {
-    const newData = [...questions];
-    newData.find((question) => question.id === questionId).options.push('');
-    setQuestions(newData);
-    setSaveStatus(false);
+  const handleAddOption = (questionId) => {
+    setQuestions((prevData) => {
+      const newData = prevData.map((question) => {
+        let newId = 1;
+        while (question.options.find((option) => option.id === newId)) {
+          newId++;
+        }
+        if (question.id === questionId) {
+          return {
+            ...question,
+            options: [
+              ...question.options,
+              {
+                id: newId,
+                text: ''
+              }
+            ]
+          };
+        }
+        return question;
+      });
+
+      setSaveStatus(false);
+      return newData;
+    });
   };
 
   const handleDeleteQuestion = (questionId) => {
@@ -137,12 +147,12 @@ export default function QuestionEditorItem({ question }) {
           <h3 className='text-2xl font-bold text-accent1'>
             Question #{question.id}
           </h3>
-          {question.audio && typeof question.audio === 'string' && (
+          {question.audio && (
             <div className='flex items-center gap-2'>
               <audio src={question.audio} controls />
             </div>
           )}
-          {question.image && typeof question.image === 'string' && (
+          {question.image && (
             <div className='flex items-center gap-2'>
               <img
                 src={question.image}
@@ -167,18 +177,18 @@ export default function QuestionEditorItem({ question }) {
         </div>
         <div className='flex flex-col gap-[18px] min-w-full '>
           {question.options &&
-            question.options.map((option, index) => (
+            question.options.map((option) => (
               <EditableOptions
-                key={index}
+                key={option.id}
                 option={option}
-                active={handleSetActive(option)}
-                index={index}
+                active={handleSetActive(option.text)}
+                optionId={option.id}
                 questionId={question.id}
               />
             ))}
           <button
             className='w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-95  shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)] bg-whitePlus'
-            onClick={() => handleAddOptions(question.id)}>
+            onClick={() => handleAddOption(question.id)}>
             <i className='fa-solid fa-plus' />
           </button>
         </div>
