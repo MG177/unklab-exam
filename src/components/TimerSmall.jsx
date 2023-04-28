@@ -34,7 +34,7 @@ export default function TimerSmall({ time, classTime }) {
   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-
+ // deploy
   return (
     <div className="flex flex-row justify-center items-center max-h-[60px] bg-white gap-[10px] mt-[40px] mb-[40px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
       <p className="text-accent2 font-bold font-nunito text-[30px]">

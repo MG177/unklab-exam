@@ -12,7 +12,13 @@ export default function Score() {
   const [time, setTime] = useState(0);
   const { examId } = useParams();
   const navigate = useNavigate();
-  const [score, setScore] = useState([]);
+  const [score, setScore] = useState({
+    totalScore: 0,
+    totalCorrect: 0,
+    totalQuestion: 0,
+    grade: "null",
+  });
+  console.log(score);
   useEffect(() => {
     const fetchTime = async () => {
       try {
@@ -118,7 +124,7 @@ export default function Score() {
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-row font-Nunito gap-[10px] ">
-                <div className="text-black w-full bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 pl-4">
+                <div className="text-black w-full max-w-[200px] bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 px-5">
                   <p className="text-5xl font-bold">
                     {`${score.totalCorrect}/${score.totalQuestion}`}
                   </p>
@@ -129,7 +135,7 @@ export default function Score() {
                   <p className="text-2xl font-bold">Grade</p>
                 </div>
               </div>
-              <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl w-[350px] h-[111px] flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
+              <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
                 <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
                   {convertName(user.username)}
                 </p>
