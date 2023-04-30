@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
@@ -6,6 +6,7 @@ import AuthContext from '../../contexts/AuthContext';
 export default function Sidebar({ setToken }) {
   const { user } = useContext(AuthContext);
   const { examId } = useParams();
+  const uploadRef = useRef(null);
   const [isHidden, setIsHidden] = useState(false);
   const [examList, setExamList] = useState([]);
 
@@ -25,6 +26,7 @@ export default function Sidebar({ setToken }) {
           console.log('exam list', res.data);
           setExamList(res.data);
           setToken(res.data[0].token);
+          uploadRef.current.value = '';
         });
     } catch (error) {
       console.log(error);
@@ -52,6 +54,7 @@ export default function Sidebar({ setToken }) {
   };
 
   const handleAddExam = async (e) => {
+    console.log('add exam');
     try {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
@@ -114,6 +117,7 @@ export default function Sidebar({ setToken }) {
             <input
               type='file'
               accept='.csv'
+              ref={uploadRef}
               onChange={handleAddExam}
               className='hidden'
             />
