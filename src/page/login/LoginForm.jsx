@@ -133,9 +133,9 @@ export default function Form() {
                   pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
-              <div className="flex flex-col items-start ">
-                <label htmlFor="password" className="mb-2">
-                  Token
+              <div className='flex flex-col items-start '>
+                <label htmlFor='password' className='mb-2'>
+                Password
                 </label>
                 <input
                   name="password"
