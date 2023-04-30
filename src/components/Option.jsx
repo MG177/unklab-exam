@@ -19,9 +19,13 @@ export default function Option({ active, option, handleAnswer, widthFit }) {
         <div className="w-[29px] h-[29px] bg-white rounded-[50%] border"></div>
       )}
       <p
+        style={{ userSelect: "none" }}
+        onCopy={(event) => {
+          event.preventDefault();
+        }}
         className={`${
           active
-            ? "text-white transition ease-out duration-300 cursor-default"
+            ? "text-white tr  ansition ease-out duration-300 cursor-default"
             : ""
         } text-[20px]`}
       >

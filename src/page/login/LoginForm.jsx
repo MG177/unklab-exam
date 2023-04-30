@@ -1,7 +1,9 @@
-import React, { useContext, useRef, useState } from 'react';
-import api from '../../config';
-import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../contexts/AuthContext';
+import React, { useContext, useRef, useState } from "react";
+import api from "../../config";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../../contexts/AuthContext";
+import Vector from "../login/Vector.svg";
+import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -11,38 +13,47 @@ export default function Form() {
   const adminUsernameRef = useRef(null);
   const adminPasswordRef = useRef(null);
   const [adminForm, setAdminForm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorFilled, setErrorFilled] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
     localStorage.clear();
+    if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
+      setErrorFilled(
+        "Missing required fields. Please fill in all required fields."
+      );
+      return;
+    }
     try {
-      const studentData = await api.post('/auth/login/student', {
+      const studentData = await api.post("/auth/login/student", {
         noreg: studentNoregRef.current.value,
-        token: studentTokenRef.current.value
+        token: studentTokenRef.current.value,
       });
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
         {
-          token: studentData.data.data.access_token
+          token: studentData.data.data.access_token,
         },
         {
           headers: {
-            Authorization: `Bearer ${studentData.data.data.access_token}`
-          }
+            Authorization: `Bearer ${studentData.data.data.access_token}`,
+          },
         }
       );
+
       if (startResponse.status >= 200 && startResponse.status < 300) {
         if (startResponse.data.isScore) {
           // alert("You already finish the exam");
           setUser({ ...user, score: startResponse.data.score });
           localStorage.setItem(
-            'isScore',
+            "isScore",
             JSON.stringify(startResponse.data.isScore)
           );
         }
         if (startResponse.data.id) {
           localStorage.setItem(
-            'studentId',
+            "studentId",
             JSON.stringify(startResponse.data.id)
           );
         }
@@ -51,9 +62,12 @@ export default function Form() {
         });
         window.location.reload();
       } else {
-        throw new Error('Student not found');
+        throw new Error("Student not found");
       }
     } catch (error) {
+      setErrorMessage(
+        "Incorrect Registration number or Token. Please try again."
+      );
       console.log(error);
     }
   };
@@ -63,9 +77,9 @@ export default function Form() {
     localStorage.clear();
     try {
       api
-        .post('/auth/login/admin', {
+        .post("/auth/login/admin", {
           username: adminUsernameRef.current.value,
-          password: adminPasswordRef.current.value
+          password: adminPasswordRef.current.value,
         })
         .then((response) => {
           const admin = response.data.data;
@@ -73,50 +87,50 @@ export default function Form() {
             localStorage.setItem(key, JSON.stringify(value));
           });
           setUser(response.data);
-          navigate('/dashboard');
+          navigate("/dashboard");
         });
     } catch (error) {
       console.log(error);
     }
-    console.log('login admin');
+    console.log("login admin");
   };
 
   const toggleForm = () => {
     setAdminForm(!adminForm);
   };
-
   return (
     <div>
       <button
-        type='button'
-        className='py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0'
-        onClick={() => toggleForm()}></button>
+        type="button"
+        className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
+        onClick={() => toggleForm()}
+      ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className='max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center'>
-            <div className='flex flex-col items-center justify-center'>
-              <div className='flex text-5xl md:text-[62px] font-inter font-bold '>
-                <h1 className='text-[#37474F]'>Welcome Admin</h1>
-                <h1 className='text-[#FF6593]'>!</h1>
+          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
+                <h1 className="text-[#37474F]">Welcome Admin</h1>
+                <h1 className="text-[#FF6593]">!</h1>
               </div>
-              <p className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
+              <p className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] ">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
             </div>
-            <div className='flex flex-col w-full gap-6'>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='username' className='mb-2'>
+            <div className="flex flex-col w-full gap-6">
+              <div className="flex flex-col items-start ">
+                <label htmlFor="username" className="mb-2">
                   Username
                 </label>
                 <input
-                  name='username'
-                  id='username'
+                  name="username"
+                  id="username"
                   ref={adminUsernameRef}
-                  type='text'
-                  placeholder='John'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
-                  pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="John"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
+                  pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className='flex flex-col items-start '>
@@ -124,18 +138,18 @@ export default function Form() {
                 Password
                 </label>
                 <input
-                  name='password'
-                  id='password'
+                  name="password"
+                  id="password"
                   ref={adminPasswordRef}
-                  type='password'
-                  placeholder='********'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="password"
+                  placeholder="********"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
             <button
-              type='submit'
-              className='uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]'
+              type="submit"
+              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
               // onClick={() => (adminFormRef.current = true)}
             >
               Login as admin
@@ -144,49 +158,70 @@ export default function Form() {
         </form>
       ) : (
         <form onSubmit={handleLogin}>
-          <div className='max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center'>
-            <div className='flex flex-col items-center justify-center'>
-              <div className='flex text-5xl md:text-[62px] font-inter font-bold '>
-                <h1 className='text-[#37474F]'>Welcome</h1>
-                <h1 className='text-[#FF6593]'>!</h1>
+          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
+                <h1 className="text-[#37474F]">Welcome</h1>
+                <h1 className="text-[#FF6593]">!</h1>
               </div>
-              <p className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
+              <p
+                style={{ userSelect: "none" }}
+                className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] "
+              >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
             </div>
-            <div className='flex flex-col w-full gap-6'>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='noreg' className='mb-2'>
+            <div className="flex flex-col w-full gap-6">
+              <div className="flex flex-col items-start ">
+                <label htmlFor="noreg" className="mb-2">
                   Registration Number
                 </label>
                 <input
-                  name='noreg'
-                  id='noreg'
+                  name="noreg"
+                  id="noreg"
                   ref={studentNoregRef}
-                  type='text'
-                  placeholder='S2200000'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="S2200000"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='token' className='mb-2'>
+              <div className="flex flex-col items-start ">
+                <label htmlFor="token" className="mb-2">
                   Token
                 </label>
                 <input
-                  name='token'
-                  id='token'
+                  name="token"
+                  id="token"
                   ref={studentTokenRef}
-                  type='text'
-                  placeholder='Token'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="Token"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
+            {errorMessage ? (
+              <div className="flex items-center">
+                <img src={Vector} />
+                <div className="w-[415px] h-[45px] font-Nunito font-normal text-[17px] leading-[20.4px] text-left ml-4 -mb-6">
+                  {errorMessage}
+                </div>
+              </div>
+            ) : (
+              errorFilled && (
+                <div className="flex items-start">
+                  <img src={Vector} />
+                  <div className="w-[415px] h-[45px] font-Nunito font-normal text-[17px] leading-[20.4px] text-left ml-4 -mb-6">
+                    {errorFilled}
+                  </div>
+                </div>
+              )
+            )}
 
             <button
-              type='submit'
-              className='uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]'>
+              type="submit"
+              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
+            >
               Login
             </button>
           </div>

@@ -26,7 +26,13 @@ export default function Questions({ question, questions, media }) {
           <img src={media.image} alt="" className="w-full mt-3" />
         </div>
       )}
-      <p className="font-nunito text-[20px] leading-[24px] text-[#37474F]">
+      <p
+        style={{ userSelect: "none" }}
+        onCopy={(event) => {
+          event.preventDefault();
+        }}
+        className="font-nunito text-[20px] leading-[24px] text-[#37474F]"
+      >
         {questions[question].text}
       </p>
     </div>
