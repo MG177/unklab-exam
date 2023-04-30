@@ -16,6 +16,7 @@ export default function Sidebar({
 }) {
   const { user } = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false);
+  console.log(user.access_token);
 
   const toggleHidden = () => {
     setIsHidden(!isHidden);
@@ -36,6 +37,8 @@ export default function Sidebar({
         handleSidebarButton(response.data[0]);
       } catch (error) {
         console.log(error);
+        console.log(user.access_token);
+        window.location.reload();
       }
     };
 

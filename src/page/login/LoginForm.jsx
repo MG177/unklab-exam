@@ -121,7 +121,7 @@ export default function Form() {
               </div>
               <div className='flex flex-col items-start '>
                 <label htmlFor='password' className='mb-2'>
-                  Token
+                Password
                 </label>
                 <input
                   name='password'

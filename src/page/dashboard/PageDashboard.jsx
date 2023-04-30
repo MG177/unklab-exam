@@ -19,23 +19,76 @@ export default function PageDashboard() {
   const [examActive, setExamActive] = useState();
   const [time, setTime] = useState(0);
   const [token, setToken] = useState("");
-  const [dataGrid, setDataGrid] = useState([]);
+  const [dataGrid, setDataGrid] = useState([
+    {
+      name: "MG",
+      score: {
+        reading: {
+          total: 0,
+          correct: 0,
+          score: 0,
+        },
+        vocabulary: {
+          total: 0,
+          correct: 0,
+          score: 0,
+        },
+        listening: {
+          total: 0,
+          correct: 0,
+          score: 0,
+        },
+        grammar: {
+          total: 0,
+          correct: 0,
+          score: 0,
+        },
+        totalQuestion: 0,
+        totalCorrect: 0,
+        totalScore: 0,
+        grade: "-",
+      },
+      noreg: "-",
+      status: "-",
+    },
+  ]);
   const dt = useRef(null);
   console.log("dataGrid = ", dataGrid);
 
   document.body.style.overflow = "hidden";
 
   const cols = [
-    { field: "subjectCode", header: "Code" },
-    { field: "subjectName", header: "Subject name" },
-    { field: "parallel", header: "Parallel" },
-    { field: "credit", header: "Credits" },
-    { field: "lecturerName", header: "Lecturer" },
-    { field: "roomName", header: "Room" },
-    { field: "schedule", header: "Schedule" },
-    { field: "status", header: "Status" },
-    { field: "capacity", header: "Capacity" },
+    { field: "noreg", header: "Nomor registrasi" },
+    { field: "name", header: "Name" },
+    { field: "score.grade", header: "Grade" },
+    { field: "credit", header: "Total Score" },
+    { field: "score.totalScore", header: "Vocab" },
+    { field: "score.vocabulary.score", header: "Reading" },
+    { field: "score.reading.score", header: "Schedule" },
+    { field: "score.listening.score", header: "Listening" },
+    { field: "score.grammar.score", header: "grammar" },
+    { field: "status", header: "status" },
   ];
+
+  console.log("item.score.grade = ", dataGrid[0].score.grade);
+  const formattedData = dataGrid.map((item) => {
+    const formattedItem = {
+      name: item.name,
+      noreg: item.noreg,
+      status: item.status,
+    };
+
+    if (item.score) {
+      formattedItem.grade = item.score.grade || "";
+      formattedItem.totalScore = item.score.totalScore || "";
+      formattedItem.vocabulary = item.score.vocabulary?.score || "";
+      formattedItem.reading = item.score.reading?.score || "";
+      formattedItem.listening = item.score.listening?.score || "";
+      formattedItem.grammar = item.score.grammar?.score || "";
+    }
+
+    return formattedItem;
+  });
 
   const exportColumns = cols.map((col) => ({
     title: col.header,
@@ -61,7 +114,11 @@ export default function PageDashboard() {
 
   const exportExcel = () => {
     import("xlsx").then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(dataGrid);
+      const worksheet = xlsx.utils.json_to_sheet(formattedData);
+
+      // Set the column order
+      worksheet["!cols"] = [{ wch: 10 }, { wch: 20 }, { wch: 30 }];
+
       const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
       const excelBuffer = xlsx.write(workbook, {
         bookType: "xlsx",
