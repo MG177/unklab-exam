@@ -14,7 +14,13 @@ export default function Login() {
   }, [user, navigate]);
 
   return (
-    <div className="w-full min-h-screen bg-[url('./image/Background.svg')] bg-cover bg-no-repeat flex justify-center items-center">
+    <div
+      style={{ userSelect: 'none' }}
+      onCopy={(event) => {
+        event.preventDefault();
+      }}
+      className="w-full min-h-screen bg-[url('./image/Background.svg')] bg-cover bg-no-repeat flex justify-center items-center"
+    >
       <LoginForm />
     </div>
   );

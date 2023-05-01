@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import TimerSmall from "./TimerSmall";
-import Arrow from "../image/arrow_next.svg";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../contexts/AuthContext";
-import api from "../config";
+import React, { useContext } from 'react';
+import TimerSmall from './TimerSmall';
+import Arrow from '../image/arrow_next.svg';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
+import api from '../config';
 
 export default function Footer({
   question,
@@ -23,12 +23,12 @@ export default function Footer({
   // }
 
   const handleNext = async () => {
-    console.log("clicked");
+    console.log('clicked');
     if (!answer) {
-      console.log("no answer");
+      console.log('no answer');
     } else {
       const hitAnswer = await api.patch(
-        "students/answer/" + user.noreg,
+        'students/answer/' + user.noreg,
         {
           answer: answer,
           index: questions[question].id - 1,
@@ -39,7 +39,7 @@ export default function Footer({
           },
         }
       );
-      console.log("hit answer: " + hitAnswer.data);
+      console.log('hit answer: ' + hitAnswer.data);
       if (hitAnswer.data) {
         setAnswer(null);
         setQuestion((prev) => prev + 1);
@@ -48,29 +48,29 @@ export default function Footer({
 
     if (question === questions.length - 1) {
       // handleTimeOut();
-      navigate("/waiting");
+      navigate('/waiting');
     }
   };
 
   const handleTimeOut = () => {
-    console.log("time out");
-    navigate("/score");
+    console.log('time out');
+    navigate('/score');
   };
 
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   const validateUrlExam = () => {
-    const rootExamPath = "/exam";
+    const rootExamPath = '/exam';
     return window.location.pathname.startsWith(rootExamPath);
   };
 
   const validateUrlPathFinish = () => {
-    const rootExamPathWaiting = "/waiting";
-    const rootExamPathScore = "/score";
+    const rootExamPathWaiting = '/waiting';
+    const rootExamPathScore = '/score';
     if (
       window.location.pathname.startsWith(rootExamPathWaiting) ||
       window.location.pathname.startsWith(rootExamPathScore)
@@ -80,7 +80,13 @@ export default function Footer({
   };
 
   return (
-    <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50">
+    <div
+      style={{ userSelect: 'none' }}
+      onCopy={(event) => {
+        event.preventDefault();
+      }}
+      className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50"
+    >
       <div className="font-nunito my-[40.26px] ml-28 w-content">
         <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
         {validateUrlExam() && (

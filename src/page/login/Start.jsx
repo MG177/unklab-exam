@@ -2,10 +2,10 @@ import React, {
   useState,
   // useContext,
   useEffect,
-} from "react";
+} from 'react';
 // import AuthContext from "../../contexts/AuthContext";
-import TermsConditions from "../../image/terms and conditions.svg";
-import { useNavigate } from "react-router-dom";
+import TermsConditions from '../../image/terms and conditions.svg';
+import { useNavigate } from 'react-router-dom';
 
 export default function Start() {
   const [isShaking, setIsShaking] = useState(false);
@@ -17,7 +17,7 @@ export default function Start() {
   };
 
   function shakeitBaby() {
-    console.log("shake");
+    console.log('shake');
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 1000);
   }
@@ -26,8 +26,8 @@ export default function Start() {
     // if (localStorage.getItem('isScore')) {
     //   navigate('/score');
     // }
-    if (localStorage.getItem("agree")) {
-      navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    if (localStorage.getItem('agree')) {
+      navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -35,20 +35,26 @@ export default function Start() {
   const logout = async () => {
     //clear local storage
     localStorage.clear();
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   const handleAgree = () => {
     if (isChecked) {
-      localStorage.setItem("agree", true);
-      navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+      localStorage.setItem('agree', true);
+      navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
     } else {
       shakeitBaby();
     }
   };
 
   return (
-    <div className="p-[54px] h-max rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center">
+    <div
+      style={{ userSelect: 'none' }}
+      onCopy={(event) => {
+        event.preventDefault();
+      }}
+      className="p-[54px] h-max rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center"
+    >
       <button
         type="button"
         className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
@@ -67,7 +73,7 @@ export default function Start() {
         <form
           action=""
           className={`flex gap-1 mb-[14.5px] ${
-            isShaking ? "animate-horizontal-shaking" : ""
+            isShaking ? 'animate-horizontal-shaking' : ''
           }`}
         >
           <input
@@ -90,7 +96,7 @@ export default function Start() {
           // disabled={!isChecked}
           onClick={handleAgree}
           className={`font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] ${
-            !isChecked && "text-black bg-[#E0E0E0]"
+            !isChecked && 'text-black bg-[#E0E0E0]'
           } text-white bg-accent1`}
         >
           START
