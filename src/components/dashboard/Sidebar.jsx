@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
 import api from "../../config";
 import AuthContext from "../../contexts/AuthContext";
 
@@ -53,43 +53,59 @@ export default function Sidebar({
             Authorization: `Bearer ${user.access_token}`,
           },
         })
-        .then((response) => {
-          setDbQuestions(response.data);
-          setExamActive(id);
+        .then((res) => {
+          console.log("exam list", res.data);
+          setExamList(res.data);
+          setToken(res.data[0].token);
+          uploadRef.current.value = "";
         });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getDataGrid = async (id) => {
-    try {
-      await api
-        .get(`/students/exam/score/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setDataGrid(response.data);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    fetchData();
+  }, [setToken, user.access_token]);
 
-  const handleSidebarButton = (exam) => {
-    fetchTime(exam._id);
-    setExam(exam);
-    setToken(exam.token);
-    getDataGrid(exam._id);
-    getDbQuestions(exam._id);
-  };
+  // const handleSidebarButton = (exam) => {
+  //   fetchTime(exam._id);
+  //   setExam(exam);
+  //   setToken(exam.token);
+  // getDataGrid(exam._id);
+  // getDbQuestions(exam._id);
+  // };
 
   const handleLogout = () => {
     //clear local storage
     localStorage.clear();
     window.location.href = "/";
+  };
+
+  const handleAddExam = async (e) => {
+    console.log("add exam");
+    try {
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+
+      console.log("user access token", user.access_token);
+      const response = await api.post(`/exam`, formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      fetchData();
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const splitExamName = (examName) => {
+    const split1 = examName.split(" ");
+    const split2 = examName.split(" - ");
+    return split1[0] + " - " + split2[1];
   };
 
   return (
@@ -123,12 +139,26 @@ export default function Sidebar({
               }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
                 !isHidden ? "gap-0 justify-center" : "gap-4 px-4 justify-start"
-              } ${examActive === exam._id && `bg-accent2 text-white`}`}
+              } ${examId === exam._id && `bg-accent2 text-white`}`}
             >
               <p>{index + 1}</p>
-              <p>{isHidden && exam.examName}</p>
-            </button>
+              <p>{isHidden && splitExamName(exam.examName)}</p>
+            </Link>
           ))}
+          <label
+            className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg p-3 ${
+              !isHidden ? "gap-0 justify-center" : "gap-4 px-4 justify-start"
+            }`}
+          >
+            <p className="text-whitePlus text-lg">+</p>
+            <input
+              type="file"
+              accept=".csv"
+              ref={uploadRef}
+              onChange={handleAddExam}
+              className="hidden"
+            />
+          </label>
         </ul>
       </nav>
       <div className="flex justify-end w-full p-5">
