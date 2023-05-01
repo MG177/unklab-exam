@@ -6,16 +6,21 @@ import React, {
 // import AuthContext from "../../contexts/AuthContext";
 import TermsConditions from "../../image/terms and conditions.svg";
 import { useNavigate } from "react-router-dom";
-import borderVector2 from "../login/borderVector2.svg";
-import Vector2 from "../login/Vector2.svg";
 
 export default function Start() {
+  const [isShaking, setIsShaking] = useState(false);
   // const { user } = useContext(AuthContext);
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
   const handleChange = (event) => {
     setIsChecked((current) => !current);
   };
+
+  function shakeitBaby() {
+    console.log("shake");
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 1000);
+  }
 
   useEffect(() => {
     // if (localStorage.getItem('isScore')) {
@@ -34,8 +39,12 @@ export default function Start() {
   };
 
   const handleAgree = () => {
-    localStorage.setItem("agree", true);
-    navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    if (isChecked) {
+      localStorage.setItem("agree", true);
+      navigate(/exam/ + JSON.parse(localStorage.getItem("examId")));
+    } else {
+      shakeitBaby();
+    }
   };
 
   return (
@@ -55,7 +64,12 @@ export default function Start() {
         <img src={TermsConditions} alt="" />
       </div>
       <div className="flex flex-col items-center justify-between h-7 mt-[31.5px] mb-[54px]">
-        <form action="" className="flex gap-1 mb-[14.5px]">
+        <form
+          action=""
+          className={`flex gap-1 mb-[14.5px] ${
+            isShaking ? "animate-horizontal-shaking" : ""
+          }`}
+        >
           <input
             type="checkbox"
             id="agree"
@@ -71,14 +85,17 @@ export default function Start() {
             I agree to the Software Exam Test terms and conditions.
           </label>
         </form>
-
+        {/* <div onClick={handleAgree}> */}
         <button
-          disabled={!isChecked}
+          // disabled={!isChecked}
           onClick={handleAgree}
-          className="font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] disabled:text-black disabled:bg-[#E0E0E0] enabled:text-white enabled:bg-accent1"
+          className={`font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] ${
+            !isChecked && "text-black bg-[#E0E0E0]"
+          } text-white bg-accent1`}
         >
           START
         </button>
+        {/* </div> */}
       </div>
     </div>
   );

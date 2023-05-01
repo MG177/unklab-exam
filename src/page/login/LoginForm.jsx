@@ -14,15 +14,16 @@ export default function Form() {
   const adminPasswordRef = useRef(null);
   const [adminForm, setAdminForm] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [errorFilled, setErrorFilled] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     localStorage.clear();
     if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
-      setErrorFilled(
+      setErrorMessage(
         "Missing required fields. Please fill in all required fields."
       );
+      shakeitBaby();
       return;
     }
     try {
@@ -68,6 +69,7 @@ export default function Form() {
       setErrorMessage(
         "Incorrect Registration number or Token. Please try again."
       );
+      shakeitBaby();
       console.log(error);
     }
   };
@@ -98,6 +100,12 @@ export default function Form() {
   const toggleForm = () => {
     setAdminForm(!adminForm);
   };
+
+  function shakeitBaby() {
+    console.log("shake");
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 1000);
+  }
   return (
     <div>
       <button
@@ -133,9 +141,9 @@ export default function Form() {
                   pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='password' className='mb-2'>
-                Password
+              <div className="flex flex-col items-start ">
+                <label htmlFor="password" className="mb-2">
+                  Password
                 </label>
                 <input
                   name="password"
@@ -200,7 +208,7 @@ export default function Form() {
                 />
               </div>
             </div>
-            {errorMessage ? (
+            {/* {errorMessage ? (
               <div className="flex items-center">
                 <img src={Vector} />
                 <div className="w-[415px] h-[45px] font-Nunito font-normal text-[17px] leading-[20.4px] text-left ml-4 -mb-6">
@@ -211,19 +219,34 @@ export default function Form() {
               errorFilled && (
                 <div className="flex items-start">
                   <img src={Vector} />
-                  <div className="w-[415px] h-[45px] font-Nunito font-normal text-[17px] leading-[20.4px] text-left ml-4 -mb-6">
+                  <div className="w-full h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-left ml-4 -mb-6">
                     {errorFilled}
                   </div>
                 </div>
               )
-            )}
+            )} */}
 
-            <button
-              type="submit"
-              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
-            >
-              Login
-            </button>
+            <div className="flex flex-col w-full gap-4">
+              {errorMessage && (
+                <div
+                  className={`flex justify-center h-fit ${
+                    isShaking ? "animate-horizontal-shaking" : ""
+                  }`}
+                >
+                  <img src={Vector} className=" " />
+                  <div className="h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-accent2 text-left ml-4 -mb-6">
+                    {errorMessage}
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
+              >
+                Login
+              </button>
+            </div>
           </div>
         </form>
       )}
