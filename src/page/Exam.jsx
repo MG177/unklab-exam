@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../config";
 import Footer from "../components/Footer";
@@ -7,6 +7,7 @@ import Option from "../components/Option";
 import Header from "../components/Header";
 import sound from "../media/no7.mp3";
 import img from "../media/gunting.jpg";
+import AuthContext from "../contexts/AuthContext";
 
 const media = {
   audio: sound,
@@ -21,25 +22,27 @@ export default function Exam() {
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
-
+  const { user } = useContext(AuthContext);
+  const [questionLength, setQuestionLength] = useState(0);
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await api.get(
-          `students/${JSON.parse(localStorage.getItem("noreg"))}`,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("access_token")
-              )}`,
-            },
-          }
-        );
+        const response = await api.get("students/" + user.noreg, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         if (!response.data) {
           navigate("/started");
+        } else {
+          const filteredData = response.data.filter((item) => item !== null);
+          setQuestions(filteredData);
+          setQuestionLength(response.data.length);
+          setLoading(false);
+          if (filteredData.length === 0) {
+            navigate("/waiting");
+          }
         }
-        setQuestions(response.data);
-        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -47,16 +50,11 @@ export default function Exam() {
 
     const fetchTime = async () => {
       try {
-        const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem("examId"))}`,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("access_token")
-              )}`,
-            },
-          }
-        );
+        const response = await api.get("time/" + user.examId, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setTime(response.data);
       } catch (error) {
         console.log(error);
@@ -73,19 +71,6 @@ export default function Exam() {
         return;
       }
     }
-    console.log("answer form db = " + JSON.stringify(questions[question]));
-    // if (questions[question].answer) {
-    //   if (questions[question].answer === "") {
-    //     console.log("answer = empty");
-    //     return;
-    //   } else {
-    //     console.log("answer = #" + questions[question].answer);
-    //     setAnswer(null);
-    //     setQuestion((prev) => prev + 1);
-    //   }
-    // } else {
-    //   console.log("ciluk baa");
-    // }
   }, [question, questions.length, navigate]);
 
   const handleAnswer = (index) => {
@@ -95,7 +80,6 @@ export default function Exam() {
   const handleActive = (index) => {
     return answer === index;
   };
-  console.log("answer = " + answer);
 
   return (
     <>
@@ -122,6 +106,7 @@ export default function Exam() {
         setAnswer={setAnswer}
         setQuestion={setQuestion}
         time={time}
+        questionLength={questionLength}
       />
     </>
   );

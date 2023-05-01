@@ -12,6 +12,7 @@ export default function Footer({
   time,
   answer,
   setAnswer,
+  questionLength,
 }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -30,7 +31,7 @@ export default function Footer({
         "students/answer/" + user.noreg,
         {
           answer: answer,
-          index: question,
+          index: questions[question].id - 1,
         },
         {
           headers: {
@@ -81,12 +82,10 @@ export default function Footer({
   return (
     <div className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50">
       <div className="font-nunito my-[40.26px] ml-28 w-content">
-        <p className="text-accent1 text-[29px] font-bold">
-          {JSON.parse(localStorage.getItem("examName"))}
-        </p>
+        <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
         {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
-            {`Question ${question + 1} of ${questions.length}`}
+            {`Question ${questions[question].id} of ${questionLength}`}
           </p>
         )}
       </div>
