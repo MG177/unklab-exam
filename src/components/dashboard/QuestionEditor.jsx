@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import QuestionEditorItem from './QuestionEditorItem';
 import QuestionContext from '../../contexts/QuestionContext';
 
-export default function QuestionEditor(dbQuestions) {
+export default function QuestionEditor() {
   const { handleSave, questions, setQuestions, setSaveStatus, saveStatus } =
     useContext(QuestionContext);
 
@@ -32,18 +32,6 @@ export default function QuestionEditor(dbQuestions) {
     });
     setSaveStatus(false);
   };
-
-  // const handleAddQuestion = () => {
-  //   setQuestions(dbQuestions.questions);
-  // };
-  useEffect(() => {
-    setQuestions(dbQuestions.dbQuestions);
-    // console.log("DB = " + JSON.stringify(dbQuestions.dbQuestions));
-    // console.log(
-    //   "Questions used in question editor = " + JSON.stringify(questions)
-    // );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dbQuestions]);
 
   return (
     <div className='relative z-20 flex flex-col h-screen overflow-y-scroll bg-white font-Nunito min-w-fit shadow-right scroll-smooth'>

@@ -3,52 +3,21 @@ import { Link, useParams } from "react-router-dom";
 import api from "../../config";
 import AuthContext from "../../contexts/AuthContext";
 
-export default function Sidebar({
-  examlist,
-  setExamList,
-  setExam,
-  setDbQuestions,
-  setExamActive,
-  examActive,
-  fetchTime,
-  setToken,
-  setDataGrid,
-}) {
+export default function Sidebar({ setToken }) {
   const { user } = useContext(AuthContext);
+  const { examId } = useParams();
+  const uploadRef = useRef(null);
   const [isHidden, setIsHidden] = useState(false);
-  console.log(user.access_token);
+  const [examList, setExamList] = useState([]);
 
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get(`/exam`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
-        fetchTime(response.data[0]._id);
-        setExamList(response.data);
-        setExamActive(response.data[0]._id);
-        setToken(response.data[0].token);
-        handleSidebarButton(response.data[0]);
-      } catch (error) {
-        console.log(error);
-        console.log(user.access_token);
-        window.location.reload();
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const getDbQuestions = async (id) => {
+  const fetchData = async () => {
     try {
       await api
-        .get(`/questions/exam/${id}`, {
+        .get(`/exam`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
@@ -61,6 +30,8 @@ export default function Sidebar({
         });
     } catch (error) {
       console.log(error);
+      // console.log(user.access_token);
+      // window.location.reload();
     }
   };
 
@@ -131,12 +102,13 @@ export default function Sidebar({
       </div>
       <nav className="flex-1 px-4">
         <ul className={`space-y-2 font-Nunito text-gray bg-white`}>
-          {examlist.map((exam, index) => (
-            <button
+          {examList.map((exam, index) => (
+            <Link
+              to={`/dashboard/${exam._id}`}
               key={exam._id}
-              onClick={() => {
-                handleSidebarButton(exam);
-              }}
+              // onClick={() => {
+              //   handleSidebarButton(exam);
+              // }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
                 !isHidden ? "gap-0 justify-center" : "gap-4 px-4 justify-start"
               } ${examId === exam._id && `bg-accent2 text-white`}`}

@@ -2,6 +2,8 @@ import React, { useContext, useRef, useState } from 'react';
 import api from '../../config';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
+import Vector from '../login/Vector.svg';
+import { eventWrapper } from '@testing-library/user-event/dist/utils';
 
 export default function Form() {
   const navigate = useNavigate();
@@ -11,10 +13,19 @@ export default function Form() {
   const adminUsernameRef = useRef(null);
   const adminPasswordRef = useRef(null);
   const [adminForm, setAdminForm] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isShaking, setIsShaking] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     localStorage.clear();
+    if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
+      setErrorMessage(
+        "Missing required fields. Please fill in all required fields."
+      );
+      shakeitBaby();
+      return;
+    }
     try {
       const studentData = await api.post('/auth/login/student', {
         noreg: studentNoregRef.current.value,
@@ -31,6 +42,7 @@ export default function Form() {
           }
         }
       );
+
       if (startResponse.status >= 200 && startResponse.status < 300) {
         if (startResponse.data.isScore) {
           // alert("You already finish the exam");
@@ -54,6 +66,10 @@ export default function Form() {
         throw new Error('Student not found');
       }
     } catch (error) {
+      setErrorMessage(
+        'Incorrect Registration number or Token. Please try again.'
+      );
+      shakeitBaby();
       console.log(error);
     }
   };
@@ -73,7 +89,7 @@ export default function Form() {
             localStorage.setItem(key, JSON.stringify(value));
           });
           setUser(response.data);
-          navigate('/dashboard');
+          navigate('/dashboard/0');
         });
     } catch (error) {
       console.log(error);
@@ -85,6 +101,11 @@ export default function Form() {
     setAdminForm(!adminForm);
   };
 
+  function shakeitBaby() {
+    console.log("shake");
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 1000);
+  }
   return (
     <div>
       <button
@@ -119,9 +140,9 @@ export default function Form() {
                   pl-[22px] placeholder:text-[#37474F40]'
                 />
               </div>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='password' className='mb-2'>
-                Password
+              <div className="flex flex-col items-start ">
+                <label htmlFor="password" className="mb-2">
+                  Password
                 </label>
                 <input
                   name='password'
@@ -150,7 +171,9 @@ export default function Form() {
                 <h1 className='text-[#37474F]'>Welcome</h1>
                 <h1 className='text-[#FF6593]'>!</h1>
               </div>
-              <p className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
+              <p
+                style={{ userSelect: 'none' }}
+                className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
@@ -183,12 +206,27 @@ export default function Form() {
                 />
               </div>
             </div>
+            <div className="flex flex-col w-full gap-4">
+              {errorMessage && (
+                <div
+                  className={`flex justify-center h-fit ${
+                    isShaking ? "animate-horizontal-shaking" : ""
+                  }`}
+                >
+                  <img src={Vector} className=" " />
+                  <div className="h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-accent2 text-left ml-4 -mb-6">
+                    {errorMessage}
+                  </div>
+                </div>
+              )}
 
-            <button
-              type='submit'
-              className='uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]'>
-              Login
-            </button>
+              <button
+                type="submit"
+                className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
+              >
+                Login
+              </button>
+            </div>
           </div>
         </form>
       )}

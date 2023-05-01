@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import api from '../config/index';
 import AuthContext from './AuthContext';
+import { useParams } from 'react-router-dom';
 import UnsaveWarning from '../components/dashboard/UnsaveWarning';
 
 const QuestionContext = createContext();
@@ -29,26 +30,14 @@ const questionsInitial = [
 ];
 
 export function QuestionProvider({ children }) {
+  const { examId } = useParams();
   const { user } = useContext(AuthContext);
   const [questions, setQuestions] = useState(
     JSON.parse(localStorage.getItem('questions')) ?? questionsInitial
   );
-  const [examActive, setExamActive] = useState('');
   const [saveStatus, setSaveStatus] = useState(true);
 
   console.log('questions in context', questions);
-
-  useEffect(() => {
-    api
-      .get(`/exam`, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`
-        }
-      })
-      .then((response) => {
-        setExamActive(response.data[0]._id);
-      });
-  }, [user]);
 
   const handleSave = () => {
     setSaveStatus(true);
@@ -75,13 +64,11 @@ export function QuestionProvider({ children }) {
   const postQuestions = async () => {
     api
       .patch(
-        `/questions/${examActive}`,
+        `/questions/${examId}`,
         { questions: questions },
         {
           headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem('access_token')
-            )}`
+            Authorization: `Bearer ${user.access_token}`
           }
         }
       )
