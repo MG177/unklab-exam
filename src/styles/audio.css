@@ -9,7 +9,7 @@ audio {
 
 audio::-webkit-media-controls-panel {
   background-color: #fafafa;
-  border-radius: 5px; 
+  border-radius: 5px;
   display: hidden;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
@@ -21,13 +21,68 @@ audio::-webkit-media-controls-time-remaining-display {
   display: none;
 }
 
-audio::-webkit-media-controls-speedometer-button{
+audio::-webkit-media-controls-speedometer-button {
   display: none !important;
 }
 
-/* audio::-webkit-media-controls-volume-slider::-webkit-slider-thumb {
-  background-color: #b55ffe;
+input[type='range'] {
+  -webkit-appearance: none;
+  width: 100%;
+  border-radius: 5px;
+  background: #ddd;
+  outline: none;
+  margin: 10px 0;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  width: 15px;
-  height: 15px;
-} */
+  background: #b55ffe;
+  cursor: pointer;
+  border: none;
+  margin-top: -9px; /* formula to center the thumb vertically */
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b55ffe;
+  cursor: pointer;
+  border: none;
+  margin-top: -9px; /* formula to center the thumb vertically */
+}
+
+input[type='range']::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #b55ffe;
+  cursor: pointer;
+  border: none;
+  margin-top: -9px; /* formula to center the thumb vertically */
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+  height: 2px;
+  background: #37474f;
+  border-radius: 1px;
+  border: none;
+}
+
+input[type='range']::-moz-range-track {
+  height: 2px;
+  background: #37474f;
+  border-radius: 1px;
+  border: none;
+}
+
+input[type='range']::-ms-track {
+  height: 2px;
+  background: #37474f;
+  border-radius: 1px;
+  border: none;
+}
