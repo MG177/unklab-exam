@@ -197,19 +197,6 @@ export default function PageDashboard() {
     }
   }, [user, navigate]);
 
-  // const handleSearch = (event) => {
-  //   const query = event.target.value.toLowerCase();
-  //   ProductService.getProductsMini().then((data) => {
-  //     const filteredProducts = data.filter((product) => {
-  //       return (
-  //         product.name.toLowerCase().includes(query) ||
-  //         product.code.toLowerCase().includes(query)
-  //       );
-  //     });
-  //     setProducts(filteredProducts);
-  //   });
-  // };
-
   useEffect(() => {
     try {
       api
@@ -224,7 +211,20 @@ export default function PageDashboard() {
     } catch (error) {
       console.log(error);
     }
-  }, [user.access_token, examId]);
+    try {
+      api
+        .get(`/exam/token/${examId}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          setToken(response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [user.access_token, examId, token]);
 
   const handleStartExam = async () => {
     console.log('start exam');
