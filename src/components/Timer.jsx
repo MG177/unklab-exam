@@ -1,24 +1,24 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import api from "../config";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import api from '../config';
+import { useNavigate } from 'react-router-dom';
 // import Clock from "../image/clock_icon.svg";
 
 export default function Timer() {
   // const [time, setTime] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(10);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTime = async () => {
       try {
         const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem("examId"))}`,
+          `time/${JSON.parse(localStorage.getItem('examId'))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem("access_token")
+                localStorage.getItem('access_token')
               )}`,
             },
           }
@@ -29,7 +29,13 @@ export default function Timer() {
       }
     };
 
-    fetchTime();
+    fetchTime(); // Fetch time once when component mounts
+
+    const intervalId = setInterval(() => {
+      fetchTime();
+    }, 5000); // Send request every 5 seconds
+
+    return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, []);
 
   useEffect(() => {
@@ -37,7 +43,7 @@ export default function Timer() {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate("/score");
+          navigate('/score');
         } else {
           return prevTimeRemaining - 1;
         }

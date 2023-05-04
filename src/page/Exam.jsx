@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import api from "../config";
-import Footer from "../components/Footer";
-import Question from "../components/Question";
-import Option from "../components/Option";
-import Header from "../components/Header";
-import sound from "../media/no7.mp3";
-import img from "../media/gunting.jpg";
-import AuthContext from "../contexts/AuthContext";
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../config';
+import Footer from '../components/Footer';
+import Question from '../components/Question';
+import Option from '../components/Option';
+import Header from '../components/Header';
+import sound from '../media/no7.mp3';
+import img from '../media/gunting.jpg';
+import AuthContext from '../contexts/AuthContext';
 
 const media = {
   audio: sound,
@@ -17,7 +17,7 @@ const media = {
 export default function Exam() {
   const { examId } = useParams();
   const navigate = useNavigate();
-  const [answer, setAnswer] = useState("");
+  const [answer, setAnswer] = useState('');
   const [questions, setQuestions] = useState([1]);
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -27,20 +27,20 @@ export default function Exam() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await api.get("students/" + user.noreg, {
+        const response = await api.get('students/' + user.noreg, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
         if (!response.data) {
-          navigate("/started");
+          navigate('/started');
         } else {
           const filteredData = response.data.filter((item) => item !== null);
           setQuestions(filteredData);
           setQuestionLength(response.data.length);
           setLoading(false);
           if (filteredData.length === 0) {
-            navigate("/waiting");
+            navigate('/waiting');
           }
         }
       } catch (error) {
@@ -50,7 +50,7 @@ export default function Exam() {
 
     const fetchTime = async () => {
       try {
-        const response = await api.get("time/" + user.examId, {
+        const response = await api.get('time/' + user.examId, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
@@ -61,8 +61,18 @@ export default function Exam() {
       }
     };
 
-    fetchTime();
-    fetchQuestions();
+    async function fetchData() {
+      await fetchQuestions();
+      await fetchTime();
+    }
+
+    fetchData();
+
+    const intervalId = setInterval(() => {
+      fetchTime();
+    }, 5000); // Send request every 5 seconds
+
+    return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, [examId, navigate]);
 
   useEffect(() => {

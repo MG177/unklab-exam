@@ -198,32 +198,47 @@ export default function PageDashboard() {
   }, [user, navigate]);
 
   useEffect(() => {
-    try {
-      api
-        .get(`time/${examId}`, {
+    const fetchTimeRemaining = async () => {
+      try {
+        const response = await api.get(`time/${examId}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
-        })
-        .then((response) => {
-          setTime(response.data);
         });
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      api
-        .get(`/exam/token/${examId}`, {
+        setTime(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchToken = async () => {
+      try {
+        const response = await api.get(`/exam/token/${examId}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
-        })
-        .then((response) => {
-          setToken(response.data);
         });
-    } catch (error) {
-      console.log(error);
-    }
+        setToken(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTimeRemaining();
+    fetchToken();
+
+    const timeIntervalId = setInterval(() => {
+      fetchTimeRemaining();
+    }, 5000);
+
+    const tokenIntervalId = setInterval(() => {
+      fetchToken();
+    }, 3600000); // 1 hour interval
+
+    return () => {
+      clearInterval(timeIntervalId);
+      clearInterval(tokenIntervalId);
+    };
   }, [user.access_token, examId, token]);
 
   const handleStartExam = async () => {
@@ -370,7 +385,7 @@ export default function PageDashboard() {
                         Click here to start exam
                       </button>
                     ) : (
-                      <div className="min-w-full px-4 py-2 text-3xl font-bold text-center bg-white text-accent1 rounded-2xl">
+                      <div className="min-w-full min-h-full px-4 py-2 text-3xl font-bold text-center bg-white text-accent1 rounded-2xl">
                         {token}
                       </div>
                     )}
