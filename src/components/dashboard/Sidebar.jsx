@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
 
-export default function Sidebar({ setToken }) {
+export default function Sidebar({ setToken, setExam }) {
   const { user } = useContext(AuthContext);
   const { examId } = useParams();
   const uploadRef = useRef(null);
@@ -25,7 +25,7 @@ export default function Sidebar({ setToken }) {
         .then((res) => {
           console.log('exam list', res.data);
           setExamList(res.data);
-          uploadRef.current.value = '';
+          // uploadRef.current.value = '';
         });
     } catch (error) {
       console.log(error);
@@ -73,13 +73,13 @@ export default function Sidebar({ setToken }) {
   };
 
   const splitExamName = (examName) => {
-    const split1 = examName.split(' ');
+    const split1 = examName.split('/');
     const split2 = examName.split(' - ');
     return split1[0] + ' - ' + split2[1];
   };
 
   return (
-    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right">
+    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right overflow-x-auto">
       <div className="flex items-center justify-center h-16 p-3">
         {isHidden ? (
           <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
@@ -105,9 +105,9 @@ export default function Sidebar({ setToken }) {
             <Link
               to={`/dashboard/${exam._id}`}
               key={exam._id}
-              // onClick={() => {
-              //   handleSidebarButton(exam);
-              // }}
+              onClick={() => {
+                setExam(exam);
+              }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
                 !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
               } ${examId === exam._id && `bg-accent2 text-white`}`}

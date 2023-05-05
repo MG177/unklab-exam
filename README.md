@@ -1,7 +1,7 @@
 admin:
 | Username | Password |
 |----------|----------|
-| mg | 123 |
+| lumen | 123 |
 
 Student
 

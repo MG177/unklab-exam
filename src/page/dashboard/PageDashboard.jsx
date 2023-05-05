@@ -18,7 +18,7 @@ export default function PageDashboard() {
   const { questions, setQuestions } = useContext(QuestionContext);
   const navigate = useNavigate();
   const [exam, setExam] = useState({});
-  const [examActive, setExamActive] = useState();
+  const [examActive, setExamActive] = useState('-');
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const [token, setToken] = useState('');
@@ -126,6 +126,22 @@ export default function PageDashboard() {
     return formattedItem;
   });
 
+  if (!exam.examName) {
+    try {
+      api
+        .get(`/exam/name/${examId}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          setExam(response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const exportColumns = cols.map((col) => ({
     title: col.header,
     dataKey: col.field,
@@ -224,8 +240,10 @@ export default function PageDashboard() {
       }
     };
 
-    fetchTimeRemaining();
-    fetchToken();
+    if (examId) {
+      fetchTimeRemaining();
+      fetchToken();
+    }
 
     const timeIntervalId = setInterval(() => {
       fetchTimeRemaining();
@@ -257,8 +275,6 @@ export default function PageDashboard() {
         setToken(response.data.token);
       });
   };
-  console.log('time = ' + time);
-  console.log('token = ' + exam.token);
 
   useEffect(() => {
     let intervalId;
@@ -335,7 +351,7 @@ export default function PageDashboard() {
 
   return (
     <div className="relative flex w-full justify-center">
-      <Sidebar setToken={setToken} />
+      <Sidebar setToken={setToken} setExam={setExam} />
       {!loading ? (
         <>
           <div className="container p-4 w-full bg-[#FCF9FF] flex-1">
@@ -346,27 +362,10 @@ export default function PageDashboard() {
                   alt=""
                   className="absolute top-0 left-0 z-0 object-cover w-full h-full rounded-2xl"
                 />
-                <h1 className="z-10 text-[60px] max-w-xl font-Nunito text-white font-bold leading-tight">
+                <h1 className="z-10 text-[35px] max-w-xl font-Nunito text-white font-bold leading-tight">
                   {exam.examName}
                 </h1>
                 <div className="z-10 flex flex-row items-end gap-3">
-                  <div className="flex flex-row gap-3  font-Nunito right-4 bottom-4">
-                    {/* <form
-                  className="px-4 py-2 text-2xl font-bold bg-white text-accent1 rounded-2xl"
-                  onSubmit={handleImport}
-                >
-                  <i className="fa-solid fa-bars" />
-                  <label htmlFor="file">Choose a file:</label>
-                  <input type="file" id="file" name="file" />
-                  <button type="submit">Upload</button>
-                </form> */}
-                    <button
-                      className="px-4 py-2 text-2xl font-bold bg-white text-accent1 rounded-2xl"
-                      onClick={handleImport}
-                    >
-                      <i className="fa-solid fa-bars" />
-                    </button>
-                  </div>
                   <div className="flex flex-col items-center min-w-[220px] gap-3">
                     <div
                       className={`text-accent2 text-center font-extrabold font-nunito min-w-full text-3xl px-4 py-2 bg-white rounded-2xl ${
