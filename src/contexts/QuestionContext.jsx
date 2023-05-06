@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useMemo,
-  useContext
-} from 'react';
+import React, { createContext, useState, useMemo, useContext } from 'react';
 import api from '../config/index';
 import AuthContext from './AuthContext';
 import { useParams } from 'react-router-dom';
@@ -19,14 +13,14 @@ const questionsInitial = [
     options: [
       {
         id: 1,
-        text: ''
-      }
+        text: '',
+      },
     ],
     audio: null,
     image: null,
     type: 'Listening',
-    correctAnswer: ''
-  }
+    correctAnswer: '',
+  },
 ];
 
 export function QuestionProvider({ children }) {
@@ -39,6 +33,7 @@ export function QuestionProvider({ children }) {
 
   console.log('questions in context', questions);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSave = () => {
     setSaveStatus(true);
     localStorage.setItem('questions', JSON.stringify(questions));
@@ -68,8 +63,8 @@ export function QuestionProvider({ children }) {
         { questions: questions },
         {
           headers: {
-            Authorization: `Bearer ${user.access_token}`
-          }
+            Authorization: `Bearer ${user.access_token}`,
+          },
         }
       )
       .then((res) => {
@@ -88,10 +83,9 @@ export function QuestionProvider({ children }) {
       setQuestions,
       handleSave,
       saveStatus,
-      setSaveStatus
+      setSaveStatus,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questions]
+    [handleSave, questions, saveStatus]
   );
 
   return (

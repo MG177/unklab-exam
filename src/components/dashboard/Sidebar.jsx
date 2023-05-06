@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
+import QuestionContext from '../../contexts/QuestionContext';
 
 export default function Sidebar({ setToken, setExam }) {
   const { user } = useContext(AuthContext);
+  const { saveStatus } = useContext(QuestionContext);
   const { examId } = useParams();
+  const navigate = useNavigate();
   const uploadRef = useRef(null);
   const [isHidden, setIsHidden] = useState(false);
   const [examList, setExamList] = useState([]);
@@ -36,15 +39,8 @@ export default function Sidebar({ setToken, setExam }) {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setToken, user.access_token]);
-
-  // const handleSidebarButton = (exam) => {
-  //   fetchTime(exam._id);
-  //   setExam(exam);
-  //   setToken(exam.token);
-  // getDataGrid(exam._id);
-  // getDbQuestions(exam._id);
-  // };
 
   const handleLogout = () => {
     //clear local storage
@@ -102,10 +98,16 @@ export default function Sidebar({ setToken, setExam }) {
       <nav className="flex-1 px-4">
         <ul className={`space-y-2 font-Nunito text-gray bg-white`}>
           {examList.map((exam, index) => (
-            <Link
-              to={`/dashboard/${exam._id}`}
+            <button
+              // href={`/dashboard/${exam._id}`}
+              type="button"
               key={exam._id}
               onClick={() => {
+                if (!saveStatus) {
+                  alert('Please save your work first!');
+                  return;
+                }
+                navigate(`/dashboard/${exam._id}`);
                 setExam(exam);
               }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
@@ -114,7 +116,7 @@ export default function Sidebar({ setToken, setExam }) {
             >
               <p>{index + 1}</p>
               <p>{isHidden && splitExamName(exam.examName)}</p>
-            </Link>
+            </button>
           ))}
           <label
             className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg p-3 ${

@@ -1,10 +1,16 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import QuestionEditorItem from './QuestionEditorItem';
 import QuestionContext from '../../contexts/QuestionContext';
 
 export default function QuestionEditor() {
   const { handleSave, questions, setQuestions, setSaveStatus, saveStatus } =
     useContext(QuestionContext);
+
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    setSaveButtonDisabled(saveStatus);
+  }, [saveStatus]);
 
   const handleAddQuestion = () => {
     setQuestions((prevData) => {
@@ -33,6 +39,8 @@ export default function QuestionEditor() {
     setSaveStatus(false);
   };
 
+  console.log('saveStatus QuestionEditor', saveStatus);
+
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-y-scroll bg-white font-Nunito min-w-fit shadow-right scroll-smooth">
       <div className="flex flex-col items-center justify-start w-full max-w-lg p-3 ">
@@ -52,7 +60,7 @@ export default function QuestionEditor() {
         <button
           className="flex-1 py-3 font-medium text-white rounded-full px-44 bg-accent1 text-3 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={handleSave}
-          disabled={saveStatus}
+          disabled={saveButtonDisabled}
         >
           Save
         </button>
