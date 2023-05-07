@@ -7,11 +7,11 @@ export default function Login() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      navigate('/started');
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user && user.data.access_token) {
+  //     navigate('/started');
+  //   }
+  // }, [user, navigate]);
 
   return (
     <div
