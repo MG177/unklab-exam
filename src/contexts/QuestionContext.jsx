@@ -33,6 +33,26 @@ export function QuestionProvider({ children }) {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSave = () => {
+    let emptyOption = false;
+    questions.forEach((question) => {
+      if (!question.correctAnswer) {
+        emptyOption = true;
+        return;
+      }
+      question.options.forEach((option) => {
+        if (!option.text) {
+          emptyOption = true;
+          return;
+        }
+      });
+    });
+    if (emptyOption) {
+      alert(
+        'Please make sure all options and correct answers are filled in before saving.'
+      );
+      return;
+    }
+
     setSaveStatus(true);
     localStorage.setItem('questions', JSON.stringify(questions));
     postQuestions();
