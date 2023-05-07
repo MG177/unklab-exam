@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import check from '../../image/check_small.svg';
 import QuestionContext from '../../contexts/QuestionContext';
 import { Button } from 'primereact/button';
@@ -7,16 +7,20 @@ export default function EditableOptions({
   active,
   questionId,
   option,
-  optionId
+  optionId,
 }) {
   const { setQuestions, setSaveStatus } = useContext(QuestionContext);
-  const [optionValue, setOptionValue] = useState(option.text);
+  const [optionValue, setOptionValue] = useState('');
+
+  useEffect(() => {
+    setOptionValue(option.text);
+  }, [option.text]);
 
   const handleAnswerChange = () => {
     setQuestions((prevData) => {
       const newData = [...prevData];
       newData.find((question) => question.id === questionId).correctAnswer =
-        optionValue;
+        optionId;
       return newData;
     });
     setSaveStatus(false);
@@ -79,18 +83,19 @@ export default function EditableOptions({
 
   return (
     <div
-      className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}>
-      <button type='button' onClick={() => handleAnswerChange()}>
+      className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}
+    >
+      <button type="button" onClick={() => handleAnswerChange()}>
         {active ? (
-          <img src={check} alt='' />
+          <img src={check} alt="" />
         ) : (
-          <div className='w-[29px] h-[29px] bg-whitePlus rounded-[50%] border'></div>
+          <div className="w-[29px] h-[29px] bg-whitePlus rounded-[50%] border"></div>
         )}
       </button>
       <input
-        type='text'
-        className='text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0'
-        placeholder='Option...'
+        type="text"
+        className="text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
+        placeholder="Option..."
         value={optionValue}
         onChange={handleOptionChange}
       />
@@ -100,12 +105,12 @@ export default function EditableOptions({
         onClick={() => handleDeleteOptions(questionId, index)}
       > */}
       <Button
-        icon='pi pi-times'
+        icon="pi pi-times"
         rounded
         text
         style={{ color: '#FF6593' }}
         onClick={() => handleDeleteOption()}
-        aria-label='Cancel'
+        aria-label="Cancel"
       />
       {/* </button> */}
     </div>

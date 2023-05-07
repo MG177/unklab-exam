@@ -7,6 +7,13 @@ export default function QuestionEditor() {
     useContext(QuestionContext);
 
   const [saveButtonDisabled, setSaveButtonDisabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (questions.length !== 0) {
+      setLoading(false);
+    }
+  }, [questions]);
 
   useEffect(() => {
     setSaveButtonDisabled(saveStatus);
@@ -40,6 +47,10 @@ export default function QuestionEditor() {
   };
 
   console.log('saveStatus QuestionEditor', saveStatus);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-y-scroll bg-white font-Nunito min-w-fit shadow-right scroll-smooth">

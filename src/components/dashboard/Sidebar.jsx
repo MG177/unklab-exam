@@ -104,8 +104,8 @@ export default function Sidebar({ setToken, setExam }) {
               key={exam._id}
               onClick={() => {
                 if (!saveStatus) {
-                  alert('Please save your work first!');
-                  return;
+                  // eslint-disable-next-line no-restricted-globals
+                  if (!confirm('Changes you made may not be saved.')) return;
                 }
                 navigate(`/dashboard/${exam._id}`);
                 setExam(exam);

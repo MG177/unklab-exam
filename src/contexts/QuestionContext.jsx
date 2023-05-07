@@ -6,29 +6,27 @@ import UnsaveWarning from '../components/dashboard/UnsaveWarning';
 
 const QuestionContext = createContext();
 
-const questionsInitial = [
-  {
-    id: 1,
-    text: '',
-    options: [
-      {
-        id: 1,
-        text: '',
-      },
-    ],
-    audio: null,
-    image: null,
-    type: 'Listening',
-    correctAnswer: '',
-  },
-];
+// const questionsInitial = [
+//   {
+//     id: 1,
+//     text: '',
+//     options: [
+//       {
+//         id: 1,
+//         text: '',
+//       },
+//     ],
+//     audio: null,
+//     image: null,
+//     type: 'Listening',
+//     correctAnswer: '',
+//   },
+// ];
 
 export function QuestionProvider({ children }) {
   const { examId } = useParams();
   const { user } = useContext(AuthContext);
-  const [questions, setQuestions] = useState(
-    JSON.parse(localStorage.getItem('questions')) ?? questionsInitial
-  );
+  const [questions, setQuestions] = useState(null);
   const [saveStatus, setSaveStatus] = useState(true);
 
   console.log('questions in context', questions);
@@ -43,6 +41,7 @@ export function QuestionProvider({ children }) {
   // calculate file size of image and audio in questions
   const totalFileSize = useMemo(() => {
     let total = 0;
+    if (!questions) return total;
     questions.forEach((question) => {
       if (question.audio) {
         total += question.audio.length;
@@ -81,11 +80,12 @@ export function QuestionProvider({ children }) {
     () => ({
       questions,
       setQuestions,
-      handleSave,
       saveStatus,
       setSaveStatus,
+      handleSave,
+      totalFileSize,
     }),
-    [handleSave, questions, saveStatus]
+    [handleSave, questions, saveStatus, totalFileSize]
   );
 
   return (
