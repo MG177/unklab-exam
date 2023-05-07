@@ -13,7 +13,7 @@ export default function Form() {
   const adminUsernameRef = useRef(null);
   const adminPasswordRef = useRef(null);
   const [adminForm, setAdminForm] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [isShaking, setIsShaking] = useState(false);
 
   const handleLogin = async (event) => {
@@ -21,7 +21,7 @@ export default function Form() {
     localStorage.clear();
     if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
       setErrorMessage(
-        "Missing required fields. Please fill in all required fields."
+        'Missing required fields. Please fill in all required fields.'
       );
       shakeitBaby();
       return;
@@ -29,17 +29,17 @@ export default function Form() {
     try {
       const studentData = await api.post('/auth/login/student', {
         noreg: studentNoregRef.current.value,
-        token: studentTokenRef.current.value
+        token: studentTokenRef.current.value,
       });
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
         {
-          token: studentData.data.data.access_token
+          token: studentData.data.data.access_token,
         },
         {
           headers: {
-            Authorization: `Bearer ${studentData.data.data.access_token}`
-          }
+            Authorization: `Bearer ${studentData.data.data.access_token}`,
+          },
         }
       );
 
@@ -81,14 +81,14 @@ export default function Form() {
       api
         .post('/auth/login/admin', {
           username: adminUsernameRef.current.value,
-          password: adminPasswordRef.current.value
+          password: adminPasswordRef.current.value,
         })
         .then((response) => {
           const admin = response.data.data;
           Object.entries(admin).forEach(([key, value]) => {
             localStorage.setItem(key, JSON.stringify(value));
           });
-          setUser(response.data);
+          setUser(response.data.data);
           navigate('/dashboard/0');
         });
     } catch (error) {
@@ -102,42 +102,43 @@ export default function Form() {
   };
 
   function shakeitBaby() {
-    console.log("shake");
+    console.log('shake');
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 1000);
   }
   return (
     <div>
       <button
-        type='button'
-        className='py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0'
-        onClick={() => toggleForm()}></button>
+        type="button"
+        className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
+        onClick={() => toggleForm()}
+      ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className='max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center'>
-            <div className='flex flex-col items-center justify-center'>
-              <div className='flex text-5xl md:text-[62px] font-inter font-bold '>
-                <h1 className='text-[#37474F]'>Welcome Admin</h1>
-                <h1 className='text-[#FF6593]'>!</h1>
+          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
+                <h1 className="text-[#37474F]">Welcome Admin</h1>
+                <h1 className="text-[#FF6593]">!</h1>
               </div>
-              <p className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
+              <p className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] ">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
             </div>
-            <div className='flex flex-col w-full gap-6'>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='username' className='mb-2'>
+            <div className="flex flex-col w-full gap-6">
+              <div className="flex flex-col items-start ">
+                <label htmlFor="username" className="mb-2">
                   Username
                 </label>
                 <input
-                  name='username'
-                  id='username'
+                  name="username"
+                  id="username"
                   ref={adminUsernameRef}
-                  type='text'
-                  placeholder='John'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
-                  pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="John"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
+                  pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
@@ -145,18 +146,18 @@ export default function Form() {
                   Password
                 </label>
                 <input
-                  name='password'
-                  id='password'
+                  name="password"
+                  id="password"
                   ref={adminPasswordRef}
-                  type='password'
-                  placeholder='********'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="password"
+                  placeholder="********"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
             <button
-              type='submit'
-              className='uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]'
+              type="submit"
+              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
               // onClick={() => (adminFormRef.current = true)}
             >
               Login as admin
@@ -165,44 +166,45 @@ export default function Form() {
         </form>
       ) : (
         <form onSubmit={handleLogin}>
-          <div className='max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center'>
-            <div className='flex flex-col items-center justify-center'>
-              <div className='flex text-5xl md:text-[62px] font-inter font-bold '>
-                <h1 className='text-[#37474F]'>Welcome</h1>
-                <h1 className='text-[#FF6593]'>!</h1>
+          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center justify-center">
+              <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
+                <h1 className="text-[#37474F]">Welcome</h1>
+                <h1 className="text-[#FF6593]">!</h1>
               </div>
               <p
                 style={{ userSelect: 'none' }}
-                className='font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] '>
+                className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] "
+              >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
             </div>
-            <div className='flex flex-col w-full gap-6'>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='noreg' className='mb-2'>
+            <div className="flex flex-col w-full gap-6">
+              <div className="flex flex-col items-start ">
+                <label htmlFor="noreg" className="mb-2">
                   Registration Number
                 </label>
                 <input
-                  name='noreg'
-                  id='noreg'
+                  name="noreg"
+                  id="noreg"
                   ref={studentNoregRef}
-                  type='text'
-                  placeholder='S2200000'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="S2200000"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
-              <div className='flex flex-col items-start '>
-                <label htmlFor='token' className='mb-2'>
+              <div className="flex flex-col items-start ">
+                <label htmlFor="token" className="mb-2">
                   Token
                 </label>
                 <input
-                  name='token'
-                  id='token'
+                  name="token"
+                  id="token"
                   ref={studentTokenRef}
-                  type='text'
-                  placeholder='Token'
-                  className='w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]'
+                  type="text"
+                  placeholder="Token"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
@@ -210,7 +212,7 @@ export default function Form() {
               {errorMessage && (
                 <div
                   className={`flex justify-center h-fit ${
-                    isShaking ? "animate-horizontal-shaking" : ""
+                    isShaking ? 'animate-horizontal-shaking' : ''
                   }`}
                 >
                   <img src={Vector} className=" " />

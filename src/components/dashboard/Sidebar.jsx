@@ -13,6 +13,8 @@ export default function Sidebar({ setToken, setExam }) {
   const [isHidden, setIsHidden] = useState(false);
   const [examList, setExamList] = useState([]);
 
+  console.log('user in sidebar', user);
+
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
@@ -75,7 +77,7 @@ export default function Sidebar({ setToken, setExam }) {
   };
 
   return (
-    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right overflow-x-auto">
+    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right overflow-x-auto relative">
       <div className="flex items-center justify-center h-16 p-3">
         {isHidden ? (
           <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
@@ -134,7 +136,7 @@ export default function Sidebar({ setToken, setExam }) {
           </label>
         </ul>
       </nav>
-      <div className="flex justify-end w-full p-5">
+      <div className="sticky bottom-0 right-0 flex justify-end w-full p-5">
         <button
           onClick={toggleHidden}
           className="w-8 h-8 text-white rounded-full bg-accent2"

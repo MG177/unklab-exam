@@ -74,7 +74,7 @@ export default function PageDashboard() {
     } catch (error) {
       console.log(error);
     }
-  }, [user.access_token, examId, setQuestions, loading]);
+  }, [examId, loading, setQuestions, user.access_token]);
 
   useEffect(() => {
     try {

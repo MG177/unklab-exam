@@ -6,24 +6,20 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }) {
-  function getAllLocalStorage() {
-    if (!localStorage.length) return null;
-    const localStorageData = {};
+export function getAllLocalData() {
+  const localStorageData = {};
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      const value = JSON.parse(localStorage.getItem(key));
-      localStorageData[key] = value;
-    }
-    console.log('AuthContext refreshed = ', localStorageData);
-
-    return localStorageData;
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = JSON.parse(localStorage.getItem(key));
+    localStorageData[key] = value;
   }
 
-  const [user, setUser] = useState(getAllLocalStorage() || null);
+  return localStorageData;
+}
 
-  console.log('user from authContext = ', user);
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(getAllLocalData() || {});
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
