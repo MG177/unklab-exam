@@ -151,19 +151,6 @@ export default function PageDashboard() {
     dt.current.exportCSV({ selectionOnly });
   };
 
-  const exportPdf = () => {
-    import('jspdf').then((jsPDF) => {
-      import('jspdf-autotable').then(() => {
-        const doc = new jsPDF.default({
-          orientation: 'landscape',
-        });
-
-        doc.autoTable(exportColumns, dataGrid);
-        doc.save(`Exam_export_${exam.examName}_${new Date().getTime()}.pdf`);
-      });
-    });
-  };
-
   const exportExcel = () => {
     import('xlsx').then((xlsx) => {
       const worksheet = xlsx.utils.json_to_sheet(formattedData);
@@ -315,16 +302,6 @@ export default function PageDashboard() {
         raised
         onClick={exportExcel}
         data-pr-tooltip="XLS"
-      />
-      <Button
-        type="button"
-        icon="pi pi-file-pdf"
-        severity="warning"
-        rounded
-        text
-        raised
-        onClick={exportPdf}
-        data-pr-tooltip="PDF"
       />
     </div>
   );
