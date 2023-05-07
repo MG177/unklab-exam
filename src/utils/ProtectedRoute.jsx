@@ -1,6 +1,6 @@
-import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import AuthContext from "../contexts/AuthContext";
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
 
 export default function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -12,18 +12,19 @@ export default function ProtectedRoute({ children }) {
     const checkAuth = async () => {
       // const user = await localStorage.getItem("access_token");
       if (!user) {
-        console.log("user from protectedRoute = ", user);
-        console.log("!!!PROTECTED PAGE!!!");
+        console.log('user from protectedRoute = ', user);
+        console.log('!!!PROTECTED PAGE!!!');
         setIsAuthenticated(false);
-        navigate("/");
+        navigate('/');
       } else {
-        console.log("!!!ACCESS GRANTED!!!");
+        console.log('!!!ACCESS GRANTED!!!');
         setIsAuthenticated(true);
       }
       setLoading(false);
     };
     checkAuth();
   }, [user, navigate]);
+  console.log('user.access_token = ', user.access_token);
 
   return loading ? (
     <div>Loading...</div>
