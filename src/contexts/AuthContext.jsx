@@ -10,9 +10,22 @@ export function getAllLocalData() {
   const localStorageData = {};
 
   for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = JSON.parse(localStorage.getItem(key));
-    localStorageData[key] = value;
+    try {
+      const key = localStorage.key(i);
+      const value = JSON.parse(localStorage.getItem(key));
+      localStorageData[key] = value;
+    } catch (error) {
+      // Handle any errors that occur during parsing or retrieval
+      console.error(`Error retrieving data for key "${key}":`, error);
+
+      // Wait for 3 seconds before clearing local storage
+      setTimeout(() => {
+        localStorage.clear();
+        console.log('Local storage cleared.');
+      }, 3000);
+
+      break; // Exit the loop after clearing local storage
+    }
   }
 
   return localStorageData;
