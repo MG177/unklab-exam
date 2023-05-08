@@ -1,35 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../components/Header';
 import Timer from '../../components/Timer';
 import Footer from '../../components/Footer';
 import api from '../../config';
 import { useParams, useNavigate } from 'react-router-dom';
+import AuthContext from '../../contexts/AuthContext';
 // import Warning from "../components/Warning"
 
 export default function ScoreCountdown() {
+  const { user } = useContext(AuthContext);
   const [time, setTime] = useState(0);
   const { examId } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
-    const fetchTime = async () => {
+    const fetchScore = async () => {
       try {
-        const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem('examId'))}`,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('access_token')
-              )}`,
-            },
-          }
-        );
-        setTime(response.data);
+        const response = await api.get('/students/score/' + user.noreg, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
+        // if (!response.data) {
+        //   localStorage.clear();
+        //   navigate('/started');
+        // } else {
+        //   setScore(response.data);
+        // }
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchTime();
+    fetchScore();
   }, [examId, navigate]);
   return (
     <div

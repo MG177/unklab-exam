@@ -140,7 +140,7 @@ export default function Score() {
                   <p className="text-2xl">Right answers</p>
                 </div>
                 <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7">
-                  <p className="text-5xl text-left font-bold">{score.grade}</p>
+                  <p className="text-5xl font-bold text-left">{score.grade}</p>
                   <p className="text-2xl font-bold">Grade</p>
                 </div>
               </div>

@@ -16,7 +16,7 @@ export function getAllLocalData() {
       localStorageData[key] = value;
     } catch (error) {
       // Handle any errors that occur during parsing or retrieval
-      console.error(`Error retrieving data for key "${key}":`, error);
+      console.error(`Error retrieving data for key :`, error);
 
       // Wait for 3 seconds before clearing local storage
       setTimeout(() => {
@@ -27,6 +27,7 @@ export function getAllLocalData() {
       break; // Exit the loop after clearing local storage
     }
   }
+  console.log('localStorageData' + localStorageData);
 
   return localStorageData;
 }
@@ -34,7 +35,10 @@ export function getAllLocalData() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(getAllLocalData() || {});
 
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const value = useMemo(
+    () => ({ user, setUser, getAllLocalData }),
+    [user, setUser]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
