@@ -9,17 +9,29 @@ export function useAuth() {
 export function getAllLocalData() {
   const localStorageData = {};
 
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = JSON.parse(localStorage.getItem(key));
-    localStorageData[key] = value;
+  localStorageData.access_token = localStorage.getItem('access_token');
+  localStorageData.examId = localStorage.getItem('examId');
+  localStorageData.examName = localStorage.getItem('examName');
+  localStorageData.noreg = localStorage.getItem('noreg');
+  localStorageData.studentId = localStorage.getItem('studentId');
+  localStorageData.username = localStorage.getItem('username');
+
+  // if localstorage has empty or null value, return null
+  for (const key in localStorageData) {
+    if (
+      localStorageData[key] === null ||
+      localStorageData[key] === '' ||
+      localStorageData[key] === undefined
+    ) {
+      return null;
+    }
   }
 
   return localStorageData;
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(getAllLocalData() || {});
+  const [user, setUser] = useState(getAllLocalData() || null);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 

@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children }) {
     };
     checkAuth();
   }, [user, navigate]);
-  console.log('user.access_token = ', user.access_token);
+  console.log('user.access_token = ', user);
 
   return loading ? (
     <div>Loading...</div>
