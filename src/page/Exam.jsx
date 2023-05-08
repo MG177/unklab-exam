@@ -31,7 +31,7 @@ export default function Exam() {
           'students/' + JSON.parse(localStorage.getItem('noreg')),
           {
             headers: {
-              Authorization: `Bearer ${user.access_token}`,
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`,
             },
           }
         );
@@ -55,7 +55,7 @@ export default function Exam() {
       try {
         const response = await api.get(`time/${JSON.parse(localStorage.getItem('examId'))}`, {
           headers: {
-            Authorization: `Bearer ${user.access_token}`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
           },
         });
         setTime(response.data);
