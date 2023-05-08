@@ -1,33 +1,63 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import EditableOptions from './EditableOptions';
 import QuestionContext from '../../contexts/QuestionContext';
+import AuthContext from '../../contexts/AuthContext';
 import SelectableButtons from './SelectableButtons';
 import AddImage from '../../image/imageicon.svg';
 import AddAudio from '../../image/audio.svg';
 import Delete from '../../image/trash.svg';
+import api from '../../config';
 
 export default function QuestionEditorItem({ question }) {
   const { questions, setQuestions, setSaveStatus } =
     useContext(QuestionContext);
+  const { user } = useContext(AuthContext);
   const questionRef = useRef(null);
   const [audioSrc, setAudioSrc] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
 
-  const handleReadAudioFile = (file) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setAudioSrc(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
+  useEffect(() => {
+    console.log('useEffect QuestionEditorItem');
+    if (question.audio) {
+      if (!audioLoading) {
+        setAudioLoading(true);
+      }
+      api
+        .get(`/file/${question.audio}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          setAudioSrc(response.data);
+          setImageSrc(null);
+          setAudioLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+    if (question.image) {
+      if (!imageLoading) {
+        setImageLoading(true);
+      }
+      api
+        .get(`/file/${question.image}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          setImageSrc(response.data);
+          setAudioSrc(null);
+          setImageLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question.audio, question.image, user.access_token]);
 
-  const handleReadImageFile = (file) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImageSrc(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
+  // console.log('imageSrc', imageSrc);
 
   const resizeTextArea = () => {
     questionRef.current.style.height = 'auto';
@@ -55,24 +85,38 @@ export default function QuestionEditorItem({ question }) {
       alert('File size exceeds 1MB limit');
       return;
     }
-    handleReadAudioFile(file);
+    const formData = new FormData();
+    formData.append('file', file);
 
-    setQuestions((prevData) => {
-      const index = prevData.findIndex(
-        (question) => question.id === questionId
-      );
-      if (index === -1) return prevData;
-      const newData = [...prevData];
-      newData[index] = {
-        ...newData[index],
-        audio: file,
-        image: null,
-      };
-      return newData;
-    });
+    api
+      .post('/file', formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
+      .then((response) => {
+        const fileId = response.data.id;
+        setQuestions((prevData) => {
+          const index = prevData.findIndex(
+            (question) => question.id === questionId
+          );
+          if (index === -1) return prevData;
+          const newData = [...prevData];
+          newData[index] = {
+            ...newData[index],
+            audio: fileId,
+            image: null,
+          };
+          return newData;
+        });
+        setSaveStatus(false);
+        setAudioLoading(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     e.target.value = '';
-    setSaveStatus(false);
   };
 
   const handleImageFileChange = (e, questionId) => {
@@ -81,24 +125,39 @@ export default function QuestionEditorItem({ question }) {
       alert('File size exceeds 1MB limit');
       return;
     }
-    handleReadImageFile(file);
+    const formData = new FormData();
+    formData.append('file', file);
 
-    setQuestions((prevData) => {
-      const index = prevData.findIndex(
-        (question) => question.id === questionId
-      );
-      if (index === -1) return prevData;
-      const newData = [...prevData];
-      newData[index] = {
-        ...newData[index],
-        image: file,
-        audio: null,
-      };
-      return newData;
-    });
+    api
+      .post('/file', formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
+      .then((response) => {
+        // console.log('response', response);
+        const fileId = response.data.id;
+        setQuestions((prevData) => {
+          const index = prevData.findIndex(
+            (question) => question.id === questionId
+          );
+          if (index === -1) return prevData;
+          const newData = [...prevData];
+          newData[index] = {
+            ...newData[index],
+            image: fileId,
+            audio: null,
+          };
+          return newData;
+        });
+        setSaveStatus(false);
+        setImageLoading(true);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     e.target.value = '';
-    setSaveStatus(false);
   };
 
   const handleRemoveMusicFile = (questionId) => {
@@ -161,6 +220,8 @@ export default function QuestionEditorItem({ question }) {
     setSaveStatus(false);
   };
 
+  // console.log('imageSrc', imageSrc);
+
   return (
     <div className="flex w-full gap-3 mb-6">
       <div className="flex flex-col w-full gap-6">
@@ -169,15 +230,20 @@ export default function QuestionEditorItem({ question }) {
           <h3 className="text-2xl font-bold text-accent1">
             Question #{question.id}
           </h3>
-          {question.audio && (
+          {audioLoading && <p>Loading audio...</p>}
+          {audioSrc && (
             <div className="flex items-center gap-2">
-              <audio src={audioSrc} controls />
+              <audio
+                src={`data:audio/mp3;base64,${audioSrc.base64}`}
+                controls
+              />
             </div>
           )}
-          {question.image && (
+          {imageLoading && <p>Loading image...</p>}
+          {imageSrc && (
             <div className="flex items-center gap-2">
               <img
-                src={imageSrc}
+                src={`data:${imageSrc.type};base64,${imageSrc.base64}`}
                 alt="Selected"
                 className="object-cover w-full h-auto"
                 style={{ maxHeight: '300px' }}
