@@ -53,7 +53,7 @@ export default function Exam() {
 
     const fetchTime = async () => {
       try {
-        const response = await api.get('time/' + user.examId, {
+        const response = await api.get(`time/${JSON.parse(localStorage.getItem('examId'))}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
