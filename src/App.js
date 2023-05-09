@@ -46,7 +46,7 @@ function App() {
             path="/score"
             element={
               <ProtectedRoute>
-                <Login />
+                <Score />
               </ProtectedRoute>
             }
           />
