@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import sound from '../media/no7.mp3';
 import img from '../media/gunting.jpg';
 import AuthContext from '../contexts/AuthContext';
+import Media from '../components/Media';
 
 const media = {
   audio: sound,
@@ -23,6 +24,7 @@ export default function Exam() {
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const { user, getAllLocalData } = useContext(AuthContext);
+  console.log('user from exam = ', user);
   const [questionLength, setQuestionLength] = useState(0);
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -50,6 +52,8 @@ export default function Exam() {
         console.log(error);
       }
     };
+
+    console.log('question = ', questions);
 
     const fetchTime = async () => {
       try {
@@ -102,6 +106,7 @@ export default function Exam() {
       <Header />
       {!loading && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
+          <Media id={questions[question].image || questions[question].audio} />
           <Question question={question} questions={questions} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
             {questions[question].option.map((option, index) => (
