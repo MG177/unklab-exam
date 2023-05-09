@@ -107,11 +107,12 @@ export default function Exam() {
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} questions={questions} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
-            {questions[question].option.map((option, index) => (
+            {questions[question].options.map((option) => (
               <Option
-                key={index}
-                option={option}
-                active={handleActive(option)}
+                key={option.id} // Use option.id as the key
+                answerId={option.id} // Pass option.id to handleAnswer
+                option={option.text} // Use option.text as the option
+                active={handleActive(option.id)} // Pass option.text to handleActive
                 handleAnswer={handleAnswer}
               />
             ))}
