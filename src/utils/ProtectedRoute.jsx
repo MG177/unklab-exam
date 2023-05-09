@@ -10,8 +10,7 @@ export default function ProtectedRoute({ children }) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // const user = await localStorage.getItem("access_token");
-      if (!user) {
+      if (typeof user === 'undefined' || user === null) {
         console.log('user from protectedRoute = ', user);
         console.log('!!!PROTECTED PAGE!!!');
         setIsAuthenticated(false);

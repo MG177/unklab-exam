@@ -61,6 +61,9 @@ export default function Form() {
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });
+
+        setUser(studentData.data.data);
+
         getAllLocalData();
         navigate('/started');
       } else {
