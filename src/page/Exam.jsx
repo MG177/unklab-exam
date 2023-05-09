@@ -106,7 +106,6 @@ export default function Exam() {
       <Header />
       {!loading && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
-          <Media id={questions[question].image || questions[question].audio} />
           <Question question={question} questions={questions} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
             {questions[question].option.map((option, index) => (

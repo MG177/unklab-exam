@@ -19,24 +19,8 @@ export default function Questions({ question, questions, media }) {
       <h1 className="font-nunito font-bold text-[29px] leading-[34.8px] text-[#B55FFE]">
         Question #{questions[question].id}
       </h1>
-      {/* {hasAudio && (
-        <div className="flex-1 mb-2">
-          <audio
-            controls
-            className="w-full"
-            controlsList="nodownload noplaybackrate"
-          >
-            <source src={media.audio} type="audio/mpeg" />
-          </audio>
-        </div>
-      )}
-      {hasImage && (
-        <div className="flex-1 mb-2">
-          <img src={media.image} alt="" className="w-full mt-3" />
-        </div>
-      )} */}
 
-      <Media id={'644f7b041e1ab88845ae5cf9'} />
+      {/* <Media id={'644f7b041e1ab88845ae5cf9'} /> */}
       <p className="font-nunito text-[20px] leading-[24px] text-[#37474F]">
         {questions[question].text}
       </p>
