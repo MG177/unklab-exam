@@ -33,7 +33,7 @@ export default function Exam() {
           'students/' + JSON.parse(localStorage.getItem('noreg')),
           {
             headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+              Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
@@ -61,7 +61,7 @@ export default function Exam() {
           `time/${JSON.parse(localStorage.getItem('examId'))}`,
           {
             headers: {
-              Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+              Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
