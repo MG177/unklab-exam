@@ -29,7 +29,6 @@ export default function QuestionEditor() {
       }
       newData.push({
         id: newId,
-        question: '',
         options: [
           {
             id: 1,
