@@ -8,7 +8,6 @@ import Header from '../components/Header';
 import sound from '../media/no7.mp3';
 import img from '../media/gunting.jpg';
 import AuthContext from '../contexts/AuthContext';
-import Media from '../components/Media';
 
 const media = {
   audio: sound,
