@@ -4,7 +4,7 @@ import AuthContext from '../contexts/AuthContext';
 
 const MAX_PLAYS = 3;
 
-export default function Media({ id }) {
+export default function Media({ id, dashboard }) {
   const [file, setFile] = useState(null);
   const { user } = useContext(AuthContext);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -61,7 +61,15 @@ export default function Media({ id }) {
     );
   }
 
-  if (type.startsWith('audio/')) {
+  if (dashboard && type.startsWith('audio/')) {
+    return (
+      <div className="flex flex-row items-center">
+        <audio src={`data:audio/mp3;base64,${base64}`} controls />
+      </div>
+    );
+  }
+
+  if (type.startsWith('audio/') && !dashboard) {
     return (
       <div className="flex flex-row items-center">
         <audio

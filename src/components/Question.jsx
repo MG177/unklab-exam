@@ -3,14 +3,15 @@ import '../styles/audio.css';
 import Media from './Media';
 
 export default function Questions({ question, questions, media }) {
-  const hasAudio = questions[question].audio === true;
-  const hasImage = questions[question].image === true;
-  const hasFile = questions[question].file === true;
-  const hasMedia = questions[question].media === true;
+  const hasContent =
+    questions[question].audio ||
+    questions[question].image ||
+    questions[question].file ||
+    questions[question].media;
 
-  const hasContent = hasAudio || hasImage || hasFile || hasMedia;
+  console.log('hasContent: ', hasContent);
 
-  console.log('id: ' + JSON.stringify(questions[question]));
+  console.log('id: ', questions[question].media);
 
   console.log('question: ', question);
   console.log('questions: ', questions);
