@@ -27,26 +27,36 @@ export default function Footer({
     if (!answer) {
       console.log('no answer');
     } else {
-      const hitAnswer = await api.patch(
-        'students/answer/' + user.noreg,
-        {
-          answer: answer,
-          index: questions[question].id - 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
+      try {
+        const hitAnswer = await api.patch(
+          'students/answer/' + user.noreg,
+          {
+            answer: answer,
+            index: questions[question].id - 1,
           },
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        console.log('hit answer: ' + hitAnswer.data);
+
+        // Check if the API hit was successful
+        if (hitAnswer.status === 200 && hitAnswer.data) {
+          setAnswer(null);
+          setQuestion((prev) => prev + 1);
+        } else {
+          console.log('API hit was not successful');
+          // Handle the error or show an error message to the user
         }
-      );
-      console.log('hit answer: ' + hitAnswer.data);
-      if (hitAnswer.data) {
-        setAnswer(null);
-        setQuestion((prev) => prev + 1);
+      } catch (error) {
+        console.log('API hit failed:', error);
+        // Handle the error or show an error message to the user
       }
     }
 
-    if (question === questions.length - 1) {
+    if (question === questions.length - 1 && answer) {
       // handleTimeOut();
       navigate('/waiting');
     }

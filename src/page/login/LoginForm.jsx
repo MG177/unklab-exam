@@ -7,7 +7,7 @@ import { eventWrapper } from '@testing-library/user-event/dist/utils';
 
 export default function Form() {
   const navigate = useNavigate();
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, getAllLocalData } = useContext(AuthContext);
   const studentNoregRef = useRef(null);
   const studentTokenRef = useRef(null);
   const adminUsernameRef = useRef(null);
@@ -61,7 +61,8 @@ export default function Form() {
         Object.entries(studentData.data.data).forEach(([key, value]) => {
           localStorage.setItem(key, JSON.stringify(value));
         });
-        window.location.reload();
+        getAllLocalData();
+        navigate('/started');
       } else {
         throw new Error('Student not found');
       }
@@ -116,12 +117,12 @@ export default function Form() {
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
           <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-3">
               <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
-                <h1 className="text-[#37474F]">Welcome Admin</h1>
-                <h1 className="text-[#FF6593]">!</h1>
+                <span className="text-[#37474F]">Welcome Admin</span>
+                <span className="text-[#FF6593]">!</span>
               </div>
-              <p className="font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] ">
+              <p className="font-Nunito font-normal text-sm md:text-[24px] leading-[30px] ">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
@@ -215,7 +216,7 @@ export default function Form() {
                     isShaking ? 'animate-horizontal-shaking' : ''
                   }`}
                 >
-                  <img src={Vector} className=" " />
+                  <img src={Vector} className="" />
                   <div className="h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-accent2 text-left ml-4 -mb-6">
                     {errorMessage}
                   </div>

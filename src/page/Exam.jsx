@@ -23,16 +23,20 @@ export default function Exam() {
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
-  const { user } = useContext(AuthContext);
+  const { user, getAllLocalData } = useContext(AuthContext);
+  console.log('user from exam = ', user);
   const [questionLength, setQuestionLength] = useState(0);
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await api.get('students/' + user.noreg, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
+        const response = await api.get(
+          'students/' + JSON.parse(localStorage.getItem('noreg')),
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
         if (!response.data) {
           navigate('/started');
         } else {
@@ -48,6 +52,8 @@ export default function Exam() {
         console.log(error);
       }
     };
+
+    console.log('question = ', questions);
 
     const fetchTime = async () => {
       try {
