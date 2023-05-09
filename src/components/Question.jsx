@@ -36,7 +36,13 @@ export default function Questions({ question, questions, media }) {
         </div>
       )} */}
 
-      <Media id={'644f7b041e1ab88845ae5cf9'} />
+      <Media
+        id={
+          questions[question].image ||
+          questions[question].audio ||
+          questions[question].file
+        }
+      />
       <p className="font-nunito text-[20px] leading-[24px] text-[#37474F]">
         {questions[question].text}
       </p>

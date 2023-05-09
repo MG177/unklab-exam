@@ -4,14 +4,14 @@ import LoginForm from '../login/LoginForm';
 import AuthContext from '../../contexts/AuthContext';
 
 export default function Login() {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const { user } = useContext(AuthContext);
+  // const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      navigate('/started');
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     navigate('/started');
+  //   }
+  // }, [user, navigate]);
 
   return (
     <div
