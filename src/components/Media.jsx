@@ -55,7 +55,7 @@ export default function Media({ id }) {
         <img
           src={`data:${type};base64,${base64}`}
           alt={name}
-          className="w-full h-full object-cover"
+          className="object-cover w-full h-full"
         />
       </div>
     );
@@ -74,7 +74,7 @@ export default function Media({ id }) {
         <button
           onClick={handlePlay}
           disabled={isPlaying || playCount >= MAX_PLAYS}
-          className="w-fit h-fit rounded-full text-accent2 flex items-center justify-center"
+          className="flex items-center justify-center rounded-full w-fit h-fit text-accent2"
         >
           <i className="pi pi-caret-right" style={{ fontSize: '2rem' }}></i>
         </button>
@@ -92,7 +92,7 @@ export default function Media({ id }) {
             }}
           />
         )}
-        <div className="font-nunito font-bold text-lg p-2 ">{`${
+        <div className="p-2 text-lg font-bold font-nunito ">{`${
           MAX_PLAYS - playCount
         }x`}</div>
       </div>

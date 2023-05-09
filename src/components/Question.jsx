@@ -5,8 +5,16 @@ import Media from './Media';
 export default function Questions({ question, questions, media }) {
   const hasAudio = questions[question].audio === true;
   const hasImage = questions[question].image === true;
+  const hasFile = questions[question].file === true;
+  const hasMedia = questions[question].media === true;
+
+  const hasContent = hasAudio || hasImage || hasFile || hasMedia;
 
   console.log('id: ' + JSON.stringify(questions[question]));
+
+  console.log('question: ', question);
+  console.log('questions: ', questions);
+  console.log('media: ', media);
 
   return (
     <div
@@ -20,13 +28,16 @@ export default function Questions({ question, questions, media }) {
         Question #{questions[question].id}
       </h1>
 
-      <Media
-        id={
-          questions[question].image ||
-          questions[question].audio ||
-          questions[question].file
-        }
-      />
+      {hasContent && (
+        <Media
+          id={
+            questions[question].image ||
+            questions[question].audio ||
+            questions[question].file ||
+            questions[question].media
+          }
+        />
+      )}
       <p className="font-nunito text-[20px] leading-[24px] text-[#37474F]">
         {questions[question].text}
       </p>

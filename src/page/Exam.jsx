@@ -22,7 +22,7 @@ export default function Exam() {
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
-  const { user, getAllLocalData } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   console.log('user from exam = ', user);
   const [questionLength, setQuestionLength] = useState(0);
   useEffect(() => {
