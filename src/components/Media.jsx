@@ -4,7 +4,7 @@ import AuthContext from '../contexts/AuthContext';
 
 const MAX_PLAYS = 3;
 
-export default function Media({ id }) {
+export default function Media({ id, dashboard }) {
   const [file, setFile] = useState(null);
   const { user } = useContext(AuthContext);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -55,13 +55,21 @@ export default function Media({ id }) {
         <img
           src={`data:${type};base64,${base64}`}
           alt={name}
-          className="w-full h-full object-cover"
+          className="object-cover w-full h-full"
         />
       </div>
     );
   }
 
-  if (type.startsWith('audio/')) {
+  if (dashboard && type.startsWith('audio/')) {
+    return (
+      <div className="flex flex-row items-center">
+        <audio src={`data:audio/mp3;base64,${base64}`} controls />
+      </div>
+    );
+  }
+
+  if (type.startsWith('audio/') && !dashboard) {
     return (
       <div className="flex flex-row items-center">
         <audio
@@ -74,7 +82,7 @@ export default function Media({ id }) {
         <button
           onClick={handlePlay}
           disabled={isPlaying || playCount >= MAX_PLAYS}
-          className="w-fit h-fit rounded-full text-accent2 flex items-center justify-center"
+          className="flex items-center justify-center rounded-full w-fit h-fit text-accent2"
         >
           <i className="pi pi-caret-right" style={{ fontSize: '2rem' }}></i>
         </button>
@@ -92,7 +100,7 @@ export default function Media({ id }) {
             }}
           />
         )}
-        <div className="font-nunito font-bold text-lg p-2 ">{`${
+        <div className="p-2 text-lg font-bold font-nunito ">{`${
           MAX_PLAYS - playCount
         }x`}</div>
       </div>

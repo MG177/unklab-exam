@@ -133,15 +133,17 @@ export default function Score() {
 
             <div className="flex flex-col gap-6">
               <div className="flex flex-row font-Nunito gap-[10px] ">
-                <div className="text-black w-full max-w-[200px] bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-[111px] py-4 px-5">
+                <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit py-4 px-5">
                   <p className="text-5xl font-bold">
                     {`${score.totalCorrect}/${score.totalQuestion}`}
                   </p>
-                  <p className="text-2xl">Right answers</p>
+                  <span className="text-2xl whitespace-nowrap">
+                    Right answers
+                  </span>
                 </div>
-                <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7">
-                  <p className="text-5xl font-bold text-left">{score.grade}</p>
-                  <p className="text-2xl font-bold">Grade</p>
+                <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7 w-full">
+                  {/* <p className="text-5xl font-bold text-left">{score.grade}</p>
+                  <p className="text-2xl font-bold">Grade</p> */}
                 </div>
               </div>
               <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center px-[16px] py-[30px] leading-[35px]">

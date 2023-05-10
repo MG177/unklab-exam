@@ -7,55 +7,55 @@ import AddImage from '../../image/imageicon.svg';
 import AddAudio from '../../image/audio.svg';
 import Delete from '../../image/trash.svg';
 import api from '../../config';
+import Media from '../Media';
 
 export default function QuestionEditorItem({ question }) {
   const { questions, setQuestions, setSaveStatus } =
     useContext(QuestionContext);
   const { user } = useContext(AuthContext);
   const questionRef = useRef(null);
-  const [audioSrc, setAudioSrc] = useState(null);
-  const [imageSrc, setImageSrc] = useState(null);
-  const [audioLoading, setAudioLoading] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
+  const hasContent =
+    question.media || question.audio || question.image || question.question;
+  // const [mediaId, setMediaId] = useState(null);
 
-  useEffect(() => {
-    console.log('useEffect QuestionEditorItem');
-    if (question.audio) {
-      if (!audioLoading) {
-        setAudioLoading(true);
-      }
-      api
-        .get(`/file/${question.audio}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setAudioSrc(response.data);
-          setImageSrc(null);
-          setAudioLoading(false);
-        })
-        .catch((error) => console.log(error));
-    }
-    if (question.image) {
-      if (!imageLoading) {
-        setImageLoading(true);
-      }
-      api
-        .get(`/file/${question.image}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setImageSrc(response.data);
-          setAudioSrc(null);
-          setImageLoading(false);
-        })
-        .catch((error) => console.log(error));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [question.audio, question.image, user.access_token]);
+  // useEffect(() => {
+  //   console.log('useEffect QuestionEditorItem');
+  //   if (question.audio) {
+  //     if (!audioLoading) {
+  //       setAudioLoading(true);
+  //     }
+  //     api
+  //       .get(`/file/${question.audio}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         setAudioSrc(response.data);
+  //         setImageSrc(null);
+  //         setAudioLoading(false);
+  //       })
+  //       .catch((error) => console.log(error));
+  //   }
+  //   if (question.image) {
+  //     if (!imageLoading) {
+  //       setImageLoading(true);
+  //     }
+  //     api
+  //       .get(`/file/${question.image}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //         },
+  //       })
+  //       .then((response) => {
+  //         setImageSrc(response.data);
+  //         setAudioSrc(null);
+  //         setImageLoading(false);
+  //       })
+  //       .catch((error) => console.log(error));
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [question.audio, question.image, user.access_token]);
 
   // console.log('imageSrc', imageSrc);
 
@@ -66,10 +66,8 @@ export default function QuestionEditorItem({ question }) {
 
   useEffect(resizeTextArea, [question.question]);
 
-  const handleSetActive = (valueId, valueText) => {
-    return (
-      question.correctAnswer === valueId || question.correctAnswer === valueText
-    );
+  const handleSetActive = (valueId) => {
+    return question.correctAnswer === valueId;
   };
 
   const handleOverwriteDataQuestion = (questionId, value) => {
@@ -110,7 +108,7 @@ export default function QuestionEditorItem({ question }) {
           return newData;
         });
         setSaveStatus(false);
-        setAudioLoading(true);
+        // setAudioLoading(true)  ;
       })
       .catch((error) => {
         console.error(error);
@@ -151,7 +149,7 @@ export default function QuestionEditorItem({ question }) {
           return newData;
         });
         setSaveStatus(false);
-        setImageLoading(true);
+        // setImageLoading(true);
       })
       .catch((error) => {
         console.error(error);
@@ -166,7 +164,7 @@ export default function QuestionEditorItem({ question }) {
       newData.find((question) => question.id === questionId).audio = null;
       return newData;
     });
-    setAudioSrc(null);
+    // setAudioSrc(null);
     setSaveStatus(false);
   };
 
@@ -176,7 +174,7 @@ export default function QuestionEditorItem({ question }) {
       newData.find((question) => question.id === questionId).image = null;
       return newData;
     });
-    setImageSrc(null);
+    // setImageSrc(null);
     setSaveStatus(false);
   };
 
@@ -230,25 +228,16 @@ export default function QuestionEditorItem({ question }) {
           <h3 className="text-2xl font-bold text-accent1">
             Question #{question.id}
           </h3>
-          {audioLoading && <p>Loading audio...</p>}
-          {audioSrc && (
-            <div className="flex items-center gap-2">
-              <audio
-                src={`data:audio/mp3;base64,${audioSrc.base64}`}
-                controls
-              />
-            </div>
-          )}
-          {imageLoading && <p>Loading image...</p>}
-          {imageSrc && (
-            <div className="flex items-center gap-2">
-              <img
-                src={`data:${imageSrc.type};base64,${imageSrc.base64}`}
-                alt="Selected"
-                className="object-cover w-full h-auto"
-                style={{ maxHeight: '300px' }}
-              />
-            </div>
+          {hasContent && (
+            <Media
+              id={
+                question.image ||
+                question.audio ||
+                question.file ||
+                question.media
+              }
+              dashboard
+            />
           )}
           <div className="grid grid-cols-1 grid-rows-1 after:whitespace-pre-wrap after:content-[attr(data-replicated-value)] after:invisible ">
             <textarea
@@ -269,7 +258,7 @@ export default function QuestionEditorItem({ question }) {
               <EditableOptions
                 key={option.id}
                 option={option}
-                active={handleSetActive(option.id, option.text)}
+                active={handleSetActive(option.id)}
                 optionId={option.id}
                 questionId={question.id}
               />

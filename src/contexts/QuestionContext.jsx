@@ -73,8 +73,6 @@ export function QuestionProvider({ children }) {
     return total;
   }, [questions]);
 
-  console.log('totalFileSize', totalFileSize);
-
   const postQuestions = async () => {
     api
       .patch(

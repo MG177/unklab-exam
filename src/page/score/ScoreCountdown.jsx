@@ -47,8 +47,7 @@ export default function ScoreCountdown() {
           <Timer />
         </div>
         <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
-          Your score will be visible after the exam duration ends, or you can
-          choose to log out at this time.
+          you can choose to log out at this time.
         </p>
       </div>
       <Footer time={time} />

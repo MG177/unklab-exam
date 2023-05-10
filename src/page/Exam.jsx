@@ -8,7 +8,6 @@ import Header from '../components/Header';
 import sound from '../media/no7.mp3';
 import img from '../media/gunting.jpg';
 import AuthContext from '../contexts/AuthContext';
-import Media from '../components/Media';
 
 const media = {
   audio: sound,
@@ -23,7 +22,7 @@ export default function Exam() {
   const [question, setQuestion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
-  const { user, getAllLocalData } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   console.log('user from exam = ', user);
   const [questionLength, setQuestionLength] = useState(0);
   useEffect(() => {
@@ -57,11 +56,14 @@ export default function Exam() {
 
     const fetchTime = async () => {
       try {
-        const response = await api.get('time/' + user.examId, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
+        const response = await api.get(
+          `time/${JSON.parse(localStorage.getItem('examId'))}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
         setTime(response.data);
       } catch (error) {
         console.log(error);
@@ -103,14 +105,14 @@ export default function Exam() {
       <Header />
       {!loading && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
-          <Media id={questions[question].image || questions[question].audio} />
           <Question question={question} questions={questions} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
-            {questions[question].option.map((option, index) => (
+            {questions[question].options.map((option) => (
               <Option
-                key={index}
-                option={option}
-                active={handleActive(option)}
+                key={option.id} // Use option.id as the key
+                answerId={option.id} // Pass option.id to handleAnswer
+                option={option.text} // Use option.text as the option
+                active={handleActive(option.id)} // Pass option.text to handleActive
                 handleAnswer={handleAnswer}
               />
             ))}

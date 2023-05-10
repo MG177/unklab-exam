@@ -13,8 +13,6 @@ export default function Sidebar({ setToken, setExam }) {
   const [isHidden, setIsHidden] = useState(false);
   const [examList, setExamList] = useState([]);
 
-  console.log('user in sidebar', user);
-
   const toggleHidden = () => {
     setIsHidden(!isHidden);
   };
@@ -77,7 +75,7 @@ export default function Sidebar({ setToken, setExam }) {
   };
 
   return (
-    <div className="z-20 flex flex-col h-screen bg-whitePlus min-w-fit shadow-right overflow-x-auto relative">
+    <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
       <div className="flex items-center justify-center h-16 p-3">
         {isHidden ? (
           <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
@@ -91,7 +89,7 @@ export default function Sidebar({ setToken, setExam }) {
         {isHidden && (
           <button
             onClick={handleLogout}
-            className="w-8 h-8 text-white items-center rounded-full bg-accent2 ml-5"
+            className="items-center w-8 h-8 ml-5 text-white rounded-full bg-accent2"
           >
             <i className="pi pi-sign-out " style={{ fontSize: '1rem' }} />
           </button>
@@ -125,7 +123,7 @@ export default function Sidebar({ setToken, setExam }) {
               !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
             }`}
           >
-            <p className="text-whitePlus text-lg">+</p>
+            <p className="text-lg text-whitePlus">+</p>
             <input
               type="file"
               accept=".csv"

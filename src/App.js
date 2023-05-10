@@ -14,12 +14,12 @@ import QuestionContextLayout from './contexts/QuestionContextLayout';
 
 function App() {
   return (
-    <BrowserRouter basename='/'>
+    <BrowserRouter basename="/">
       <Routes>
         <Route element={<AuthContextLayout />}>
-          <Route path='/' element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route
-            path='/started'
+            path="/started"
             element={
               <ProtectedRoute>
                 <Getstarted />
@@ -27,7 +27,7 @@ function App() {
             }
           />
           <Route
-            path='/waiting'
+            path="/waiting"
             element={
               <ProtectedRoute>
                 <ScoreCountdown />
@@ -35,7 +35,7 @@ function App() {
             }
           />
           <Route
-            path='/exam/:examId'
+            path="/exam/:examId"
             element={
               <ProtectedRoute>
                 <Exam />
@@ -43,7 +43,7 @@ function App() {
             }
           />
           <Route
-            path='/score'
+            path="/score"
             element={
               <ProtectedRoute>
                 <Score />
@@ -51,7 +51,7 @@ function App() {
             }
           />
           <Route
-            path='/testing'
+            path="/testing"
             element={
               <ProtectedRoute>
                 <Testing />
@@ -60,7 +60,7 @@ function App() {
           />
           <Route element={<QuestionContextLayout />}>
             <Route
-              path='/dashboard/:examId'
+              path="/dashboard/:examId"
               element={
                 <ProtectedRoute>
                   <PageDashboard />
@@ -69,7 +69,7 @@ function App() {
             />
           </Route>
           {/* <Route path='/login' element={<Login />} /> */}
-          <Route path='*' element={<Navigate to='/' />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
     </BrowserRouter>
