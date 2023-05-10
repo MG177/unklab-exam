@@ -66,10 +66,8 @@ export default function QuestionEditorItem({ question }) {
 
   useEffect(resizeTextArea, [question.question]);
 
-  const handleSetActive = (valueId, valueText) => {
-    return (
-      question.correctAnswer === valueId || question.correctAnswer === valueText
-    );
+  const handleSetActive = (valueId) => {
+    return question.correctAnswer === valueId;
   };
 
   const handleOverwriteDataQuestion = (questionId, value) => {
@@ -238,6 +236,7 @@ export default function QuestionEditorItem({ question }) {
                 question.file ||
                 question.media
               }
+              dashboard
             />
           )}
           <div className="grid grid-cols-1 grid-rows-1 after:whitespace-pre-wrap after:content-[attr(data-replicated-value)] after:invisible ">
@@ -259,7 +258,7 @@ export default function QuestionEditorItem({ question }) {
               <EditableOptions
                 key={option.id}
                 option={option}
-                active={handleSetActive(option.id, option.text)}
+                active={handleSetActive(option.id)}
                 optionId={option.id}
                 questionId={question.id}
               />
