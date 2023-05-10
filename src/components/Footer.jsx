@@ -24,7 +24,7 @@ export default function Footer({
 
   const handleNext = async () => {
     console.log('clicked');
-    if (!answer) {
+    if (!answer || answer === '' || answer === null) {
       console.log('no answer');
     } else {
       try {
