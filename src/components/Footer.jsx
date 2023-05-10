@@ -7,12 +7,11 @@ import api from '../config';
 
 export default function Footer({
   question,
-  setQuestion,
   questions,
   time,
   answer,
   setAnswer,
-  questionLength,
+  fetchQuestion,
 }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -32,7 +31,7 @@ export default function Footer({
           'students/answer/' + user.noreg,
           {
             answer: answer,
-            index: questions[question].id - 1,
+            index: question.id - 1,
           },
           {
             headers: {
@@ -45,7 +44,9 @@ export default function Footer({
         // Check if the API hit was successful
         if (hitAnswer.status === 200 && hitAnswer.data) {
           setAnswer(null);
-          setQuestion((prev) => prev + 1);
+          // setQuestion((prev) => prev + 1);
+          // window.location.reload();
+          fetchQuestion();
         } else {
           console.log('API hit was not successful');
           // Handle the error or show an error message to the user
@@ -56,7 +57,7 @@ export default function Footer({
       }
     }
 
-    if (question === questions.length - 1 && answer) {
+    if (!question) {
       // handleTimeOut();
       navigate('/waiting');
     }
@@ -101,12 +102,12 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
         {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
-            {`Question ${questions[question].id} of ${questionLength}`}
+            {`Question ${question.id} of ${questions.length + question.id - 1}`}
           </p>
         )}
       </div>
       {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
-      {validateUrlExam() && question < questions.length && (
+      {validateUrlExam() && question !== null && (
         <button
           type="button"
           onClick={handleNext}

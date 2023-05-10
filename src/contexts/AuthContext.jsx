@@ -44,7 +44,7 @@ export function getAllLocalData() {
       return null;
     }
   }
-  console.log('localStorageData' + localStorageData);
+  console.table(localStorageData);
 
   return localStorageData;
 }
