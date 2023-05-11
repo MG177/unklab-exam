@@ -42,6 +42,7 @@ export default function Footer({
         );
         console.log('hit answer: ' + hitAnswer.data);
 
+        window.location.reload();
         // Check if the API hit was successful
         if (hitAnswer.status === 200 && hitAnswer.data) {
           setAnswer(null);
