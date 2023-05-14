@@ -25,6 +25,7 @@ export default function Footer({
     console.log('clicked');
     if (!answer || answer === '' || answer === null) {
       console.log('no answer');
+      alert('Please choose an answer to continue to the next question');
     } else {
       try {
         const hitAnswer = await api.patch(
@@ -54,11 +55,6 @@ export default function Footer({
         alert('Failed to answer question, check your internet connection');
         // Handle the error or show an error message to the user
       }
-    }
-
-    if (!question) {
-      // handleTimeOut();
-      navigate('/waiting');
     }
   };
 

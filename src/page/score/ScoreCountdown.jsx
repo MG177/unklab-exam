@@ -20,12 +20,6 @@ export default function ScoreCountdown() {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
-        // if (!response.data) {
-        //   localStorage.clear();
-        //   navigate('/started');
-        // } else {
-        //   setScore(response.data);
-        // }
       } catch (error) {
         console.log(error);
       }
