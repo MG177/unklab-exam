@@ -22,7 +22,7 @@ export default function Exam() {
   const [question, setQuestion] = useState(null);
   const [loadingQuestion, setLoadingQuestion] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(2);
   const { user } = useContext(AuthContext);
 
   const fetchQuestion = async () => {

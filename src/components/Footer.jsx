@@ -102,7 +102,7 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
         {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
-            {`Question ${question.id} of ${questions.length + question.id - 1}`}
+            {`Question ${question.id} of ${question.totalQuestion}`}
           </p>
         )}
       </div>
