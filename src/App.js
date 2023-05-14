@@ -30,7 +30,7 @@ function App() {
             path="/waiting"
             element={
               <ProtectedRoute>
-                <ScoreCountdown />
+                <Score />
               </ProtectedRoute>
             }
           />

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Timer() {
   // const [time, setTime] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(10);
+  const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Timer() {
 
     const intervalId = setInterval(() => {
       fetchTime();
-    }, 5000); // Send request every 5 seconds
+    }, 10000); // Send request every 5 seconds
 
     return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, []);
@@ -43,7 +43,8 @@ export default function Timer() {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate('/score');
+          window.location.reload();
+          // navigate('/score');
         } else {
           return prevTimeRemaining - 1;
         }

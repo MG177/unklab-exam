@@ -7,12 +7,11 @@ import api from '../config';
 
 export default function Footer({
   question,
-  setQuestion,
   questions,
   time,
   answer,
   setAnswer,
-  questionLength,
+  fetchQuestion,
 }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
@@ -26,13 +25,14 @@ export default function Footer({
     console.log('clicked');
     if (!answer || answer === '' || answer === null) {
       console.log('no answer');
+      alert('Please choose an answer to continue to the next question');
     } else {
       try {
         const hitAnswer = await api.patch(
           'students/answer/' + user.noreg,
           {
             answer: answer,
-            index: questions[question].id - 1,
+            index: question.id - 1,
           },
           {
             headers: {
@@ -46,20 +46,16 @@ export default function Footer({
         // Check if the API hit was successful
         if (hitAnswer.status === 200 && hitAnswer.data) {
           setAnswer(null);
-          setQuestion((prev) => prev + 1);
+          fetchQuestion();
         } else {
-          console.log('API hit was not successful');
+          console.log('Failed to answer question');
           // Handle the error or show an error message to the user
         }
       } catch (error) {
         console.log('API hit failed:', error);
+        alert('Failed to answer question, check your internet connection');
         // Handle the error or show an error message to the user
       }
-    }
-
-    if (question === questions.length - 1 && answer) {
-      // handleTimeOut();
-      navigate('/waiting');
     }
   };
 
@@ -102,12 +98,12 @@ export default function Footer({
         <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
         {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
-            {`Question ${questions[question].id} of ${questionLength}`}
+            {`Question ${question.id} of ${question.totalQuestion}`}
           </p>
         )}
       </div>
       {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
-      {validateUrlExam() && question < questions.length && (
+      {validateUrlExam() && question !== null && (
         <button
           type="button"
           onClick={handleNext}

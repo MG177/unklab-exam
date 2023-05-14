@@ -18,31 +18,49 @@ export default function Exam() {
   const { examId } = useParams();
   const navigate = useNavigate();
   const [answer, setAnswer] = useState('');
-  const [questions, setQuestions] = useState([1]);
-  const [question, setQuestion] = useState(0);
+  const [questions, setQuestions] = useState(null);
+  const [question, setQuestion] = useState(null);
+  const [loadingQuestion, setLoadingQuestion] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(2);
   const { user } = useContext(AuthContext);
-  console.log('user from exam = ', user);
-  const [questionLength, setQuestionLength] = useState(0);
+
+  const fetchQuestion = async () => {
+    try {
+      const response = await api.get(`students/${user.noreg}/onebyone`, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      // console.log('response FetchQuestion = ', response.data[0]);
+      setQuestion(response.data[0]);
+      if (response.status === 204) {
+        navigate('/waiting');
+      }
+      if (response.status === 404) {
+        navigate('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    // console.log('user from exam = ', user);
     const fetchQuestions = async () => {
+      console.log('inside fetchQuestions');
       try {
-        const response = await api.get(
-          'students/' + JSON.parse(localStorage.getItem('noreg')),
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await api.get(`students/${user.noreg}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         if (!response.data) {
           navigate('/started');
         } else {
           const filteredData = response.data.filter((item) => item !== null);
           setQuestions(filteredData);
-          setQuestionLength(response.data.length);
-          setLoading(false);
+          setLoadingQuestion(false);
           if (filteredData.length === 0) {
             navigate('/waiting');
           }
@@ -71,9 +89,14 @@ export default function Exam() {
     };
 
     async function fetchData() {
+      console.log('inside fetchData');
       await fetchQuestions();
+      await fetchQuestion();
       await fetchTime();
+      setLoading(false);
     }
+
+    console.log('inside useEffect');
 
     fetchData();
 
@@ -84,13 +107,13 @@ export default function Exam() {
     return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, [examId, navigate]);
 
-  useEffect(() => {
-    if (question === questions.length) {
-      if (question === 0) {
-        return;
-      }
-    }
-  }, [question, questions.length, navigate]);
+  // useEffect(() => {
+  //   if (question === questions.length) {
+  //     if (question === 0) {
+  //       return;
+  //     }
+  //   }
+  // }, [question, questions.length, navigate]);
 
   const handleAnswer = (index) => {
     setAnswer(index);
@@ -100,14 +123,18 @@ export default function Exam() {
     return answer === index;
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <Header />
-      {!loading && (
+      {!loadingQuestion && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
-          <Question question={question} questions={questions} media={media} />
+          <Question question={question} media={media} />
           <div className="flex flex-col gap-[18px] mb-10">
-            {questions[question].options.map((option) => (
+            {question.options.map((option) => (
               <Option
                 key={option.id} // Use option.id as the key
                 answerId={option.id} // Pass option.id to handleAnswer
@@ -124,9 +151,8 @@ export default function Exam() {
         question={question}
         answer={answer}
         setAnswer={setAnswer}
-        setQuestion={setQuestion}
         time={time}
-        questionLength={questionLength}
+        fetchQuestion={fetchQuestion}
       />
     </>
   );
