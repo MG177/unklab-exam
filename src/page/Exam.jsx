@@ -37,6 +37,9 @@ export default function Exam() {
       if (response.status === 204) {
         navigate('/waiting');
       }
+      if (response.status === 404) {
+        navigate('/');
+      }
     } catch (error) {
       console.log(error);
     }

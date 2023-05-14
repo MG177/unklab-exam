@@ -6,6 +6,7 @@ import Footer from '../../components/Footer';
 import api from '../../config';
 import Answer from '../score/Answer';
 import AuthContext from '../../contexts/AuthContext';
+import Timer from '../../components/Timer';
 
 export default function Score() {
   const { user } = useContext(AuthContext);
@@ -105,61 +106,85 @@ export default function Score() {
     return lastName + ', ' + givenNames;
   }
 
-  return (
-    <div
-      style={{ userSelect: 'none' }}
-      onCopy={(event) => {
-        event.preventDefault();
-      }}
-      className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]"
-    >
-      <Header />
-      <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
-        YOUR SCORE
-      </p>
-      <div className="mb-[30vh] flex flex-col justify-center items-center">
-        <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
-          <div className="bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]">
-            <main>
-              <div className="flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
-                <img src={ProgressBar} alt="" />
-                <div className="-mt-[180px] flex flex-col items-center justify-center mb-[120px]">
-                  <p className="text-6xl font-bold text-black font-Nunito">
-                    {`${score.totalScore}/100`}
-                  </p>
+  if (time > 0) {
+    return (
+      <div
+        style={{ userSelect: 'none' }}
+        onCopy={(event) => {
+          event.preventDefault();
+        }}
+        className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]"
+      >
+        <Header />
+        <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
+          <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
+            <Timer />
+          </div>
+          <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
+            Your score will be visible after the exam duration ends, or you can
+            choose to log out at this time.
+          </p>
+        </div>
+        <Footer time={time} />
+      </div>
+    );
+  } else {
+    return (
+      <div
+        style={{ userSelect: 'none' }}
+        onCopy={(event) => {
+          event.preventDefault();
+        }}
+        className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]"
+      >
+        <Header />
+        <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
+          YOUR SCORE
+        </p>
+        <div className="mb-[30vh] flex flex-col justify-center items-center">
+          <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
+            <div className="bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]">
+              <main>
+                <div className="flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
+                  <img src={ProgressBar} alt="" />
+                  <div className="-mt-[180px] flex flex-col items-center justify-center mb-[120px]">
+                    <p className="text-6xl font-bold text-black font-Nunito">
+                      {`${score.totalScore}/100`}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </main>
+              </main>
 
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-row font-Nunito gap-[10px] ">
-                <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit py-4 px-5">
-                  <p className="text-5xl font-bold">
-                    {`${score.totalCorrect}/${score.totalQuestion}`}
-                  </p>
-                  <span className="text-2xl whitespace-nowrap">
-                    Right answers
-                  </span>
-                </div>
-                <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7 w-full">
-                  {/* <p className="text-5xl font-bold text-left">{score.grade}</p>
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-row font-Nunito gap-[10px] ">
+                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit py-4 px-5">
+                    <p className="text-5xl font-bold">
+                      {`${score.totalCorrect}/${score.totalQuestion}`}
+                    </p>
+                    <span className="text-2xl whitespace-nowrap">
+                      Right answers
+                    </span>
+                  </div>
+                  <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7 w-full">
+                    {/* <p className="text-5xl font-bold text-left">{score.grade}</p>
                   <p className="text-2xl font-bold">Grade</p> */}
+                  </div>
                 </div>
-              </div>
-              <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
-                <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
-                  {convertName(user.username)}
-                </p>
+                <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
+                  <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
+                    {convertName(user.username)}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
+          {score.questions &&
+            score.questions.map((question) => {
+              return <Answer key={question.index} question={question} />;
+            })}
         </div>
-        {score.questions &&
-          score.questions.map((question) => {
-            return <Answer key={question.index} question={question} />;
-          })}
+        <Footer />
       </div>
-      <Footer time={time} />
-    </div>
-  );
+    );
+  }
 }

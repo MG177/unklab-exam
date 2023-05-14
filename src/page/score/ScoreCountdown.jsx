@@ -12,21 +12,21 @@ export default function ScoreCountdown() {
   const [time, setTime] = useState(0);
   const { examId } = useParams();
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchScore = async () => {
-      try {
-        const response = await api.get('/students/score/' + user.noreg, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchScore = async () => {
+  //     try {
+  //       const response = await api.get('/students/score/' + user.noreg, {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //         },
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchScore();
-  }, [examId, navigate]);
+  //   fetchScore();
+  // }, [examId, navigate]);
   return (
     <div
       style={{ userSelect: 'none' }}
