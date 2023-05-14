@@ -44,15 +44,14 @@ export default function Footer({
         // Check if the API hit was successful
         if (hitAnswer.status === 200 && hitAnswer.data) {
           setAnswer(null);
-          // setQuestion((prev) => prev + 1);
-          // window.location.reload();
           fetchQuestion();
         } else {
-          console.log('API hit was not successful');
+          console.log('Failed to answer question');
           // Handle the error or show an error message to the user
         }
       } catch (error) {
         console.log('API hit failed:', error);
+        alert('Failed to answer question, check your internet connection');
         // Handle the error or show an error message to the user
       }
     }

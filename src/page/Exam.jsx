@@ -26,7 +26,6 @@ export default function Exam() {
   const { user } = useContext(AuthContext);
 
   const fetchQuestion = async () => {
-    console.log('inside fetchQuestion');
     try {
       const response = await api.get(`students/${user.noreg}/onebyone`, {
         headers: {
@@ -35,7 +34,7 @@ export default function Exam() {
       });
       // console.log('response FetchQuestion = ', response.data[0]);
       setQuestion(response.data[0]);
-      if (response.data === null) {
+      if (response.status === 204) {
         navigate('/waiting');
       }
     } catch (error) {
