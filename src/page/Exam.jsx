@@ -102,7 +102,7 @@ export default function Exam() {
 
     const intervalId = setInterval(() => {
       fetchTime();
-    }, 5000); // Send request every 5 seconds
+    }, 30000); // Send request every 30 seconds
 
     return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, [examId, navigate]);
