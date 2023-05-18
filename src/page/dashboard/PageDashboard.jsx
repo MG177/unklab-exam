@@ -22,39 +22,44 @@ export default function PageDashboard() {
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const [token, setToken] = useState('');
-  const [dataGrid, setDataGrid] = useState([
+  const loadingDataGrid = [
     {
-      name: 'MG',
+      noreg: 'Loading...',
+      status: 'Loading...',
+      name: 'Loading...',
       score: {
         reading: {
-          total: 0,
-          correct: 0,
-          score: 0,
+          total: 'Loading...',
+          correct: 'Loading...',
+          score: 'Loading...',
+          string: 'Loading...',
         },
         vocabulary: {
-          total: 0,
-          correct: 0,
-          score: 0,
+          total: 'Loading...',
+          correct: 'Loading...',
+          score: 'Loading...',
+          string: 'Loading...',
         },
         listening: {
-          total: 0,
-          correct: 0,
-          score: 0,
+          total: 'Loading...',
+          correct: 'Loading...',
+          score: 'Loading...',
+          string: 'Loading...',
         },
         grammar: {
-          total: 0,
-          correct: 0,
-          score: 0,
+          total: 'Loading...',
+          correct: 'Loading...',
+          score: 'Loading...',
+          string: 'Loading...',
         },
-        totalQuestion: 0,
-        totalCorrect: 0,
-        totalScore: 0,
-        grade: '-',
+        totalQuestion: 'Loading...',
+        totalCorrect: 'Loading...',
+        totalScore: 'Loading...',
+        grade: 'Loading...',
       },
-      noreg: '-',
-      status: '-',
     },
-  ]);
+  ];
+  const [dataGrid, setDataGrid] = useState(loadingDataGrid);
   const dt = useRef(null);
 
   useEffect(() => {
@@ -76,21 +81,54 @@ export default function PageDashboard() {
     }
   }, [examId, loading, setQuestions, user.access_token]);
 
-  useEffect(() => {
+  const fetchDataGrid = async () => {
+    setDataGrid(loadingDataGrid);
     try {
-      api
-        .get(`/students/exam/score/${examId}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setDataGrid(response.data);
-        });
+      const response = await api.get(`/students/exam/score/${examId}`, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      setDataGrid(response.data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  useEffect(() => {
+    // try {
+    //   api
+    //     .get(`/students/exam/score/${examId}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${user.access_token}`,
+    //       },
+    //     })
+    //     .then((response) => {
+    //       setDataGrid(response.data);
+    //     });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    fetchDataGrid();
   }, [user.access_token, examId, loading]);
+
+  const recalculateScore = async () => {
+    setDataGrid(loadingDataGrid);
+    try {
+      await api.post(
+        `/students/exam/score/${examId}/recalculate`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
+      fetchDataGrid();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   document.body.style.overflow = 'hidden';
 
@@ -117,10 +155,10 @@ export default function PageDashboard() {
     if (item.score) {
       formattedItem.grade = item.score.grade || '';
       formattedItem.totalScore = item.score.totalScore || '';
-      formattedItem.vocabulary = item.score.vocabulary?.score || '';
-      formattedItem.reading = item.score.reading?.score || '';
-      formattedItem.listening = item.score.listening?.score || '';
-      formattedItem.grammar = item.score.grammar?.score || '';
+      formattedItem.vocabulary = item.score.vocabulary?.string || '';
+      formattedItem.reading = item.score.reading?.string || '';
+      formattedItem.listening = item.score.listening?.string || '';
+      formattedItem.grammar = item.score.grammar?.string || '';
     }
 
     return formattedItem;
@@ -234,7 +272,7 @@ export default function PageDashboard() {
 
     const timeIntervalId = setInterval(() => {
       fetchTimeRemaining();
-    }, 5000);
+    }, 30000);
 
     const tokenIntervalId = setInterval(() => {
       fetchToken();
@@ -284,7 +322,7 @@ export default function PageDashboard() {
 
   const footer = (
     <div className="flex align-items-center justify-end gap-2">
-      <Button
+      {/* <Button
         type="button"
         icon="pi pi-file"
         rounded
@@ -292,16 +330,40 @@ export default function PageDashboard() {
         raised
         onClick={() => exportCSV(false)}
         data-pr-tooltip="CSV"
-      />
+      /> */}
       <Button
         type="button"
         icon="pi pi-file-excel"
         severity="success"
         rounded
         text
-        raised
+        label="Export to Excel"
         onClick={exportExcel}
         data-pr-tooltip="XLS"
+      />
+    </div>
+  );
+
+  const refresh = (
+    <div className="flex items-center justify-end gap-2">
+      <Button
+        type="button"
+        icon="pi pi-refresh"
+        rounded
+        text
+        raised
+        severity="danger"
+        onClick={recalculateScore}
+      />
+      <Button
+        type="button"
+        icon="pi pi-refresh"
+        severity="success"
+        rounded
+        text
+        raised
+        label="refresh"
+        onClick={fetchDataGrid}
       />
     </div>
   );
@@ -332,7 +394,7 @@ export default function PageDashboard() {
       {!loading ? (
         <>
           <div className="container p-4 w-full bg-[#FCF9FF] flex-1">
-            <div className="mb-12">
+            <div className="mb-4">
               <div className="relative flex flex-row justify-between min-h-[175px] p-4">
                 <img
                   src={classHeader}
@@ -369,7 +431,7 @@ export default function PageDashboard() {
                 </div>
               </div>
             </div>
-            <div className="mb-3 bg-white rounded-lg shadow-md">
+            {/* <div className="mb-3 bg-white rounded-lg shadow-md">
               <div className="relative flex flex-row-reverse flex-wrap items-stretch w-full mb-4">
                 <input
                   type="search"
@@ -386,7 +448,7 @@ export default function PageDashboard() {
                   <i className="text-black fa-solid fa-magnifying-glass" />
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className="relative rounded-[24px] overflow-hidden shadow-lg border-[#fafafade]">
               <DataTable
                 value={dataGrid}
@@ -395,7 +457,7 @@ export default function PageDashboard() {
                 paginator
                 rows={15}
                 rowsPerPageOptions={[15, 25, 50]}
-                tableStyle={{ minWidth: '50rem' }}
+                tableStyle={{ width: '100%', 'max-height': '100vh' }}
                 size="sm"
                 sortMode="multiple"
                 sortOrder={-1}
@@ -404,19 +466,19 @@ export default function PageDashboard() {
                 scrollHeight="60vh"
                 rounded
                 paginatorRight={footer}
-                paginatorLeft={<div></div>}
+                paginatorLeft={refresh}
               >
                 <Column field="noreg" header="Nomor registrasi"></Column>
                 <Column field="name" header="Name"></Column>
                 <Column field="score.grade" header="Grade"></Column>
                 <Column field="score.totalScore" header="Total Score"></Column>
-                <Column field="score.vocabulary.score" header="Vocab"></Column>
-                <Column field="score.reading.score" header="Reading"></Column>
+                <Column field="score.vocabulary.string" header="Vocab"></Column>
+                <Column field="score.reading.string" header="Reading"></Column>
                 <Column
-                  field="score.listening.score"
+                  field="score.listening.string"
                   header="Listening"
                 ></Column>
-                <Column field="score.grammar.score" header="grammar"></Column>
+                <Column field="score.grammar.string" header="grammar"></Column>
                 <Column field="status" header="status"></Column>
               </DataTable>
             </div>
