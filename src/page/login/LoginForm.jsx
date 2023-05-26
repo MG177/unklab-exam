@@ -119,11 +119,14 @@ export default function Form() {
       ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+          <div className="max-w-[625px] text-center p-12 md:px-[60px] md:py-[50px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
-                <span className="text-[#37474F]">Welcome Admin</span>
-                <span className="text-[#FF6593]">!</span>
+              <div className="flex flex-col text-4xl md:text-[62px] font-inter font-bold mb-2">
+                <span className="text-[#37474F]">Welcome</span>
+                <div className="flex justify-center mt-5">
+                  <span className="text-[#37474F]">Admin</span>
+                  <span className="text-[#FF6593]">!</span>
+                </div>
               </div>
               <p className="font-Nunito font-normal text-sm md:text-[24px] leading-[30px] ">
                 Let's get you started with your exams. Enter your login details
@@ -170,7 +173,7 @@ export default function Form() {
         </form>
       ) : (
         <form onSubmit={handleLogin}>
-          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+          <div className="max-w-[625px] text-center p-12 md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center ">
             <div className="flex flex-col items-center justify-center">
               <div className="flex text-5xl md:text-[62px] font-inter font-bold ">
                 <h1 className="text-[#37474F]">Welcome</h1>
