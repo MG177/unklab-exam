@@ -91,10 +91,12 @@ export default function Footer({
       onCopy={(event) => {
         event.preventDefault();
       }}
-      className="fixed bottom-0 w-full h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50"
+      className="fixed bottom-0 w-full max-[960px]:h-20 h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50"
     >
       <div className="font-nunito my-[40.26px] ml-28 w-content">
-        <p className="text-accent1 text-[29px] font-bold">{user.examName}</p>
+        <p className="text-accent1 text-[29px] max-[960px]:text-[24px] font-bold">
+          {user.examName}
+        </p>
         {validateUrlExam() && (
           <p className="text-[20px] text-black font-normal">
             {`Question ${question.id} of ${question.totalQuestion}`}
@@ -113,7 +115,7 @@ export default function Footer({
       )}
       {validateUrlPathFinish() && (
         <button
-          className="bg-accent2 w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
+          className="bg-accent2 max-[960px]:w-[130px] max-[960px]:h-[40px] w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] max-[960px]:text-[18px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
           onClick={handleLogout}
         >
           Logout

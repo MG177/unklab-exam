@@ -116,11 +116,11 @@ export default function Score() {
         className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]"
       >
         <Header />
-        <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
+        <div className="bg-white p-[50px] max-[960px]:p-[20px] max-[960px]:max-w-[80vh] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
           <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
             <Timer />
           </div>
-          <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
+          <p className="font-Nunito font-bold text-black text-[35px] max-[960px]:text-[26px] w-full text-center min-[720px]:">
             Your score will be visible after the exam duration ends, or you can
             choose to log out at this time.
           </p>
