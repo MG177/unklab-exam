@@ -65,7 +65,7 @@ export default function Timer() {
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
 
   return (
-    <div className="flex flex-row justify-center items-center text-[72px] gap-[16px] px-[20px] py-[28px] min-w-fit h-[140px] bg-white rounded-[24px]">
+    <div className="flex flex-row justify-center items-center max-[720px]:text-[60px] text-[72px] gap-[16px] px-[20px] py-[28px] min-w-fit h-[140px] bg-white rounded-[24px]">
       <p className="font-bold text-accent2 font-nunito">
         {hours === 0
           ? `00 : ${minutesStr} : ${secondsStr}`
