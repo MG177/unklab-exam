@@ -138,17 +138,17 @@ export default function Score() {
         className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]"
       >
         <Header />
-        <p className="mt-[183px] text-black text-6xl font-Nunito font-bold">
+        <p className="mt-[183px] max-[960px]:text-4xl max-[960px]:mt-[120px] text-black text-6xl font-Nunito font-bold">
           YOUR SCORE
         </p>
-        <div className="mb-[30vh] flex flex-col justify-center items-center">
+        <div className="mb-[30vh] flex flex-col justify-center items-center max-[960px]:-mt-[30px]">
           <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
-            <div className="bg-white w-max h-max px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)]">
+            <div className="bg-white w-max h-max max-[960px]:py-[0px] px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)] ">
               <main>
-                <div className="flex flex-col justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
+                <div className="flex flex-col justify-center mt-10 items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
                   <img src={ProgressBar} alt="" />
                   <div className="-mt-[180px] flex flex-col items-center justify-center mb-[120px]">
-                    <p className="text-6xl font-bold text-black font-Nunito">
+                    <p className="text-6xl max-[960px]:text-3xl font-bold text-black font-Nunito max-[960px]:mt-[83px]">
                       {`${score.totalScore}/100`}
                     </p>
                   </div>
@@ -157,11 +157,11 @@ export default function Score() {
 
               <div className="flex flex-col gap-6">
                 <div className="flex flex-row font-Nunito gap-[10px] ">
-                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit py-4 px-5">
-                    <p className="text-5xl font-bold">
+                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit max-[960px]:py-[8px] max-[960px]:px-[69px] py-4 px-5 max-[960px]:w-[40px]">
+                    <p className="text-5xl max-[960px]:text-xl font-bold max-[960px]:-ml-[53px]">
                       {`${score.totalCorrect}/${score.totalQuestion}`}
                     </p>
-                    <span className="text-2xl whitespace-nowrap">
+                    <span className="text-2xl max-[960px]:text-lg whitespace-nowrap max-[960px]:-ml-[53px]">
                       Right answers
                     </span>
                   </div>
@@ -170,8 +170,8 @@ export default function Score() {
                   <p className="text-2xl font-bold">Grade</p> */}
                   </div>
                 </div>
-                <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center px-[16px] py-[30px] leading-[35px]">
-                  <p className="text-[35px] font-bold font-[Nunito] text-black text-center">
+                <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center max-[960px]:px-[8px] max-[960px]:py-[4px] px-[16px] py-[30px] leading-[35px]">
+                  <p className="text-[35px] max-[960px]:text-[20px] font-bold font-[Nunito] text-black text-center">
                     {convertName(user.username)}
                   </p>
                 </div>
