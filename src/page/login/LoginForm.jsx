@@ -119,23 +119,23 @@ export default function Form() {
       ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className="max-w-[625px] max-[720px]:max-w-[500px] max-[720px]:max-h-[470px] text-center p-12 min-[720px]: md:px-[60px] md:py-[50px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+          <div className="max-w-[625px] max-[960px]:max-w-[500px] max-[960px]:max-h-[470px] text-center p-12 min-[960px]: md:px-[60px] md:py-[50px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="flex flex-col text-4xl max-[720px]:text-[40px] max-[720px]:mt-2 md:text-[62px] font-inter font-bold mb-2 max-[720px]:mb-0">
+              <div className="flex flex-col text-4xl max-[960px]:text-[40px] max-[960px]:mt-2 md:text-[62px] font-inter font-bold mb-2 max-[960px]:mb-0">
                 <span className="text-[#37474F]">Welcome</span>
-                <div className="flex justify-center mt-5 max-[720px]:mt-0">
+                <div className="flex justify-center mt-5 max-[960px]:mt-0">
                   <span className="text-[#37474F]">Admin</span>
                   <span className="text-[#FF6593]">!</span>
                 </div>
               </div>
-              <p className="font-Nunito font-normal text-sm md:text-[24px] leading-[30px] max-[720px]:leading-[15px] ">
+              <p className="font-Nunito font-normal text-sm md:text-[24px] leading-[30px] max-[960px]:leading-[15px] ">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
             </div>
-            <div className="flex flex-col w-full gap-6 max-[720px]:-mt-[10px]">
+            <div className="flex flex-col w-full gap-6 max-[960px]:-mt-[10px]">
               <div className="flex flex-col items-start ">
-                <label htmlFor="username" className="mb-2 max-[720px]:mb-0">
+                <label htmlFor="username" className="mb-2 max-[960px]:mb-0">
                   Username
                 </label>
                 <input
@@ -144,12 +144,12 @@ export default function Form() {
                   ref={adminUsernameRef}
                   type="text"
                   placeholder="John"
-                  className="w-full max-[720px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
                   pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
-                <label htmlFor="password" className="mb-2 max-[720px]:mb-0">
+                <label htmlFor="password" className="mb-2 max-[960px]:mb-0">
                   Password
                 </label>
                 <input
@@ -158,13 +158,13 @@ export default function Form() {
                   ref={adminPasswordRef}
                   type="password"
                   placeholder="********"
-                  className="w-full max-[720px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
             <button
               type="submit"
-              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px] max-[720px]:py-3 max-[720px]:text-[16px]"
+              className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px] max-[960px]:py-3 max-[960px]:text-[16px]"
               // onClick={() => (adminFormRef.current = true)}
             >
               Login as admin
@@ -173,15 +173,15 @@ export default function Form() {
         </form>
       ) : (
         <form onSubmit={handleLogin}>
-          <div className="max-w-[625px] text-center p-12 max-[720px]:max-w-[500px] max-[720px]:max-h-[470px] md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center ">
+          <div className="max-w-[625px] text-center p-12 max-[960px]:max-w-[500px] max-[960px]:max-h-[470px] md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center ">
             <div className="flex flex-col items-center justify-center">
-              <div className="flex text-5xl max-[720px]:mt-5 max-[720px]:text-[44px] md:text-[62px] font-inter font-bold ">
+              <div className="flex text-5xl max-[960px]:mt-3 max-[960px]:text-[44px] md:text-[62px] font-inter font-bold ">
                 <h1 className="text-[#37474F]">Welcome</h1>
                 <h1 className="text-[#FF6593]">!</h1>
               </div>
               <p
                 style={{ userSelect: 'none' }}
-                className="max-[720px]:text-[15px] max-[720px]:leading-[18px] font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] max-[720px]:mt-4"
+                className="max-[960px]:text-[15px] max-[960px]:leading-[18px] font-Nunito font-normal text-lg md:text-[24px] leading-[29.05px] max-[960px]:mt-4"
               >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
@@ -198,7 +198,7 @@ export default function Form() {
                   ref={studentNoregRef}
                   type="text"
                   placeholder="S2200000"
-                  className="w-full max-[720px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
@@ -211,7 +211,7 @@ export default function Form() {
                   ref={studentTokenRef}
                   type="text"
                   placeholder="Token"
-                  className="w-full max-[720px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function Form() {
 
               <button
                 type="submit"
-                className="uppercase max-[720px]:py-3 max-[720px]:text-[16px]  w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
+                className="uppercase max-[960px]:py-3 max-[960px]:text-[16px]  w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg md:text-[24px]"
               >
                 Login
               </button>
