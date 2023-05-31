@@ -15,6 +15,7 @@ export default function Footer({
 }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+
   // console.log("user: " + user.noreg);
 
   // if (answer) {
@@ -119,7 +120,7 @@ export default function Footer({
       )}
       {validateUrlPathFinish() && (
         <button
-          className="bg-accent2 max-[960px]:w-[130px] max-[960px]:h-[40px] w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] max-[960px]:text-[18px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
+          className="bg-accent2 max-[960px]:w-[130px] max-[960px]:h-[40px] w-[152px] h-[57px] font-[Nunito] font-bold text-[24px] max-[960px]:text-[16px] text-[#FAFAFA] rounded-[34px] shadow-[0_5px_25px_rgba(0,0,0,0.2)] mr-[120px]"
           onClick={handleLogout}
         >
           Logout

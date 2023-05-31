@@ -157,7 +157,7 @@ export default function Score() {
 
               <div className="flex flex-col gap-6">
                 <div className="flex flex-row font-Nunito gap-[10px] ">
-                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit max-[960px]:py-[8px] max-[960px]:px-[69px] py-4 px-5 max-[960px]:w-[40px]">
+                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit max-[960px]:py-[8px] max-[960px]:px-20 py-4 px-5 max-[960px]:w-[40px]">
                     <p className="text-5xl max-[960px]:text-xl font-bold max-[960px]:-ml-[53px]">
                       {`${score.totalCorrect}/${score.totalQuestion}`}
                     </p>
@@ -165,9 +165,13 @@ export default function Score() {
                       Right answers
                     </span>
                   </div>
-                  <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] py-4 px-7 w-full">
-                    {/* <p className="text-5xl font-bold text-left">{score.grade}</p>
-                  <p className="text-2xl font-bold">Grade</p> */}
+                  <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] max-[960px]:py-2 max-[960px]:px-5 py-4 px-7 w-full">
+                    <p className="text-5xl max-[960px]:text-lg font-bold text-left">
+                      {score.grade}
+                    </p>
+                    <p className="text-2xl max-[960px]:text-lg font-bold">
+                      Grade
+                    </p>
                   </div>
                 </div>
                 <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center max-[960px]:px-[8px] max-[960px]:py-[4px] px-[16px] py-[30px] leading-[35px]">
