@@ -129,7 +129,7 @@ export default function Form() {
                   <span className="text-[#FF6593]">!</span>
                 </div>
               </div>
-              <p className="font-Nunito font-normal text-sm text-[24px] leading-[30px] max-[960px]:leading-[15px] ">
+              <p className="font-Nunito font-normal text-xl leading-[30px] max-[960px]:leading-[15px] ">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
@@ -182,7 +182,7 @@ export default function Form() {
               </div>
               <p
                 style={{ userSelect: 'none' }}
-                className="max-[960px]:text-[15px] max-[960px]:leading-[18px] font-Nunito font-normal text-lg text-[24px] leading-[29.05px] max-[960px]:mt-4 mt-5"
+                className="max-[960px]:text-[15px] max-[960px]:leading-[18px] font-Nunito font-normal text-xl text-[24px] leading-[29.05px] max-[960px]:mt-4 mt-5"
               >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
