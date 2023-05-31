@@ -60,7 +60,7 @@ export default function Start() {
         className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
         onClick={logout}
       ></button>
-      <div className="font-Nunito max-[960px]:text-[26px] text-[29px] font-bold text-black">
+      <div className="font-Nunito max-[960px]:text-[22px] text-[29px] font-bold text-black">
         <p>
           Welcome to the English Exam Test
           <span className="text-accent2">!</span>

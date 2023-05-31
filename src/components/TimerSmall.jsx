@@ -1,6 +1,6 @@
 // import { isValidDateValue } from "@testing-library/user-event/dist/utils";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function TimerSmall({ time, classTime }) {
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -15,7 +15,7 @@ export default function TimerSmall({ time, classTime }) {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate("/score");
+          navigate('/score');
         } else {
           return prevTimeRemaining - 1;
         }
@@ -34,20 +34,20 @@ export default function TimerSmall({ time, classTime }) {
   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
- // deploy
+  // deploy
   return (
-    <div className="flex flex-row justify-center items-center max-h-[60px] bg-white gap-[10px] mt-[40px] mb-[40px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
-      <p className="text-accent2 font-bold font-nunito text-[30px]">
+    <div className="flex flex-row justify-center items-center max-h-[60px] bg-white gap-[10px] max-[960px]:w-[180px] max-[960px]:max-h-[46px] max-[960px]:ml-[100px] mt-[40px] mb-[40px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
+      <p className="text-accent2 font-bold font-nunito text-[30px] max-[960px]:text-[16px]">
         {/* {hours > 0 ? `${hoursStr} : ` : ''}
         {`${minutesStr} : ${secondsStr}`} */}
         {hours !== 0
-          ? `${hoursStr} Hour${hours === 1 ? "" : "s"} ${minutesStr} Minute${
-              minutes === 1 ? "" : "s"
+          ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${
+              minutes === 1 ? '' : 's'
             }`
           : `${
               minutes !== 0
-                ? `${minutesStr} Minute${minutes === 1 ? "" : "s"}`
-                : `${secondsStr} Second${seconds === 1 ? "" : "s"}`
+                ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
+                : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
             }`}
       </p>
     </div>

@@ -93,12 +93,12 @@ export default function Footer({
       }}
       className="fixed bottom-0 w-full max-[960px]:h-20 h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50"
     >
-      <div className="font-nunito my-[40.26px] ml-28 w-content">
-        <p className="text-accent1 text-[29px] max-[960px]:text-[24px] font-bold">
+      <div className="font-nunito my-[40.26px] ml-28 max-[960px]:ml-16 w-content">
+        <p className="text-accent1 text-[29px] max-[960px]:text-[18px]">
           {user.examName}
         </p>
         {validateUrlExam() && (
-          <p className="text-[20px] text-black font-normal">
+          <p className="text-[20px] max-[960px]:text-[18px] max-[960px]:w-[151px] text-black font-normal">
             {`Question ${question.id} of ${question.totalQuestion}`}
           </p>
         )}
@@ -110,7 +110,11 @@ export default function Footer({
           onClick={handleNext}
           className="bg-white w-[86px] h-[86px] flex items-center justify-center mr-[120px] mt-[29px] mb-[29px]"
         >
-          <img src={Arrow} alt="" className="w-[59px] h-[44px]" />
+          <img
+            src={Arrow}
+            alt=""
+            className="w-[59px] h-[44px] max-[960px]:w-[35px] max-[960px]:ml-28 max-[960px]:h-[25px] "
+          />
         </button>
       )}
       {validateUrlPathFinish() && (

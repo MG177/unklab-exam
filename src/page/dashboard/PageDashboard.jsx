@@ -327,7 +327,7 @@ export default function PageDashboard() {
   };
 
   return (
-    <div className="relative flex w-full justify-center">
+    <div className="relative flex w-screen justify-center">
       <Sidebar setToken={setToken} setExam={setExam} />
       {!loading ? (
         <>
