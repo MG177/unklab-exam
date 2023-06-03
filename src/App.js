@@ -12,12 +12,10 @@ import QuestionContextLayout from './contexts/QuestionContextLayout';
 import { wait } from '@testing-library/user-event/dist/utils';
 import { Suspense } from 'react';
 
-const Login = lazy(() => wait(1000).then(() => import('./page/login/Login')));
-const Getstarted = lazy(() =>
-  wait(3000).then(() => import('./page/login/Getstarted'))
-);
-const Exam = lazy(() => wait(1000).then(() => import('./page/Exam')));
-const Score = lazy(() => wait(2000).then(() => import('./page/score/Score')));
+const Login = lazy(() => import('./page/login/Login'));
+const Getstarted = lazy(() => import('./page/login/Getstarted'));
+const Exam = lazy(() => import('./page/Exam'));
+const Score = lazy(() => import('./page/score/Score'));
 
 function App() {
   return (
