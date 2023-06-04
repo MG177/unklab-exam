@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 
 import ScoreCountdown from './page/score/ScoreCountdown';
-import Testing from './page/testing';
+// import Testing from './page/testing';
 import PageDashboard from './page/dashboard/PageDashboard';
 
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -62,14 +62,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/testing"
               element={
                 <ProtectedRoute>
                   <Testing />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route element={<QuestionContextLayout />}>
               <Route
                 path="/dashboard/:examId"
