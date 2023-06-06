@@ -78,20 +78,20 @@ export default function Sidebar({ setToken, setExam }) {
     <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
       <div className="flex items-center justify-center h-16 p-3">
         {isHidden ? (
-          <h1 className="font-bold text-3xl font-Nunito text-[29px] text-accent1">
+          <h1 className="text-2xl font-bold font-Nunito text-accent1">
             Unklab <span className="text-black">Exams</span>
           </h1>
         ) : (
-          <h1 className="font-bold text-3xl font-Nunito text-center text-[29px] text-accent1">
+          <h1 className="text-2xl font-bold text-center font-Nunito text-accent1">
             U<span className="text-black">E</span>
           </h1>
         )}
         {isHidden && (
           <button
             onClick={handleLogout}
-            className="items-center w-8 h-8 ml-5 text-white rounded-full bg-accent2"
+            className="items-center w-8 h-8 ml-5 text-white scale-90 rounded-full bg-accent2"
           >
-            <i className="pi pi-sign-out " style={{ fontSize: '1rem' }} />
+            <i className="pl-1 pi pi-sign-out" style={{ fontSize: '1rem' }} />
           </button>
         )}
       </div>
@@ -110,7 +110,7 @@ export default function Sidebar({ setToken, setExam }) {
                 navigate(`/dashboard/${exam._id}`);
                 setExam(exam);
               }}
-              className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-3 ${
+              className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-2 ${
                 !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
               } ${examId === exam._id && `bg-accent2 text-white`}`}
             >
@@ -119,7 +119,7 @@ export default function Sidebar({ setToken, setExam }) {
             </button>
           ))}
           <label
-            className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg p-3 ${
+            className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg py-1.5 ${
               !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
             }`}
           >
@@ -134,7 +134,7 @@ export default function Sidebar({ setToken, setExam }) {
           </label>
         </ul>
       </nav>
-      <div className="sticky bottom-0 right-0 flex justify-end w-full p-5">
+      <div className="sticky bottom-0 right-0 flex justify-end w-full p-4">
         <button
           onClick={toggleHidden}
           className="w-8 h-8 text-white rounded-full bg-accent2"

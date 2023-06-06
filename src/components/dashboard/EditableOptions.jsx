@@ -83,18 +83,19 @@ export default function EditableOptions({
 
   return (
     <div
-      className={`w-full gap-[18px] flex justify-center items-center rounded-[24px] px-[15px] py-[20px] hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}
+      className={`w-full gap-2 flex justify-between items-center rounded-[24px] px-3.5 py-2 hover:backdrop-brightness-[92] bg-whitePlus shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]`}
     >
       <button type="button" onClick={() => handleAnswerChange()}>
         {active ? (
-          <img src={check} alt="" />
+          <img src={check} alt="" className="w-5 h-5" />
         ) : (
-          <div className="w-[29px] h-[29px] bg-whitePlus rounded-[50%] border"></div>
+          <div className="w-5 h-5 border rounded-full bg-whitePlus"></div>
         )}
       </button>
-      <input
+      <textarea
         type="text"
-        className="text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
+        id="option"
+        className="overflow-hidden text-base leading-normal text-black w-full bg-transparent border-none resize-none h-fit active:ring-0 focus:ring-0 ring-0"
         placeholder="Option..."
         value={optionValue}
         onChange={handleOptionChange}

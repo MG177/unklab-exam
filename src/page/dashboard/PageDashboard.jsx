@@ -301,6 +301,23 @@ export default function PageDashboard() {
       });
   };
 
+  const handleStopExam = async () => {
+    console.log('start exam');
+    await api
+      .patch(
+        `/exam/start/${examId}?minute=0`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setToken(response.data.token);
+      });
+  };
+
   useEffect(() => {
     let intervalId;
 
@@ -321,7 +338,7 @@ export default function PageDashboard() {
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
 
   const footer = (
-    <div className="flex align-items-center justify-end gap-2">
+    <div className="flex justify-end gap-2 align-items-center">
       {/* <Button
         type="button"
         icon="pi pi-file"
@@ -389,7 +406,7 @@ export default function PageDashboard() {
   };
 
   return (
-    <div className="relative flex w-screen justify-center">
+    <div className="relative flex justify-center w-screen">
       <Sidebar setToken={setToken} setExam={setExam} />
       {!loading ? (
         <>
@@ -401,13 +418,13 @@ export default function PageDashboard() {
                   alt=""
                   className="absolute top-0 left-0 z-0 object-cover w-full h-full rounded-2xl"
                 />
-                <h1 className="z-10 text-[35px] max-w-xl font-Nunito text-white font-bold leading-tight">
-                  {exam.examName}
-                </h1>
-                <div className="z-10 flex flex-row items-end gap-3">
-                  <div className="flex flex-col items-center min-w-[220px] gap-3">
+                <div className="z-10 flex flex-row justify-between w-full ">
+                  <h1 className="text-4xl font-bold leading-tight text-white h-fit font-Nunito">
+                    {exam.examName}
+                  </h1>
+                  <div className="flex flex-col items-end self-end gap-3 min-w-fit">
                     <div
-                      className={`text-accent2 text-center font-extrabold font-nunito min-w-full text-3xl px-4 py-2 bg-white rounded-2xl ${
+                      className={`text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-white rounded-2xl ${
                         !(time > 0) && 'hidden'
                       }`}
                     >
@@ -415,18 +432,29 @@ export default function PageDashboard() {
                         ? `00:${minutesStr}:${secondsStr}`
                         : `${hoursStr}:${minutesStr}:${secondsStr} `}
                     </div>
-                    {token === undefined || !(time > 0) ? (
+                    <div className="flex flex-row items-center gap-2 min-w-[150px]">
                       <button
-                        className="min-w-full px-4 py-2 text-3xl font-bold bg-white text-accent1 rounded-2xl"
-                        onClick={handleStartExam}
+                        className="items-center justify-center min-h-full px-3 py-2 font-bold bg-white min-w-fit text-accent1 rounded-2xl"
+                        onClick={handleStopExam}
                       >
-                        Click here to start exam
+                        <i
+                          className="pi pi-power-off"
+                          style={{ fontSize: '1rem', 'font-weight': '600' }}
+                        ></i>
                       </button>
-                    ) : (
-                      <div className="min-w-full min-h-full px-4 py-2 text-3xl font-bold text-center bg-white text-accent1 rounded-2xl">
-                        {token}
-                      </div>
-                    )}
+                      {token === undefined || !(time > 0) ? (
+                        <button
+                          className="px-4 py-2 text-xl font-bold bg-white min-w-[150px] text-accent1 rounded-2xl"
+                          onClick={handleStartExam}
+                        >
+                          Click here to start exam
+                        </button>
+                      ) : (
+                        <div className="min-h-full px-4 py-2 text-xl font-bold text-center bg-white min-w-[150px] text-accent1 rounded-2xl">
+                          {token}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -452,19 +480,19 @@ export default function PageDashboard() {
             <div className="relative rounded-[24px] overflow-hidden shadow-lg border-[#fafafade]">
               <DataTable
                 value={dataGrid}
-                className="shadow-md"
                 ref={dt}
                 paginator
                 rows={15}
                 rowsPerPageOptions={[15, 25, 50]}
-                tableStyle={{ width: '100%', 'max-height': '100vh' }}
+                // tableStyle={{ width: '100%', 'max-height': '100vh' }}
                 size="sm"
                 sortMode="multiple"
                 sortOrder={-1}
                 removableSort
                 scrollable
-                scrollHeight="60vh"
                 rounded
+                scrollHeight="calc(100vh - 300px)"
+                className="shadow-md p-datatable-sm p-paginator-sm p-datatable-striped p-datatable-gridlines-both p-datatable-hoverable-rows"
                 paginatorRight={footer}
                 paginatorLeft={refresh}
               >

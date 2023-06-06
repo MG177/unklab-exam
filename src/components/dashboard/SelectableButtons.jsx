@@ -10,9 +10,9 @@ export default function SelectableButtons({ question }) {
   //   setSelectedButton(question.type);
   // }, [questionId, questions]);
 
-  const handleButtonClick = (buttonName) => {
-    // setSelectedButton(buttonName);
+  const options = ['Listening', 'Grammar', 'Vocabulary', 'Reading'];
 
+  const handleButtonClick = (buttonName) => {
     setQuestions((prevData) => {
       const index = prevData.findIndex(
         (findQuestion) => findQuestion.id === question.id
@@ -21,7 +21,7 @@ export default function SelectableButtons({ question }) {
       const newData = [...prevData];
       newData[index] = {
         ...newData[index],
-        type: buttonName
+        type: buttonName,
       };
       return newData;
     });
@@ -29,43 +29,20 @@ export default function SelectableButtons({ question }) {
   };
 
   return (
-    <div className='flex gap-3 mb-3'>
-      <button
-        className={`py-1 px-4 rounded-full ${
-          question.type.toLowerCase() === 'grammar'
-            ? 'bg-accent1 text-white'
-            : 'bg-white text-gray '
-        } font-bold text-sm font-Roboto`}
-        onClick={() => handleButtonClick('grammar')}>
-        Grammar
-      </button>
-      <button
-        className={`py-1 px-4 rounded-full ${
-          question.type.toLowerCase() === 'listening'
-            ? 'bg-accent1 text-white'
-            : 'bg-white text-gray'
-        } font-bold text-sm`}
-        onClick={() => handleButtonClick('listening')}>
-        Listening
-      </button>
-      <button
-        className={`py-1 px-4 rounded-full ${
-          question.type.toLowerCase() === 'reading'
-            ? 'bg-accent1 text-white'
-            : 'bg-white text-gray'
-        } font-bold text-sm`}
-        onClick={() => handleButtonClick('reading')}>
-        Reading
-      </button>
-      <button
-        className={`py-1 px-4 rounded-full ${
-          question.type.toLowerCase() === 'vocabulary'
-            ? 'bg-accent1 text-white'
-            : 'bg-white text-gray'
-        } font-bold text-sm`}
-        onClick={() => handleButtonClick('vocabulary')}>
-        Vocabulary
-      </button>
+    <div className="flex gap-2 mb-1">
+      {options.map((option) => (
+        <button
+          key={option}
+          className={`py-1 px-4 rounded-full ${
+            question.type.toLowerCase() === option.toLowerCase()
+              ? 'bg-accent1 text-white'
+              : 'bg-white text-gray'
+          } font-bold text-xs`}
+          onClick={() => handleButtonClick(option.toLowerCase())}
+        >
+          {option}
+        </button>
+      ))}
     </div>
   );
 }
