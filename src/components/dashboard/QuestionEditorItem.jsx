@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import EditableOptions from './EditableOptions';
 import QuestionContext from '../../contexts/QuestionContext';
 import AuthContext from '../../contexts/AuthContext';
-import SelectableButtons from './SelectableButtons';
+import SelectableDropdown from './SelectableDropdown';
 import AddImage from '../../image/imageicon.svg';
 import AddAudio from '../../image/audio.svg';
 import Delete from '../../image/trash.svg';
@@ -221,13 +221,15 @@ export default function QuestionEditorItem({ question }) {
   // console.log('imageSrc', imageSrc);
 
   return (
-    <div className="flex w-full gap-3 mb-6">
+    <div className="flex gap-3 mb-6 w-full ">
       <div className="flex flex-col w-full gap-6">
-        <div className="flex flex-col gap-3 p-3 bg-whitePlus shadow-right rounded-2xl">
-          <SelectableButtons question={question} />
-          <h3 className="text-2xl font-bold text-accent1">
-            Question #{question.id}
-          </h3>
+        <div className="flex flex-col gap-3 px-3 py-5 bg-whitePlus shadow-right rounded-2xl">
+          <div className="flex flex-row justify-between w-full">
+            <h3 className="text-xl font-bold text-accent1">
+              Question #{question.id}
+            </h3>
+            <SelectableDropdown question={question} />
+          </div>
           {hasContent && (
             <Media
               id={
@@ -246,7 +248,7 @@ export default function QuestionEditorItem({ question }) {
               onChange={(e) =>
                 handleOverwriteDataQuestion(question.id, e.target.value)
               }
-              className="w-full col-start-1 row-start-1 resize-none overflow-hidden text-[20px] border-none bg-transparent text-md text-black active:ring-0 focus:ring-0 ring-0"
+              className="w-full col-start-1 row-start-1 overflow-hidden text-base text-black bg-transparent border-none resize-none h-fit active:ring-0 focus:ring-0 ring-0"
               ref={questionRef}
               onInput={resizeTextArea}
             />
@@ -273,19 +275,19 @@ export default function QuestionEditorItem({ question }) {
       </div>
       <div className="flex flex-col gap-3">
         <button
-          className="w-[37px] h-[37px] text-white rounded-full bg-accent2 flex justify-center items-center"
+          className="flex items-center justify-center w-8 h-8 text-white rounded-full bg-accent2"
           onClick={() => handleDeleteQuestion(question.id)}
         >
           {/* <i className='fa-solid fa-trash' /> */}
-          <img src={Delete} alt="" />
+          <img src={Delete} alt="" className="scale-75" />
         </button>
         {!question.audio ? (
           <label
             htmlFor={`audio-file-input${question.id}`}
-            className="w-[37px] h-[37px] flex justify-center items-center rounded-full bg-whitePlus shadow-right"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-whitePlus shadow-right"
           >
             {/* <i className='text-black fa-solid fa-audio' /> */}
-            <img src={AddAudio} alt="" />
+            <img src={AddAudio} alt="" className="scale-75" />
           </label>
         ) : (
           <button
@@ -305,10 +307,10 @@ export default function QuestionEditorItem({ question }) {
         {!question.image ? (
           <label
             htmlFor={`image-file-input${question.id}`}
-            className="w-[37px] h-[37px] flex justify-center items-center rounded-full bg-whitePlus shadow-right"
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-whitePlus shadow-right"
           >
             {/* <i className='text-black fa-regular fa-image' /> */}
-            <img src={AddImage} alt="" />
+            <img src={AddImage} alt="" className="scale-75" />
           </label>
         ) : (
           <button

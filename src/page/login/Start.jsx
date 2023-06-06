@@ -53,23 +53,23 @@ export default function Start() {
       onCopy={(event) => {
         event.preventDefault();
       }}
-      className="p-[54px] h-max rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-evenly items-center"
+      className="px-10 py-8 h-max rounded-3xl  bg-white shadow-xl flex gap-5 flex-col items-center"
     >
       <button
         type="button"
-        className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
+        className="py-4 rounded-full bg-[#ff032d] text-white font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
         onClick={logout}
       ></button>
-      <div className="font-Nunito text-[29px] font-bold text-black">
+      <div className="font-Nunito text-4xl font-bold text-black">
         <p>
           Welcome to the English Exam Test
           <span className="text-accent2">!</span>
         </p>
       </div>
-      <div className="mt-[31px]">
+      <div className="max-[720px]:mt-[20px] max-[720px]:w-[500px]">
         <img src={TermsConditions} alt="" />
       </div>
-      <div className="flex flex-col items-center justify-between h-7 mt-[31.5px] mb-[54px]">
+      <div className="flex flex-col items-center h-fit">
         <form
           action=""
           className={`flex gap-1 mb-[14.5px] ${
@@ -86,7 +86,7 @@ export default function Start() {
           />
           <label
             htmlFor="agree"
-            className="font-montserrat font-bold text-[14px] leading-[17.07px] text-black"
+            className="font-montserrat font-bold text-[14px] max-[720px]:text-[13px] text-black"
           >
             I agree to the Software Exam Test terms and conditions.
           </label>
@@ -95,7 +95,7 @@ export default function Start() {
         <button
           // disabled={!isChecked}
           onClick={handleAgree}
-          className={`font-Nunito font-bold text-2xl py-[14px] px-[211px] rounded-[34px] ${
+          className={`font-Nunito max-[720px]:py-[8px] max-[720px]:text-lg font-bold text-2xl py-[14px] px-[211px] rounded-[34px] ${
             !isChecked && 'text-black bg-[#E0E0E0]'
           } text-white bg-accent1`}
         >
