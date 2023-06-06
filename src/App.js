@@ -47,7 +47,7 @@ function App() {
               }
             />
             <Route
-              path="/exam/:examId"
+              path="/exam/:session/:examId" // Include ":session" in the path
               element={
                 <ProtectedRoute>
                   <Exam />
@@ -72,7 +72,7 @@ function App() {
             /> */}
             <Route element={<QuestionContextLayout />}>
               <Route
-                path="/dashboard/:examId"
+                path="/dashboard/:session/:examId" // Include ":session" in the path
                 element={
                   <ProtectedRoute>
                     <PageDashboard />

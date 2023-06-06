@@ -94,7 +94,7 @@ export default function Form() {
             localStorage.setItem(key, JSON.stringify(value));
           });
           setUser(response.data.data);
-          navigate('/dashboard/0');
+          navigate('/dashboard/0/0');
         });
     } catch (error) {
       console.log(error);

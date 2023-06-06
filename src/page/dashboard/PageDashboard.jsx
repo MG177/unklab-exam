@@ -438,7 +438,7 @@ export default function PageDashboard() {
                   className="absolute top-0 left-0 z-0 object-cover w-full h-full rounded-2xl"
                 />
                 <div className="z-10 flex flex-row justify-between w-full ">
-                  <h1 className="text-4xl font-bold leading-tight text-white h-fit font-Nunito">
+                  <h1 className="text-3xl font-bold leading-tight text-white h-fit font-Nunito">
                     {exam.examName}
                   </h1>
                   <div className="flex flex-col items-end self-end gap-3 min-w-fit">
@@ -517,8 +517,9 @@ export default function PageDashboard() {
           />
         </>
       ) : (
-        <div className="flex-1 p-3">
-          <h1>Welcome to Dashboard</h1>
+        <div className="h-screen w-full flex flex-col items-center justify-center p-3 font-Nunito text-2xl">
+          <div>Welcome to Dashboard</div>
+          <div>To choose a class, please use the sidebar on the left.</div>
         </div>
       )}
     </div>

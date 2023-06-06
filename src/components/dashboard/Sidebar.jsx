@@ -12,36 +12,33 @@ import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
 import QuestionContext from '../../contexts/QuestionContext';
 
-const getYearRangesAndDataArrays = () => {
-  const currentYear = new Date().getFullYear();
-  const yearRangesArray = [];
-  const yearDataArray = [];
-  for (let i = currentYear - 3; i <= currentYear + 1; i++) {
-    const firstYear = i;
-    const secondYear = i + 1;
-    const yearRange = `${firstYear}/${secondYear}`;
-    const yearData = `${firstYear}_${secondYear}`;
-    yearRangesArray.push(yearRange);
-    yearDataArray.push(yearData);
-  }
-  return { yearRangesArray, yearDataArray };
-};
-
-export default function Sidebar({ setToken, setExam, examList, setExamList }) {
-  const { yearRangesArray, yearDataArray } = useMemo(
-    getYearRangesAndDataArrays,
-    []
-  );
-
+export default function Sidebar({
+  setToken,
+  setExam,
+  examList,
+  setExamList,
+  setLoading,
+}) {
   const { user } = useContext(AuthContext);
   const { saveStatus } = useContext(QuestionContext);
   const { examId } = useParams();
+  const { session } = useParams();
   const navigate = useNavigate();
   const uploadRef = useRef(null);
-  const [isHidden, setIsHidden] = useState(false);
-  const [session, setSession] = useState(null);
+  const [isHidden, setIsHidden] = useState(true);
+  // const [session, setSession] = useState(null);
   const [sessionArray, setSessionArray] = useState([]);
-  const newSessionRef = useRef('');
+  // const newSessionRef = useRef('');
+  const [newSession, setNewSession] = useState('');
+  const [isNewSessionSelected, setIsNewSessionSelected] = useState(false);
+  const [selectedSession, setSelectedSession] = useState('');
+
+  const handleSessionChange = (a) => {
+    fetchDataBySession(a);
+    setSelectedSession(a);
+    setLoading(true);
+    navigate(`/dashboard/${a}/0`);
+  };
 
   const toggleHidden = useCallback(() => {
     setIsHidden((prevHidden) => !prevHidden);
@@ -49,15 +46,16 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
 
   const fetchDataBySession = useCallback(
     async (hoo) => {
-      setSession(hoo);
+      // setSession(hoo);
       try {
         const res = await api.get(`/exam/session/${hoo}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
-        console.log('exam list', res.data);
+        // console.log('exam list', res.data);
         setExamList(res.data);
+        navigate(`/dashboard/${hoo}/0`);
       } catch (error) {
         console.log(error);
       }
@@ -73,15 +71,20 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
         },
       });
       console.log('exam list', res.data);
-      const array = res.data.reduce((acc, exam) => {
+
+      // Sort the array by createdAt
+      const sortedArray = res.data.sort((a, b) => {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      });
+
+      const array = sortedArray.reduce((acc, exam) => {
         if (!acc.includes(exam.session)) {
           acc.push(exam.session);
         }
         return acc;
       }, []);
-      if (session === null) {
-        fetchDataBySession(array[0]);
-      }
+
+      fetchDataBySession(array[array.length - 1]);
       setSessionArray(array);
     } catch (error) {
       console.log(error);
@@ -97,33 +100,31 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
     window.location.href = '/';
   }, []);
 
-  const handleAddExam = useCallback(
-    async (e) => {
-      let newSession;
-      if (session === 'newLumenDevPassCode') {
-        newSession = newSessionRef.current;
-      } else {
-        newSession = session;
-      }
-      try {
-        const formData = new FormData();
-        formData.append('file', e.target.files[0]);
-        const response = await api.post(`/exam/${newSession}`, formData, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
-        console.log(newSession);
+  const handleAddExam = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append('file', e.target.files[0]);
+      const response = await api.post(`/exam/${newSession}`, formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      if (response.status === 201) {
         fetchData();
-        setSession(newSession);
         fetchDataBySession(newSession);
+        setSelectedSession(newSession);
+        e.target.value = null;
         newClassDialog.close();
-      } catch (error) {
-        console.log(error);
+        alert('Exam uploaded successfully');
+      } else {
+        throw new Error('Something went wrong, please try again later');
       }
-    },
-    [fetchData, fetchDataBySession, session, user.access_token]
-  );
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
+  };
 
   const splitExamName = useCallback((examName) => {
     const split1 = examName.split('/');
@@ -145,6 +146,13 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
       }
     });
   }
+
+  const handleNewClassDialog = () => {
+    setNewSession(session);
+    newClassDialog.showModal();
+  };
+
+  console.log('session', newSession);
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
@@ -179,7 +187,7 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
                   !window.confirm('Changes you made may not be saved.')
                 )
                   return;
-                navigate(`/dashboard/${exam._id}`);
+                navigate(`/dashboard/${session}/${exam._id}`);
                 setExam(exam);
               }}
               className={`cursor-pointer flex flex-row items-center font-bold w-full shadow-right rounded-lg p-2 ${
@@ -190,7 +198,7 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
               <p>{isHidden && splitExamName(exam.examName)}</p>
             </button>
           ))}
-          <label
+          {/* <label
             className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg py-1.5 ${
               !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
             }`}
@@ -203,7 +211,7 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
               onChange={handleAddExam}
               className="hidden"
             />
-          </label>
+          </label> */}
         </ul>
       </nav>
       <div className="sticky bottom-0 right-0 flex justify-end w-full p-4">
@@ -213,7 +221,8 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
               <select
                 className="rounded-full py-1"
                 id="session"
-                onChange={(e) => fetchDataBySession(e.target.value)}
+                value={selectedSession}
+                onChange={(e) => handleSessionChange(e.target.value)}
               >
                 {sessionArray.map((session, index) => (
                   <option key={index} value={session}>
@@ -223,7 +232,7 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
               </select>
               <button
                 className="border-[1px] ml-2 border-black rounded-full w-8 h-8"
-                onClick={() => newClassDialog.showModal()}
+                onClick={() => handleNewClassDialog()}
               >
                 <i className="pi pi-plus" />
               </button>
@@ -259,7 +268,12 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
             <select
               className="rounded-full py-1 w-full"
               id="session"
-              onChange={(e) => setSession(e.target.value)}
+              onChange={(e) => {
+                setIsNewSessionSelected(
+                  e.target.value === 'newLumenDevPassCode'
+                );
+                setNewSession(e.target.value);
+              }}
             >
               {sessionArray.map((sessions, index) => (
                 <option
@@ -274,23 +288,25 @@ export default function Sidebar({ setToken, setExam, examList, setExamList }) {
                 New session...
               </option>
             </select>
-            {session === 'newLumenDevPassCode' && (
+            {isNewSessionSelected && (
               <input
                 type="text"
                 placeholder="Enter new session"
                 className="rounded-full py-1 w-full"
-                onChange={(e) => (newSessionRef.current = e.target.value)}
+                onChange={(e) => setNewSession(e.target.value)}
               />
             )}
             <label
               className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg py-1.5`}
+              htmlFor="uploadCSV"
             >
               <p className="text-base text-whitePlus">Select class .csv file</p>
               <input
                 type="file"
+                id="uploadCSV"
                 accept=".csv"
                 ref={uploadRef}
-                onChange={handleAddExam}
+                onInput={handleAddExam}
                 className="hidden"
               />
             </label>

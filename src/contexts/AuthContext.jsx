@@ -34,34 +34,36 @@ export function getAllLocalData() {
       : null,
   };
 
-  // if localstorage has empty or null value, return null
-  for (const key in localStorageData) {
-    if (
-      localStorageData[key] === null ||
-      localStorageData[key] === '' ||
-      localStorageData[key] === undefined
-    ) {
-      return null;
-    }
-  }
-  console.table(localStorageData);
+  // Check for missing or empty values
+  // for (const key in localStorageData) {
+  //   if (
+  //     localStorageData[key] === null ||
+  //     localStorageData[key] === '' ||
+  //     localStorageData[key] === undefined
+  //   ) {
+  //     return null;
+  //   }
+  // }
 
+  console.table(localStorageData);
   return localStorageData;
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(getAllLocalData() || null);
+  const [user, setUser] = useState(() => getAllLocalData() || null);
+  console.log('AuthContext1: ', user);
 
   useEffect(() => {
     const localStorageData = getAllLocalData();
     if (localStorageData) {
       setUser(localStorageData);
     }
+    console.log('AuthContext2: ', localStorageData);
   }, []);
 
   const value = useMemo(
     () => ({ user, setUser, getAllLocalData }),
-    [user, setUser]
+    [user, setUser, getAllLocalData]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
