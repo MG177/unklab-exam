@@ -22,6 +22,7 @@ export default function PageDashboard() {
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const [token, setToken] = useState('');
+  const [examList, setExamList] = useState([]);
   const loadingDataGrid = [
     {
       noreg: 'Loading...',
@@ -62,24 +63,28 @@ export default function PageDashboard() {
   const [dataGrid, setDataGrid] = useState(loadingDataGrid);
   const dt = useRef(null);
 
+  const getExamQuestion = async () => {
+    try {
+      await api
+        .get(`/questions/exam/${examId}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          setQuestions(response.data);
+          console.log('response.data = ', response.data);
+          setLoading(false);
+          console.log('loading from Exam = ', loading);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (examId != 0) {
-      try {
-        api
-          .get(`/questions/exam/${examId}`, {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          })
-          .then((response) => {
-            setQuestions(response.data);
-            console.log('response.data = ', response.data);
-            setLoading(false);
-            console.log('loading from Exam = ', loading);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+      getExamQuestion();
     }
   }, [examId, loading, setQuestions, user.access_token]);
 
@@ -414,7 +419,14 @@ export default function PageDashboard() {
 
   return (
     <div className="relative flex justify-center w-screen">
-      <Sidebar setToken={setToken} setExam={setExam} />
+      <Sidebar
+        setToken={setToken}
+        setExam={setExam}
+        examList={examList}
+        setExamList={setExamList}
+        setLoading={setLoading}
+      />
+
       {!loading ? (
         <>
           <div className="container p-4 w-full bg-[#FCF9FF] flex-1">
@@ -466,24 +478,6 @@ export default function PageDashboard() {
                 </div>
               </div>
             </div>
-            {/* <div className="mb-3 bg-white rounded-lg shadow-md">
-              <div className="relative flex flex-row-reverse flex-wrap items-stretch w-full mb-4">
-                <input
-                  type="search"
-                  className="relative m-0 block w-[1px] min-w-0 flex-auto rounded border-none text-base font-normal leading-[1.6] text-black outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:text-neutral-200 dark:placeholder:text-black dark:focus:border-primary"
-                  placeholder="Search"
-                  aria-label="Search"
-                  aria-describedby="button-addon2"
-                  // onChange={handleSearch}
-                />
-                <span
-                  className="input-group-text flex items-center whitespace-nowrap rounded px-3 py-1.5 text-center text-base font-normal text-black dark:text-neutral-200"
-                  id="basic-addon2"
-                >
-                  <i className="text-black fa-solid fa-magnifying-glass" />
-                </span>
-              </div>
-            </div> */}
             <div className="relative rounded-[24px] overflow-hidden shadow-lg border-[#fafafade]">
               <DataTable
                 value={dataGrid}
@@ -491,7 +485,6 @@ export default function PageDashboard() {
                 paginator
                 rows={15}
                 rowsPerPageOptions={[15, 25, 50]}
-                // tableStyle={{ width: '100%', 'max-height': '100vh' }}
                 size="sm"
                 sortMode="multiple"
                 sortOrder={-1}
@@ -518,7 +511,10 @@ export default function PageDashboard() {
               </DataTable>
             </div>
           </div>
-          <QuestionEditor />
+          <QuestionEditor
+            examList={examList}
+            getExamQuestions={getExamQuestion}
+          />
         </>
       ) : (
         <div className="flex-1 p-3">
