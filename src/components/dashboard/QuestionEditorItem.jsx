@@ -221,7 +221,7 @@ export default function QuestionEditorItem({ question }) {
   // console.log('imageSrc', imageSrc);
 
   return (
-    <div className="flex gap-3 mb-6 w-full">
+    <div className="flex gap-3 mb-6 w-full ">
       <div className="flex flex-col w-full gap-6">
         <div className="flex flex-col gap-3 px-3 py-5 bg-whitePlus shadow-right rounded-2xl">
           <div className="flex flex-row justify-between w-full">

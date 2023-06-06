@@ -76,7 +76,7 @@ export default function Sidebar({ setToken, setExam }) {
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
-      <div className="flex items-center justify-center h-16 p-3">
+      <div className="flex items-center justify-between h-16 py-3 px-5">
         {isHidden ? (
           <h1 className="text-2xl font-bold font-Nunito text-accent1">
             Unklab <span className="text-black">Exams</span>
@@ -89,7 +89,7 @@ export default function Sidebar({ setToken, setExam }) {
         {isHidden && (
           <button
             onClick={handleLogout}
-            className="items-center w-8 h-8 ml-5 text-white scale-90 rounded-full bg-accent2"
+            className="items-center w-8 h-8 text-white scale-90 rounded-full bg-accent2"
           >
             <i className="pl-1 pi pi-sign-out" style={{ fontSize: '1rem' }} />
           </button>

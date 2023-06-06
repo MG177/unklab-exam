@@ -63,35 +63,39 @@ export default function PageDashboard() {
   const dt = useRef(null);
 
   useEffect(() => {
-    try {
-      api
-        .get(`/questions/exam/${examId}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setQuestions(response.data);
-          console.log('response.data = ', response.data);
-          setLoading(false);
-          console.log('loading from Exam = ', loading);
-        });
-    } catch (error) {
-      console.log(error);
+    if (examId != 0) {
+      try {
+        api
+          .get(`/questions/exam/${examId}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          })
+          .then((response) => {
+            setQuestions(response.data);
+            console.log('response.data = ', response.data);
+            setLoading(false);
+            console.log('loading from Exam = ', loading);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [examId, loading, setQuestions, user.access_token]);
 
   const fetchDataGrid = async () => {
     setDataGrid(loadingDataGrid);
-    try {
-      const response = await api.get(`/students/exam/score/${examId}`, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      });
-      setDataGrid(response.data);
-    } catch (error) {
-      console.log(error);
+    if (examId != 0) {
+      try {
+        const response = await api.get(`/students/exam/score/${examId}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
+        setDataGrid(response.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -114,6 +118,7 @@ export default function PageDashboard() {
 
   const recalculateScore = async () => {
     setDataGrid(loadingDataGrid);
+
     try {
       await api.post(
         `/students/exam/score/${examId}/recalculate`,
@@ -165,18 +170,20 @@ export default function PageDashboard() {
   });
 
   if (!exam.examName) {
-    try {
-      api
-        .get(`/exam/name/${examId}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          setExam(response.data);
-        });
-    } catch (error) {
-      console.log(error);
+    if (examId != 0) {
+      try {
+        api
+          .get(`/exam/name/${examId}`, {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          })
+          .then((response) => {
+            setExam(response.data);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 

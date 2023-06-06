@@ -53,8 +53,8 @@ export default function QuestionEditor() {
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-x-hidden overflow-y-scroll bg-white font-Nunito min-w-fit shadow-right scroll-smooth">
-      <div className="flex flex-col items-center justify-start p-3 w-fit ">
-        <h1 className="flex items-center justify-between w-full 2xl:w-[500px] p-2 mb-3 text-2xl font-bold text-center text-white bg-accent1 rounded-2xl">
+      <div className="flex flex-col items-center justify-start p-3 2xl:max-w-[500px] max-w-[400px] w-fit ">
+        <h1 className="flex items-center justify-between w-full p-2 mb-3 text-2xl font-bold text-center text-white bg-accent1 rounded-2xl">
           <span className="flex-1"> QUESTION EDITOR </span>
           <span className="px-3 py-2 bg-white rounded-2xl text-accent2">{`${questions.length}`}</span>
         </h1>

@@ -120,16 +120,13 @@ export default function Form() {
       ></button>
       {adminForm ? (
         <form onSubmit={handleLoginAdmin}>
-          <div className="max-w-[625px] max-[960px]:max-w-[500px] max-[960px]:max-h-[470px] text-center p-12 min-[960px]: md:px-[60px] md:py-[50px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+          <div className="h-fit w-[600px] text-center p-12 min-[960px]: gap-8 rounded-3xl scale-90 bg-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
             <div className="flex flex-col items-center justify-center gap-3">
-              <div className="flex flex-col text-4xl max-[960px]:text-[40px] max-[960px]:mt-2 text-[62px] font-inter font-bold mb-2 max-[960px]:mb-0">
-                <span className="text-[#37474F]">Welcome</span>
-                <div className="flex justify-center mt-5 max-[960px]:mt-0">
-                  <span className="text-[#37474F]">Admin</span>
-                  <span className="text-[#FF6593]">!</span>
-                </div>
+              <div className="flex flex-row text-5xl font-inter font-bold mb-2 max-[960px]:mb-0">
+                <span className="text-black">Welcome Admin</span>
+                <span className="text-accent2">!</span>
               </div>
-              <p className="font-Nunito font-normal text-xl leading-[30px] max-[960px]:leading-[15px] ">
+              <p className="font-Nunito font-normal text-lg">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
@@ -145,8 +142,8 @@ export default function Form() {
                   ref={adminUsernameRef}
                   type="text"
                   placeholder="John"
-                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px]
-                  pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg
+                  pl-5 placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
@@ -159,7 +156,7 @@ export default function Form() {
                   ref={adminPasswordRef}
                   type="password"
                   placeholder="********"
-                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
@@ -174,15 +171,15 @@ export default function Form() {
         </form>
       ) : (
         <form onSubmit={handleLogin}>
-          <div className="max-w-[625px] text-center p-12 max-[960px]:max-w-[500px] max-[960px]:max-h-[470px] md:p-[60px] gap-[32px] rounded-[12px] bg-[#FAFAFA] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center ">
+          <div className="h-fit w-[600px] text-center p-12 gap-8 rounded-3xl scale-90 bg-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="flex text-5xl max-[960px]:mt-3 max-[960px]:text-[44px] text-[60px] font-inter font-bold ">
-                <h1 className="text-[#37474F]">Welcome</h1>
-                <h1 className="text-[#FF6593]">!</h1>
+              <div className="flex text-5xl text-14 font-inter font-bold ">
+                <h1 className="text-black">Welcome</h1>
+                <h1 className="text-accent2">!</h1>
               </div>
               <p
                 style={{ userSelect: 'none' }}
-                className="max-[960px]:text-[15px] max-[960px]:leading-[18px] font-Nunito font-normal text-xl text-[24px] leading-[29.05px] max-[960px]:mt-4 mt-5"
+                className="font-Nunito font-normal text-xl text-[24px] leading-normal mt-4 mt-5"
               >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
@@ -199,7 +196,7 @@ export default function Form() {
                   ref={studentNoregRef}
                   type="text"
                   placeholder="S2200000"
-                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
                 />
               </div>
               <div className="flex flex-col items-start ">
@@ -212,7 +209,7 @@ export default function Form() {
                   ref={studentTokenRef}
                   type="text"
                   placeholder="Token"
-                  className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg md:text-[24px] pl-[22px] placeholder:text-[#37474F40]"
+                  className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                 />
               </div>
             </div>
@@ -232,7 +229,7 @@ export default function Form() {
 
               <button
                 type="submit"
-                className="uppercase max-[960px]:py-3 max-[960px]:text-[16px]  w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg text-[24px]"
+                className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-white font-semibold text-lg text-6"
               >
                 Login
               </button>
