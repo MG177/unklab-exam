@@ -33,6 +33,8 @@ export default function Sidebar({
   const [isNewSessionSelected, setIsNewSessionSelected] = useState(false);
   const [selectedSession, setSelectedSession] = useState('');
 
+  console.log('session', session);
+
   const handleSessionChange = (a) => {
     fetchDataBySession(a);
     setSelectedSession(a);
@@ -46,7 +48,6 @@ export default function Sidebar({
 
   const fetchDataBySession = useCallback(
     async (hoo) => {
-      // setSession(hoo);
       try {
         const res = await api.get(`/exam/session/${hoo}`, {
           headers: {
@@ -70,7 +71,7 @@ export default function Sidebar({
           Authorization: `Bearer ${user.access_token}`,
         },
       });
-      console.log('exam list', res.data);
+      // console.log('exam list', res.data);
 
       // Sort the array by createdAt
       const sortedArray = res.data.sort((a, b) => {
@@ -152,7 +153,9 @@ export default function Sidebar({
     newClassDialog.showModal();
   };
 
-  console.log('session', newSession);
+  const consoleLog = (a, b) => {
+    console.log(a, b);
+  };
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
@@ -198,20 +201,6 @@ export default function Sidebar({
               <p>{isHidden && splitExamName(exam.examName)}</p>
             </button>
           ))}
-          {/* <label
-            className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg py-1.5 ${
-              !isHidden ? 'gap-0 justify-center' : 'gap-4 px-4 justify-start'
-            }`}
-          >
-            <p className="text-lg text-whitePlus">+</p>
-            <input
-              type="file"
-              accept=".csv"
-              ref={uploadRef}
-              onChange={handleAddExam}
-              className="hidden"
-            />
-          </label> */}
         </ul>
       </nav>
       <div className="sticky bottom-0 right-0 flex justify-end w-full p-4">
@@ -219,11 +208,22 @@ export default function Sidebar({
           {isHidden && (
             <div>
               <select
-                className="rounded-full py-1"
+                className="rounded-full py-1 min-w-[100px] border-[1px] border-black"
                 id="session"
                 value={selectedSession}
                 onChange={(e) => handleSessionChange(e.target.value)}
               >
+                {session == 'undefined' && (
+                  <option
+                    value=""
+                    className="text-gray"
+                    disabled
+                    selected
+                    hidden
+                  >
+                    Select session...
+                  </option>
+                )}
                 {sessionArray.map((session, index) => (
                   <option key={index} value={session}>
                     {session}
@@ -284,6 +284,11 @@ export default function Sidebar({
                   {sessions}
                 </option>
               ))}
+              {session == 'undefined' && (
+                <option value="" className="text-gray" disabled selected hidden>
+                  Select session...
+                </option>
+              )}
               <option value="newLumenDevPassCode" className="text-gray">
                 New session...
               </option>
@@ -297,7 +302,7 @@ export default function Sidebar({
               />
             )}
             <label
-              className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-lg py-1.5`}
+              className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-2xl py-1.5 my-2`}
               htmlFor="uploadCSV"
             >
               <p className="text-base text-whitePlus">Select class .csv file</p>
