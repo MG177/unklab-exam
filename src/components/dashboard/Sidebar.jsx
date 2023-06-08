@@ -159,7 +159,11 @@ export default function Sidebar({
 
   return (
     <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
-      <div className="flex items-center justify-between h-16 py-3 px-5">
+      <div
+        className={`flex items-center ${
+          !isHidden ? 'justify-center' : 'justify-between'
+        } p-3 h-16`}
+      >
         {isHidden ? (
           <h1 className="text-2xl font-bold font-Nunito mr-4 text-accent1">
             Unklab <span className="text-black">Exams</span>
@@ -204,9 +208,9 @@ export default function Sidebar({
         </ul>
       </nav>
       <div className="sticky bottom-0 right-0 flex justify-end w-full p-4">
-        <div className="flex flex-row w-full items-center justify-between gap-2">
+        <div className="flex flex-row w-full items-center justify-between">
           {isHidden && (
-            <div>
+            <div className="mr-2">
               <select
                 className="rounded-full py-1 min-w-[100px] border-[1px] border-black"
                 id="session"

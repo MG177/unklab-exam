@@ -28,8 +28,8 @@ export default function Form() {
     }
     try {
       const studentData = await api.post('/auth/login/student', {
-        noreg: studentNoregRef.current.value,
-        token: studentTokenRef.current.value,
+        noreg: studentNoregRef.current.value.trim(),
+        token: studentTokenRef.current.value.trim(),
       });
       const startResponse = await api.post(
         `/students/start/${studentData.data.data.examId}`,
@@ -85,8 +85,8 @@ export default function Form() {
     try {
       api
         .post('/auth/login/admin', {
-          username: adminUsernameRef.current.value,
-          password: adminPasswordRef.current.value,
+          username: adminUsernameRef.current.value.trim(),
+          password: adminPasswordRef.current.value.trim(),
         })
         .then((response) => {
           const admin = response.data.data;

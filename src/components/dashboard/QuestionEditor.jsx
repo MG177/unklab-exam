@@ -123,7 +123,7 @@ export default function QuestionEditor({ examList, getExamQuestions }) {
           })}
         </div>
       </dialog>
-      <div className="flex flex-col items-center justify-start p-3 2xl:max-w-[500px] max-w-[400px] w-fit ">
+      <div className="flex flex-col items-center justify-start p-3 2xl:w-[480px] w-[400px] w-fit ">
         <div className="flex items-center justify-between w-full p-2 mb-3 text-2xl font-bold text-center text-white bg-accent1 rounded-2xl">
           <button
             onClick={() => chooseSession.showModal()}

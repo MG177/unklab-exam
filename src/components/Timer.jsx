@@ -66,7 +66,7 @@ export default function Timer() {
 
   return (
     <div className="flex flex-row justify-center items-center max-[960px]:text-[40px] text-[72px] gap-[16px] max-[960px]:px-[16px] max-[960px]:py-[24px] px-[20px] py-[28px] min-w-fit h-[140px] bg-white rounded-[24px]">
-      <p className="font-bold text-accent2 font-nunito">
+      <p className="font-bold text-accent2 font-nunito whitespace-nowrap">
         {hours === 0
           ? `00 : ${minutesStr} : ${secondsStr}`
           : `${hoursStr} : ${minutesStr} : ${secondsStr}`}

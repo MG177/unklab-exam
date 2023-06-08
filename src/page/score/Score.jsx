@@ -19,7 +19,6 @@ export default function Score() {
     totalQuestion: 0,
     grade: 'null',
   });
-  console.log(score);
   useEffect(() => {
     const fetchTime = async () => {
       try {
@@ -144,16 +143,16 @@ export default function Score() {
         <div className="mb-[30vh] flex flex-col justify-center items-center max-[960px]:-mt-[30px]">
           <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
             <div className="bg-white w-max h-max max-[960px]:py-[0px] px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)] ">
-              <main>
-                <div className="flex flex-col justify-center mt-10 items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
-                  <img src={ProgressBar} alt="" />
-                  <div className="-mt-[180px] flex flex-col items-center justify-center mb-[120px]">
-                    <p className="text-6xl max-[960px]:text-3xl font-bold text-black font-Nunito max-[960px]:mt-[83px]">
-                      {`${score.totalScore}/100`}
-                    </p>
-                  </div>
-                </div>
-              </main>
+              <div className="flex flex-col border-[16px] h-[250px] w-[250px] border-accent2 rounded-full justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
+                {/* <img
+                  src={ProgressBar}
+                  alt=""
+                  className="absolute inset-0 w-full h-full"
+                /> */}
+                <p className="text-6xl max-[960px]:text-3xl font-bold text-black font-Nunito max-[960px]:mt-[83px] relative z-10">
+                  {`${score.totalScore}/100`}
+                </p>
+              </div>
 
               <div className="flex flex-col gap-6">
                 <div className="flex flex-row font-Nunito gap-[10px] ">
@@ -167,7 +166,7 @@ export default function Score() {
                   </div>
                   <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] max-[960px]:py-2 max-[960px]:px-5 py-4 px-7 w-full">
                     <p className="text-5xl max-[960px]:text-lg font-bold text-left">
-                      {score.grade}
+                      {/* {score.grade} */}-
                     </p>
                     <p className="text-2xl max-[960px]:text-lg font-bold">
                       Grade
@@ -182,10 +181,10 @@ export default function Score() {
               </div>
             </div>
           </div>
-          {score.questions &&
+          {/* {score.questions &&
             score.questions.map((question) => {
               return <Answer key={question.index} question={question} />;
-            })}
+            })} */}
         </div>
         <Footer />
       </div>
