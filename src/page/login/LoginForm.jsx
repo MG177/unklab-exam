@@ -94,7 +94,7 @@ export default function Form() {
             localStorage.setItem(key, JSON.stringify(value));
           });
           setUser(response.data.data);
-          navigate('/dashboard/0/0');
+          navigate('/dashboard/home');
         });
     } catch (error) {
       console.log(error);
@@ -126,7 +126,7 @@ export default function Form() {
                 <span className="text-black">Welcome Admin</span>
                 <span className="text-accent2">!</span>
               </div>
-              <p className="font-Nunito font-normal text-lg">
+              <p className="text-lg font-normal font-Nunito">
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.
               </p>
@@ -173,13 +173,13 @@ export default function Form() {
         <form onSubmit={handleLogin}>
           <div className="h-fit w-[600px] text-center p-12 gap-8 rounded-3xl scale-90 bg-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="flex text-5xl text-14 font-inter font-bold ">
+              <div className="flex text-5xl font-bold text-14 font-inter ">
                 <h1 className="text-black">Welcome</h1>
                 <h1 className="text-accent2">!</h1>
               </div>
               <p
                 style={{ userSelect: 'none' }}
-                className="font-Nunito font-normal text-xl text-[24px] leading-normal mt-4 mt-5"
+                className="font-Nunito font-normal text-xl text-[24px] leading-normal mt-4"
               >
                 Let's get you started with your exams. Enter your login details
                 and token to access your account.

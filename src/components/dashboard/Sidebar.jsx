@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
 import QuestionContext from '../../contexts/QuestionContext';
@@ -20,12 +20,12 @@ export default function Sidebar({
   setLoading,
 }) {
   const { user } = useContext(AuthContext);
-  const { saveStatus } = useContext(QuestionContext);
+  // const { saveStatus } = useContext(QuestionContext);
   const { examId } = useParams();
   const { session } = useParams();
   const navigate = useNavigate();
   const uploadRef = useRef(null);
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
   // const [session, setSession] = useState(null);
   const [sessionArray, setSessionArray] = useState([]);
   // const newSessionRef = useRef('');
@@ -33,14 +33,12 @@ export default function Sidebar({
   const [isNewSessionSelected, setIsNewSessionSelected] = useState(false);
   const [selectedSession, setSelectedSession] = useState('');
 
-  console.log('session', session);
-
-  const handleSessionChange = (a) => {
-    fetchDataBySession(a);
-    setSelectedSession(a);
-    setLoading(true);
-    navigate(`/dashboard/${a}/0`);
-  };
+  // const handleSessionChange = (a) => {
+  //   fetchDataBySession(a);
+  //   setSelectedSession(a);
+  //   setLoading(true);
+  //   navigate(`/dashboard/${a}/0`);
+  // };
 
   const toggleHidden = useCallback(() => {
     setIsHidden((prevHidden) => !prevHidden);
@@ -158,14 +156,14 @@ export default function Sidebar({
   };
 
   return (
-    <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus min-w-fit shadow-right">
+    <div className="relative z-20 flex flex-col h-screen overflow-x-auto bg-whitePlus max-w-fit shadow-right">
       <div
         className={`flex items-center ${
           !isHidden ? 'justify-center' : 'justify-between'
         } p-3 h-16`}
       >
         {isHidden ? (
-          <h1 className="text-2xl font-bold font-Nunito mr-4 text-accent1">
+          <h1 className="mr-4 text-2xl font-bold font-Nunito text-accent1">
             Unklab <span className="text-black">Exams</span>
           </h1>
         ) : (
@@ -183,17 +181,12 @@ export default function Sidebar({
         )}
       </div>
       <nav className="flex-1 px-4">
-        <ul className={`space-y-2 font-Nunito text-gray bg-white`}>
-          {examList.map((exam, index) => (
+        <ul className={`space-y-2 font-Nunito`}>
+          {/* {examList.map((exam, index) => (
             <button
               type="button"
               key={exam._id}
               onClick={() => {
-                if (
-                  !saveStatus &&
-                  !window.confirm('Changes you made may not be saved.')
-                )
-                  return;
                 navigate(`/dashboard/${session}/${exam._id}`);
                 setExam(exam);
               }}
@@ -204,44 +197,26 @@ export default function Sidebar({
               <p>{index + 1}</p>
               <p>{isHidden && splitExamName(exam.examName)}</p>
             </button>
-          ))}
+          ))} */}
+          <Link
+            className="flex items-center justify-center p-2 text-white rounded-xl w-11 h-fit bg-accent2"
+            to="/dashboard/home"
+          >
+            <i className="pi pi-home" style={{ fontSize: '1.5rem' }} />
+          </Link>
+          <Link
+            className="flex items-center justify-center p-2 text-white rounded-xl w-11 h-fit bg-accent2"
+            to="/dashboard/question"
+          >
+            <i
+              className="pi pi-file-edit"
+              style={{ fontSize: '1.5rem', marginLeft: '3px' }}
+            />
+          </Link>
         </ul>
       </nav>
       <div className="sticky bottom-0 right-0 flex justify-end w-full p-4">
-        <div className="flex flex-row w-full items-center justify-between">
-          {isHidden && (
-            <div className="mr-2">
-              <select
-                className="rounded-full py-1 min-w-[100px] border-[1px] border-black"
-                id="session"
-                value={selectedSession}
-                onChange={(e) => handleSessionChange(e.target.value)}
-              >
-                {session == 'undefined' && (
-                  <option
-                    value=""
-                    className="text-gray"
-                    disabled
-                    selected
-                    hidden
-                  >
-                    Select session...
-                  </option>
-                )}
-                {sessionArray.map((session, index) => (
-                  <option key={index} value={session}>
-                    {session}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="border-[1px] ml-2 border-black rounded-full w-8 h-8"
-                onClick={() => handleNewClassDialog()}
-              >
-                <i className="pi pi-plus" />
-              </button>
-            </div>
-          )}
+        <div className="flex flex-row items-center justify-end w-full">
           <button
             onClick={toggleHidden}
             className="w-8 h-8 text-white rounded-full bg-accent2"
@@ -253,74 +228,6 @@ export default function Sidebar({
             />
           </button>
         </div>
-        <dialog id="newClassDialog" className="rounded-2xl bg-white">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-row justify-between items-center w-full">
-              <h1 className=" whitespace-nowrap font-Nunito mr-10 font-semibold">
-                Add new class
-              </h1>
-              <button
-                className="flex items-center"
-                onClick={() => newClassDialog.close()}
-              >
-                <i className="fa-solid fa-xmark" />
-              </button>
-            </div>
-            <div className="font-Nunito">
-              Which session do you want to assign classes to?
-            </div>
-            <select
-              className="rounded-full py-1 w-full"
-              id="session"
-              onChange={(e) => {
-                setIsNewSessionSelected(
-                  e.target.value === 'newLumenDevPassCode'
-                );
-                setNewSession(e.target.value);
-              }}
-            >
-              {sessionArray.map((sessions, index) => (
-                <option
-                  key={index}
-                  value={sessions}
-                  selected={sessions === session}
-                >
-                  {sessions}
-                </option>
-              ))}
-              {session == 'undefined' && (
-                <option value="" className="text-gray" disabled selected hidden>
-                  Select session...
-                </option>
-              )}
-              <option value="newLumenDevPassCode" className="text-gray">
-                New session...
-              </option>
-            </select>
-            {isNewSessionSelected && (
-              <input
-                type="text"
-                placeholder="Enter new session"
-                className="rounded-full py-1 w-full"
-                onChange={(e) => setNewSession(e.target.value)}
-              />
-            )}
-            <label
-              className={`cursor-pointer flex flex-row justify-center bg-accent2 items-center font-bold w-full shadow-right rounded-2xl py-1.5 my-2`}
-              htmlFor="uploadCSV"
-            >
-              <p className="text-base text-whitePlus">Select class .csv file</p>
-              <input
-                type="file"
-                id="uploadCSV"
-                accept=".csv"
-                ref={uploadRef}
-                onInput={handleAddExam}
-                className="hidden"
-              />
-            </label>
-          </div>
-        </dialog>
       </div>
     </div>
   );

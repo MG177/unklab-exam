@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 
 import ScoreCountdown from './page/score/ScoreCountdown';
-// import Testing from './page/testing';
+import Testing from './page/testing';
 import PageDashboard from './page/dashboard/PageDashboard';
 
 import ProtectedRoute from './utils/ProtectedRoute';
@@ -11,6 +11,7 @@ import AuthContextLayout from './contexts/AuthContextLayout';
 import QuestionContextLayout from './contexts/QuestionContextLayout';
 import { wait } from '@testing-library/user-event/dist/utils';
 import { Suspense } from 'react';
+import HomepageDashboard from './page/dashboard/HomepageDashboard';
 
 const Login = lazy(() => import('./page/login/Login'));
 const Getstarted = lazy(() => import('./page/login/Getstarted'));
@@ -62,15 +63,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/testing"
+            <Route
+              path="/dashboard/*"
               element={
                 <ProtectedRoute>
-                  <Testing />
+                  <HomepageDashboard />
                 </ProtectedRoute>
               }
-            /> */}
-            <Route element={<QuestionContextLayout />}>
+            />
+            {/* <Route element={<QuestionContextLayout />}>
               <Route
                 path="/dashboard/:session/:examId" // Include ":session" in the path
                 element={
@@ -79,7 +80,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-            </Route>
+            </Route> */}
             {/* <Route path='/login' element={<Login />} /> */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
