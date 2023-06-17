@@ -23,25 +23,25 @@ export default function Start() {
   }
 
   useEffect(() => {
-    // if (localStorage.getItem('isScore')) {
+    // if (sessionStorage.getItem('isScore')) {
     //   navigate('/score');
     // }
-    if (localStorage.getItem('agree')) {
-      navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
+    if (sessionStorage.getItem('agree')) {
+      navigate(/exam/ + JSON.parse(sessionStorage.getItem('examId')));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = async () => {
     //clear local storage
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = '/';
   };
 
   const handleAgree = () => {
     if (isChecked) {
-      localStorage.setItem('agree', true);
-      navigate(/exam/ + JSON.parse(localStorage.getItem('examId')));
+      sessionStorage.setItem('agree', true);
+      navigate(/exam/ + JSON.parse(sessionStorage.getItem('examId')));
     } else {
       shakeitBaby();
     }

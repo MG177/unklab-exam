@@ -54,7 +54,7 @@ export function QuestionProvider({ children }) {
     }
 
     setSaveStatus(true);
-    localStorage.setItem('questions', JSON.stringify(questions));
+    sessionStorage.setItem('questions', JSON.stringify(questions));
     postQuestions();
   };
 

@@ -14,11 +14,11 @@ export default function Timer() {
     const fetchTime = async () => {
       try {
         const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem('examId'))}`,
+          `time/${JSON.parse(sessionStorage.getItem('examId'))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('access_token')
+                sessionStorage.getItem('access_token')
               )}`,
             },
           }

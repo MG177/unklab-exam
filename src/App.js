@@ -11,7 +11,13 @@ import AuthContextLayout from './contexts/AuthContextLayout';
 import QuestionContextLayout from './contexts/QuestionContextLayout';
 import { wait } from '@testing-library/user-event/dist/utils';
 import { Suspense } from 'react';
-import HomepageDashboard from './page/dashboard/HomepageDashboard';
+import HomepageDashboard from './page/dashboard/Dashboard';
+import Sidebar from './components/dashboard/Sidebar';
+import Dashboard from './page/dashboard/Dashboard';
+import DashboardHome from './components/dashboard/DashboardHome';
+import DashboardQuestion from './components/dashboard/DashboardQuestion';
+import QuestionEditor from './components/dashboard/QuestionEditor';
+import ExamPage from './components/dashboard/ExamPage';
 
 const Login = lazy(() => import('./page/login/Login'));
 const Getstarted = lazy(() => import('./page/login/Getstarted'));
@@ -63,14 +69,29 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            <Route path="/dashboard" element={<Dashboard />}>
+              <Route path="home" element={<DashboardHome />} />
+              <Route path="question" element={<DashboardQuestion />} />
+              <Route path="*" element={<Navigate to="home" />} />
+            </Route>
+            <Route element={<QuestionContextLayout />}>
+              <Route
+                path="/dashboard/question/:questionId"
+                element={<QuestionEditor />}
+              />
+
+              <Route path="/dashboard/exam/:examId" element={<ExamPage />} />
+            </Route>
+
+            {/* <Route
               path="/dashboard/*"
               element={
                 <ProtectedRoute>
                   <HomepageDashboard />
                 </ProtectedRoute>
               }
-            />
+            /> */}
+
             {/* <Route element={<QuestionContextLayout />}>
               <Route
                 path="/dashboard/:session/:examId" // Include ":session" in the path

@@ -7,7 +7,7 @@ import { eventWrapper } from '@testing-library/user-event/dist/utils';
 
 export default function Form() {
   const navigate = useNavigate();
-  const { user, setUser, getAllLocalData } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const studentNoregRef = useRef(null);
   const studentTokenRef = useRef(null);
   const adminUsernameRef = useRef(null);
@@ -18,7 +18,7 @@ export default function Form() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    localStorage.clear();
+    sessionStorage.clear();
     if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
       setErrorMessage(
         'Missing required fields. Please fill in all required fields.'
@@ -48,24 +48,24 @@ export default function Form() {
           // alert("You already finish the exam");
           alert(' Login Success\n Click oke to start Unklab Exam');
           setUser({ ...user, score: startResponse.data.score });
-          localStorage.setItem(
+          sessionStorage.setItem(
             'isScore',
             JSON.stringify(startResponse.data.isScore)
           );
         }
         if (startResponse.data.id) {
-          localStorage.setItem(
+          sessionStorage.setItem(
             'studentId',
             JSON.stringify(startResponse.data.id)
           );
         }
         Object.entries(studentData.data.data).forEach(([key, value]) => {
-          localStorage.setItem(key, JSON.stringify(value));
+          sessionStorage.setItem(key, JSON.stringify(value));
         });
 
         setUser(studentData.data.data);
 
-        getAllLocalData();
+        // getAllLocalData();
         navigate('/started');
       } else {
         throw new Error('Student not found');
@@ -81,7 +81,7 @@ export default function Form() {
 
   const handleLoginAdmin = (event) => {
     event.preventDefault();
-    localStorage.clear();
+    sessionStorage.clear();
     try {
       api
         .post('/auth/login/admin', {
@@ -90,9 +90,10 @@ export default function Form() {
         })
         .then((response) => {
           const admin = response.data.data;
-          Object.entries(admin).forEach(([key, value]) => {
-            localStorage.setItem(key, JSON.stringify(value));
-          });
+          sessionStorage.setItem(
+            'access_token',
+            JSON.stringify(admin.access_token)
+          );
           setUser(response.data.data);
           navigate('/dashboard/home');
         });

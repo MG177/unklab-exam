@@ -16,67 +16,20 @@ export default function QuestionEditorItem({ question }) {
   const questionRef = useRef(null);
   const hasContent =
     question.media || question.audio || question.image || question.question;
-  // const [mediaId, setMediaId] = useState(null);
-
-  // useEffect(() => {
-  //   console.log('useEffect QuestionEditorItem');
-  //   if (question.audio) {
-  //     if (!audioLoading) {
-  //       setAudioLoading(true);
-  //     }
-  //     api
-  //       .get(`/file/${question.audio}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${user.access_token}`,
-  //         },
-  //       })
-  //       .then((response) => {
-  //         setAudioSrc(response.data);
-  //         setImageSrc(null);
-  //         setAudioLoading(false);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   }
-  //   if (question.image) {
-  //     if (!imageLoading) {
-  //       setImageLoading(true);
-  //     }
-  //     api
-  //       .get(`/file/${question.image}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${user.access_token}`,
-  //         },
-  //       })
-  //       .then((response) => {
-  //         setImageSrc(response.data);
-  //         setAudioSrc(null);
-  //         setImageLoading(false);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [question.audio, question.image, user.access_token]);
-
-  // console.log('imageSrc', imageSrc);
-
   const resizeTextArea = () => {
     questionRef.current.style.height = 'auto';
     questionRef.current.style.height = questionRef.current.scrollHeight + 'px';
   };
-
   useEffect(resizeTextArea, [question.question]);
-
   const handleSetActive = (valueId) => {
     return question.correctAnswer === valueId;
   };
-
   const handleOverwriteDataQuestion = (questionId, value) => {
     let newData = [...questions];
     newData.find((question) => question.id === questionId).text = value;
     setQuestions(newData);
     setSaveStatus(false);
   };
-
   const handleMusicFileChange = (e, questionId) => {
     const file = e.target.files[0];
     if (file.size > 1000000) {
@@ -85,7 +38,6 @@ export default function QuestionEditorItem({ question }) {
     }
     const formData = new FormData();
     formData.append('file', file);
-
     api
       .post('/file', formData, {
         headers: {
@@ -113,10 +65,8 @@ export default function QuestionEditorItem({ question }) {
       .catch((error) => {
         console.error(error);
       });
-
     e.target.value = '';
   };
-
   const handleImageFileChange = (e, questionId) => {
     const file = e.target.files[0];
     if (file.size > 1000000) {
@@ -125,7 +75,6 @@ export default function QuestionEditorItem({ question }) {
     }
     const formData = new FormData();
     formData.append('file', file);
-
     api
       .post('/file', formData, {
         headers: {
@@ -154,10 +103,8 @@ export default function QuestionEditorItem({ question }) {
       .catch((error) => {
         console.error(error);
       });
-
     e.target.value = '';
   };
-
   const handleRemoveMusicFile = (questionId) => {
     setQuestions((prevData) => {
       const newData = [...prevData];
@@ -167,7 +114,6 @@ export default function QuestionEditorItem({ question }) {
     // setAudioSrc(null);
     setSaveStatus(false);
   };
-
   const handleRemoveImageFile = (questionId) => {
     setQuestions((prevData) => {
       const newData = [...prevData];
@@ -177,7 +123,6 @@ export default function QuestionEditorItem({ question }) {
     // setImageSrc(null);
     setSaveStatus(false);
   };
-
   const handleAddOption = (questionId) => {
     setQuestions((prevData) => {
       const newData = prevData.map((question) => {
@@ -200,12 +145,10 @@ export default function QuestionEditorItem({ question }) {
         }
         return question;
       });
-
       setSaveStatus(false);
       return newData;
     });
   };
-
   const handleDeleteQuestion = (questionId) => {
     setQuestions((prevData) => {
       const newData = [...prevData];
@@ -217,11 +160,9 @@ export default function QuestionEditorItem({ question }) {
     });
     setSaveStatus(false);
   };
-
   // console.log('imageSrc', imageSrc);
-
   return (
-    <div className="flex gap-3 mb-6 w-full ">
+    <div className="flex w-[500px] gap-3">
       <div className="flex flex-col w-full gap-6">
         <div className="flex flex-col gap-3 px-3 py-5 bg-whitePlus shadow-right rounded-2xl">
           <div className="flex flex-row justify-between w-full">
@@ -244,7 +185,8 @@ export default function QuestionEditorItem({ question }) {
           <div className="grid grid-cols-1 grid-rows-1 after:whitespace-pre-wrap after:content-[attr(data-replicated-value)] after:invisible ">
             <textarea
               placeholder="Question..."
-              value={questions.find((q) => q.id === question.id).text}
+              // value={questions.find((q) => q.id === question.id).text}
+              value={'hoo'}
               onChange={(e) =>
                 handleOverwriteDataQuestion(question.id, e.target.value)
               }

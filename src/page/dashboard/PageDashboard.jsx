@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../../components/dashboard/Sidebar';
-import QuestionEditor from '../../components/dashboard/QuestionEditor';
+// import QuestionEditor from '../../components/dashboard/QuestionEditor2';
 import classHeader from '../../image/class-header.svg';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -511,13 +511,13 @@ export default function PageDashboard() {
               </DataTable>
             </div>
           </div>
-          <QuestionEditor
+          {/* <QuestionEditor
             examList={examList}
             getExamQuestions={getExamQuestion}
-          />
+          /> */}
         </>
       ) : (
-        <div className="h-screen w-full flex flex-col items-center justify-center p-3 font-Nunito text-2xl">
+        <div className="flex flex-col items-center justify-center w-full h-screen p-3 text-2xl font-Nunito">
           <div>Welcome to Dashboard</div>
           <div>To choose a class, please use the sidebar on the left.</div>
         </div>

@@ -53,3 +53,7 @@ code {
   animation-duration: 1s;
   animation-iteration-count: 1;
 }
+
+body > iframe {
+  display: none;
+}

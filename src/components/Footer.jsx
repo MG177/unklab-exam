@@ -67,7 +67,7 @@ export default function Footer({
 
   const handleLogout = () => {
     //clear local storage
-    localStorage.clear();
+    sessionStorage.clear();
     window.location.href = '/';
   };
 

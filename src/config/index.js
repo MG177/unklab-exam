@@ -5,4 +5,7 @@ const api = axios.create({
   baseURL: '//localhost:8080',
 });
 
+api.defaults.headers.common['Authorization'] = `Bearer ${sessionStorage
+  .getItem('access_token')
+  .replace(/"/g, '')}`;
 export default api;

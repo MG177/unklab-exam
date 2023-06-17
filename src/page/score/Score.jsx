@@ -23,11 +23,11 @@ export default function Score() {
     const fetchTime = async () => {
       try {
         const response = await api.get(
-          `time/${JSON.parse(localStorage.getItem('examId'))}`,
+          `time/${JSON.parse(sessionStorage.getItem('examId'))}`,
           {
             headers: {
               Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('access_token')
+                sessionStorage.getItem('access_token')
               )}`,
             },
           }
@@ -53,7 +53,7 @@ export default function Score() {
         },
       });
       if (!response.data) {
-        localStorage.clear();
+        sessionStorage.clear();
         navigate('/started');
       } else {
         setScore(response.data);

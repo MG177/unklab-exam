@@ -35,7 +35,7 @@ export default function SelectableButtons({ question }) {
         {options.map((option) => (
           <option
             key={option}
-            value={option}
+            value={option.toLowerCase()}
             className="font-bold text-black bg-white rounded-none"
           >
             {option}
