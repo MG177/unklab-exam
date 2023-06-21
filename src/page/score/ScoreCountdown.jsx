@@ -35,7 +35,7 @@ export default function ScoreCountdown() {
       }}
       className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]"
     >
-      <Header />
+      {/* <Header /> */}
       <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
         <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
           <Timer />

@@ -1,15 +1,19 @@
 import { useContext, useState } from 'react';
 import QuestionContext from '../../contexts/QuestionContext';
 
-export default function SelectableButtons({ question }) {
-  const { setQuestions, setSaveStatus } = useContext(QuestionContext);
-  const [selectedOption, setSelectedOption] = useState(question.type);
+export default function SelectableButtons({
+  question,
+  setQuestions,
+  handleQuestionChange,
+}) {
+  const [selectedOption, setSelectedOption] = useState(
+    question.type || 'Choose question type'
+  );
 
   const options = ['Listening', 'Grammar', 'Vocabulary', 'Reading'];
 
   const handleOptionChange = (selectedValue) => {
     setSelectedOption(selectedValue);
-
     setQuestions((prevData) => {
       const index = prevData.findIndex(
         (findQuestion) => findQuestion.id === question.id
@@ -22,16 +26,31 @@ export default function SelectableButtons({ question }) {
       };
       return newData;
     });
-    setSaveStatus(false);
+    handleQuestionChange();
   };
 
   return (
-    <div className="mb-1">
+    <div className="">
       <select
-        className="px-4 py-1 text-xs font-bold bg-white bg-opacity-25 rounded-xl border-1 text-accent1 focus:border-none focus:ring-1 focus:outline-none"
+        className={`py-1 text-xs font-bold bg-white bg-opacity-25 rounded-xl border-none shadow-md ${
+          selectedOption === 'Choose question type'
+            ? 'text-accent2'
+            : 'text-accent1'
+        }  focus:border-none focus:ring-1 focus:outline-none w-full`}
         value={selectedOption}
         onChange={(e) => handleOptionChange(e.target.value)}
       >
+        {selectedOption === 'Choose question type' && (
+          <option
+            value="Choose question type"
+            className="font-bold text-black bg-white rounded-none"
+            selected
+            disabled
+            hidden
+          >
+            Choose question type
+          </option>
+        )}
         {options.map((option) => (
           <option
             key={option}

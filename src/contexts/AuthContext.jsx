@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import api from '../config';
 
 const AuthContext = createContext();
 
@@ -13,14 +14,16 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(
-    sessionStorage.getItem('access_token').replace(/"/g, '')
-  );
-  console.log('AuthContext1: ', user);
+  const storedAccessToken = sessionStorage.getItem('access_token');
+  const initialUser = storedAccessToken
+    ? storedAccessToken.replace(/"/g, '')
+    : null;
+  const [user, setUser] = useState(initialUser);
+  api.defaults.headers.common['Authorization'] = `Bearer ${initialUser}`;
 
   useEffect(() => {
-    if (sessionStorage.getItem('access_token').replace(/"/g, '')) {
-      setUser(sessionStorage.getItem('access_token').replace(/"/g, ''));
+    if (storedAccessToken) {
+      setUser(storedAccessToken.replace(/"/g, ''));
     }
   }, []);
 

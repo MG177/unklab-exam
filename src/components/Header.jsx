@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from 'primereact/tooltip';
 
 export default function Header() {
   return (
@@ -20,19 +21,46 @@ export default function Header() {
   );
 }
 
-export function HeaderQuestionEditor() {
+const statusIcons = {
+  failed: 'pi pi-exclamation-circle text-red-500',
+  loading: 'pi pi-spin pi-spinner text-red-500',
+  true: 'pi pi-check-circle text-blue-500',
+};
+
+const statusText = {
+  failed: 'Failed to save changes',
+  loading: 'Saving...',
+  true: 'Saved successfully',
+};
+
+export function HeaderQuestionEditor({ saveStatus, questionName }) {
+  const statusIcon =
+    statusIcons[saveStatus] || 'pi pi-exclamation-circle text-red-500';
+  const statusMsg = statusText[saveStatus] || 'Saved successfully';
+
   return (
     <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50">
       <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito">
         <span>Question Editor /</span>
-        <span className="font-bold indent-1">QuestionName</span>
+        <span className="font-bold indent-1">
+          {questionName || 'Question Name'}
+        </span>
+        <div
+          className="right-0 flex items-center justify-center ml-1 p-1 rounded-full text-xl text-center font-Nunito"
+          tooltip="Don't forget to save before exit!"
+        >
+          <Tooltip target="#statusIcon" />
+          <i
+            id="statusIcon"
+            className={statusIcon}
+            style={{ fontSize: '1rem' }}
+            data-pr-tooltip={statusMsg}
+          />
+        </div>
       </div>
       <div
         style={{ userSelect: 'none' }}
-        onCopy={(event) => {
-          event.preventDefault();
-        }}
-        className="flex flex-row items-center justify-between h-full px-16 "
+        className="flex flex-row items-center justify-between h-full px-16"
       >
         <div className="flex flex-row items-center justify-center text-black">
           <button
@@ -54,7 +82,7 @@ export function HeaderQuestionEditor() {
           </button>
         </div>
         {/* <p className="text-3xl font-bold text-center text-black font-Nunito">
-          {JSON.parse(sessionStorage.getItem('username'))}
+          {username}
         </p> */}
       </div>
     </div>

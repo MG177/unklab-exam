@@ -57,3 +57,16 @@ code {
 body > iframe {
   display: none;
 }
+
+.p-inputtext {
+  border-radius: 0.5rem !important;
+  border-width: 0px !important;
+  background-color: #fff !important;
+  filter: drop-shadow(0 0 #0000);
+}
+
+.hoo {
+  clip-path: polygon(75% 25%, 75% 75%, 44.25% 50%);
+  background-color: #000000;
+  /* border-radius: 24px; */
+}

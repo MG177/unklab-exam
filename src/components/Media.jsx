@@ -35,11 +35,7 @@ export default function Media({ id, dashboard }) {
 
   useEffect(() => {
     api
-      .get(`/file/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      })
+      .get(`/file/${id}`)
       .then((response) => setFile(response.data))
       .catch((error) => console.log(error));
   }, [id]);

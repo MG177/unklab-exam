@@ -129,7 +129,7 @@ export default function Exam() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       {!loadingQuestion && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} media={media} />
