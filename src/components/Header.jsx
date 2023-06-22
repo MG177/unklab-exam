@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tooltip } from 'primereact/tooltip';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   return (
@@ -33,14 +34,23 @@ const statusText = {
   true: 'Saved successfully',
 };
 
-export function HeaderQuestionEditor({ saveStatus, questionName }) {
+export function HeaderQuestionEditor({
+  saveStatus,
+  questionName,
+  saveQuestions,
+}) {
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate('/dashboard/questions');
+  };
+
   const statusIcon =
     statusIcons[saveStatus] || 'pi pi-exclamation-circle text-red-500';
   const statusMsg = statusText[saveStatus] || 'Saved successfully';
 
   return (
-    <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50">
-      <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito">
+    <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-20">
+      <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito z-10">
         <span>Question Editor /</span>
         <span className="font-bold indent-1">
           {questionName || 'Question Name'}
@@ -60,10 +70,13 @@ export function HeaderQuestionEditor({ saveStatus, questionName }) {
       </div>
       <div
         style={{ userSelect: 'none' }}
-        className="flex flex-row items-center justify-between h-full px-16"
+        className="flex flex-row items-center justify-between h-full px-16 z-30"
       >
-        <div className="flex flex-row items-center justify-center text-black">
-          <button
+        <button
+          className="flex flex-row items-center justify-center text-black z-20"
+          onClick={goBack}
+        >
+          <div
             className="mr-3 pi pi-angle-left"
             style={{ fontSize: '1.5rem' }}
           />
@@ -71,19 +84,19 @@ export function HeaderQuestionEditor({ saveStatus, questionName }) {
             <span className="text-accent1">Unklab </span>
             Exams
           </p>
-        </div>
+        </button>
         <div className="flex flex-row">
           <button
-            className="w-10 h-10 mr-3 text-white rounded-full pi pi-eye bg-accent1"
+            className="w-10 h-10 mr-3 text-white rounded-full pi pi-eye bg-accent1 z-20"
             style={{ fontSize: '1.4rem' }}
           />
-          <button className="flex items-center justify-center px-8 py-2 font-bold text-white rounded-3xl font-Nunito bg-accent1">
-            Submit
+          <button
+            className="flex items-center justify-center px-12 font-bold text-white rounded-3xl font-Nunito bg-accent1 z-20"
+            onClick={() => saveQuestions(true)}
+          >
+            Save
           </button>
         </div>
-        {/* <p className="text-3xl font-bold text-center text-black font-Nunito">
-          {username}
-        </p> */}
       </div>
     </div>
   );

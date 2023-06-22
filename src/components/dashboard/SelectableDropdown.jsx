@@ -32,7 +32,7 @@ export default function SelectableButtons({
   return (
     <div className="">
       <select
-        className={`py-1 text-xs font-bold bg-white bg-opacity-25 rounded-xl border-none shadow-md ${
+        className={`py-1 text-xs font-bold font-Nunito bg-white bg-opacity-25 rounded-xl border-none shadow-md ${
           selectedOption === 'Choose question type'
             ? 'text-accent2'
             : 'text-accent1'

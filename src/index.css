@@ -65,8 +65,68 @@ body > iframe {
   filter: drop-shadow(0 0 #0000);
 }
 
-.hoo {
-  clip-path: polygon(75% 25%, 75% 75%, 44.25% 50%);
-  background-color: #000000;
-  /* border-radius: 24px; */
+.p-scrollpanel-bar {
+  background-color: #b55ffe !important;
+  opacity: 0.2 !important;
+  /* border-radius: 24px !important; */
+}
+
+.p-toast .p-toast-message {
+  /* border-radius: 0.5rem;
+  overflow: hidden; */
+  box-shadow: 0 0 #0000 !important;
+  /* margin-bottom: 0px !important; */
+  padding: 0.4rem !important;
+  /* padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important; */
+}
+
+.p-component {
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  border-radius: 24px !important;
+}
+.p-toast .p-toast-message.p-toast-message-success {
+  border-radius: 24px !important;
+}
+
+.p-toast .p-toast-message .p-toast-message-content {
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-toast-message-icon {
+  scale: 1.3;
+}
+
+.p-toast-summary {
+  width: fit-content !important;
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol' !important;
+}
+.p-toast-detail {
+  width: fit-content !important;
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol' !important;
+}
+
+.p-toast-message-text {
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+  margin: 0px !important;
 }

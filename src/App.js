@@ -71,7 +71,7 @@ function App() {
             />
             <Route path="/dashboard" element={<Dashboard />}>
               <Route path="home" element={<DashboardHome />} />
-              <Route path="question" element={<DashboardQuestion />} />
+              <Route path="questions" element={<DashboardQuestion />} />
               <Route path="*" element={<Navigate to="home" />} />
             </Route>
             <Route element={<QuestionContextLayout />}>

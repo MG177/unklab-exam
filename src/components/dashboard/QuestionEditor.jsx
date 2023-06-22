@@ -4,6 +4,8 @@ import QuestionEditorItem from './QuestionEditorItem';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Divider } from 'primereact/divider';
+import { ScrollPanel } from 'primereact/scrollpanel';
+import { Toast } from 'primereact/toast';
 
 export default function QuestionEditor() {
   const { questionId } = useParams();
@@ -11,6 +13,7 @@ export default function QuestionEditor() {
   const navigate = useNavigate();
   const [saveStatus, setSaveStatus] = useState(true);
   const [questionName, setQuestionName] = useState('Question Name');
+  const toast = useRef(null);
 
   const initialQuestions = [
     {
@@ -32,6 +35,26 @@ export default function QuestionEditor() {
     },
   ];
 
+  const showErrorSaving = (msg) => {
+    toast.current.show({
+      severity: 'error',
+      summary: 'Error when saving questions',
+      detail: msg,
+      life: 5000,
+      // sticky: true,
+    });
+  };
+
+  const showSuccessSaving = (msg) => {
+    toast.current.show({
+      severity: 'success',
+      summary: 'Success saving questions',
+      detail: msg,
+      life: 2000,
+      // sticky: true,
+    });
+  };
+
   const saveQuestionsTimerRef = useRef(null);
 
   const fetchQuestions = async () => {
@@ -51,22 +74,30 @@ export default function QuestionEditor() {
 
   const handleQuestionChange = () => {
     console.log('questions - handleQuestionChange', questions);
-    
+
     setSaveStatus('loading');
     clearTimeout(saveQuestionsTimerRef.current);
-    saveQuestionsTimerRef.current = setTimeout(saveQuestions, 3000);
+    saveQuestionsTimerRef.current = setTimeout(() => saveQuestions(false), 5000);
+
   };
 
-  const saveQuestions = async () => {
+  const saveQuestions = async (toast) => {
     try {
       console.log('questions - saveQuestions: ', questions);
 
       const res = await api.put('/questions/' + questionId, { questions });
+      console.log('res.data:', res.data);
       setQuestions(res.data.questions);
       setSaveStatus(true);
+      if (toast) {
+        showSuccessSaving();
+      }
       console.log('Questions saved successfully');
     } catch (error) {
       setSaveStatus('failed');
+      if (toast) {
+        showErrorSaving(error.response.data.msg.message);
+      }
       console.error('Failed to save questions', error);
     }
   };
@@ -101,30 +132,46 @@ export default function QuestionEditor() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden">
       <HeaderQuestionEditor
         saveStatus={saveStatus}
         questionName={questionName}
+        saveQuestions={saveQuestions}
       />
 
-      <div className="flex flex-col items-center justify-center w-full gap-5 my-24">
-        {questions.map((question, index) => (
-          <>
-            <QuestionEditorItem
-              key={index}
-              question={question}
-              questions={questions}
-              setQuestions={setQuestions}
-              index={index}
-              handleQuestionChange={handleQuestionChange}
-              saveStatus={saveStatus}
-            />
-            <Divider style={{ margin: '0px' }} />
-          </>
-        ))}
-      </div>
+      <ScrollPanel style={{ width: '100%', height: '100vh' }}>
+        <div className="flex flex-col items-center justify-center w-full gap-5 my-24">
+          <Toast
+            ref={toast}
+            style={{
+              'margin-top': '4rem',
+              'border-radius': '1rem',
+              'box-shadow': '0 0 #0000',
+              overflow: 'hidden',
+            }}
+            pt={{
+              icon: '1rem',
+            }}
+          />
+          {questions.map((question, index) => (
+            <>
+              <QuestionEditorItem
+                key={index}
+                question={question}
+                questions={questions}
+                setQuestions={setQuestions}
+                index={index}
+                handleQuestionChange={handleQuestionChange}
+                saveStatus={saveStatus}
+                initialQuestions={initialQuestions}
+              />
+              <Divider style={{ margin: '0px' }} />
+            </>
+          ))}
+        </div>
+      </ScrollPanel>
       <button
-        className="p-4 flex justify-center items-center fixed bottom-7 right-7 bg-accent1 rounded-full text-white"
+        className="p-4 flex justify-center items-center fixed bottom-7 z-20 right-7 bg-accent1 rounded-full text-white"
         onClick={handleAddNewQuestion}
       >
         <i className="pi pi-plus"></i>

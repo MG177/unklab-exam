@@ -14,6 +14,7 @@ export default function QuestionEditorItem({
   index,
   handleQuestionChange,
   saveStatus,
+  initialQuestions,
 }) {
   const questionRef = useRef(null);
   const hasContent =
@@ -114,6 +115,9 @@ export default function QuestionEditorItem({
 
   const handleDeleteQuestion = async (questionId) => {
     try {
+      if (questions.length === 1) {
+        setQuestions(initialQuestions);
+      }
       setQuestions((prevData) => {
         const newData = prevData.filter(
           (question) => question.id !== questionId
@@ -141,7 +145,7 @@ export default function QuestionEditorItem({
       <div className="flex flex-col w-full gap-6">
         <div className="flex flex-col gap-3 p-4 bg-whitePlus shadow-right rounded-2xl">
           <div className="flex flex-row justify-between w-full">
-            <h3 className="text-xl font-bold text-accent1">
+            <h3 className="text-xl font-bold font-Nunito text-accent1">
               Question #{index + 1}
             </h3>
             <SelectableDropdown
