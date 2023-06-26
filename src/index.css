@@ -58,7 +58,7 @@ body > iframe {
   display: none;
 }
 
-.p-inputtext {
+.p-inputtextarea {
   border-radius: 0.5rem !important;
   border-width: 0px !important;
   background-color: #fff !important;

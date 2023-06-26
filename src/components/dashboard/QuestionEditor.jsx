@@ -77,15 +77,19 @@ export default function QuestionEditor() {
 
     setSaveStatus('loading');
     clearTimeout(saveQuestionsTimerRef.current);
-    saveQuestionsTimerRef.current = setTimeout(() => saveQuestions(false), 5000);
-
+    saveQuestionsTimerRef.current = setTimeout(
+      () => saveQuestions(false),
+      5000
+    );
   };
 
   const saveQuestions = async (toast) => {
     try {
       console.log('questions - saveQuestions: ', questions);
 
-      const res = await api.put('/questions/' + questionId, { questions });
+      const res = await api.put('/questions/update/' + questionId, {
+        questions,
+      });
       console.log('res.data:', res.data);
       setQuestions(res.data.questions);
       setSaveStatus(true);
@@ -144,9 +148,9 @@ export default function QuestionEditor() {
           <Toast
             ref={toast}
             style={{
-              'margin-top': '4rem',
-              'border-radius': '1rem',
-              'box-shadow': '0 0 #0000',
+              marginTop: '4rem',
+              borderRadius: '1rem',
+              boxShadow: '0 0 #0000',
               overflow: 'hidden',
             }}
             pt={{

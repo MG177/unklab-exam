@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from 'react';
 import api from '../config';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -14,6 +15,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
+  const navigate = useNavigate();
   const storedAccessToken = sessionStorage.getItem('access_token');
   const initialUser = storedAccessToken
     ? storedAccessToken.replace(/"/g, '')
@@ -24,6 +26,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (storedAccessToken) {
       setUser(storedAccessToken.replace(/"/g, ''));
+    } else {
+      navigate('/');
     }
   }, []);
 
