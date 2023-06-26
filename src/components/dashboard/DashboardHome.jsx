@@ -1,21 +1,36 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import mask_bg from '../../image/mask_bg.svg';
 import illustration1 from '../../image/illustration1.svg';
 import { Card, NewCard } from './Card';
 import { useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
-import { SplitButton } from 'primereact/splitbutton';
+import { ScrollPanel } from 'primereact/scrollpanel';
+
+import api from '../../config';
 
 export default function DashboardHome() {
   const navigate = useNavigate();
   const modalRef = useRef(null);
-  const [questionList, setQuestionList] = useState([]);
+  const examLabelRef = useRef(null);
+  const [questionSelected, setQuestionSelected] = useState([]);
+  const [questionDB, setQuestionDB] = useState([]);
+
+  const fetchQuestionGroup = async () => {
+    const response = await api.get('/questions');
+    const filteredData = response.data.filter((item) => item.isVerified);
+    setQuestionDB(filteredData);
+  };
+
+  useEffect(() => {
+    fetchQuestionGroup();
+  }, []);
 
   const handleOpenModal = () => {
     if (modalRef.current) {
       modalRef.current.showModal();
     }
   };
+
   if (modalRef.current) {
     modalRef.current.addEventListener('click', (e) => {
       const dialogDimensions = modalRef.current.getBoundingClientRect();
@@ -30,30 +45,69 @@ export default function DashboardHome() {
     });
   }
 
-  const items = [
-    {
-      label: 'Update',
-      icon: 'pi pi-refresh',
-      command: () => {
-        // toast.current.show({
-        //   severity: 'success',
-        //   summary: 'Updated',
-        //   detail: 'Data Updated',
-        // });
-      },
-    },
-    {
-      label: 'Delete',
-      icon: 'pi pi-times',
-      command: () => {
-        // toast.current.show({
-        //   severity: 'warn',
-        //   summary: 'Delete',
-        //   detail: 'Data Deleted',
-        // });
-      },
-    },
-  ];
+  const handleRemoveQuestion = (item, index) => {
+    setQuestionDB((prev) => {
+      const newQuestionGroup = [...prev, item];
+      newQuestionGroup.sort((a, b) => {
+        return new Date(b.updatedAt) - new Date(a.updatedAt);
+      });
+      return newQuestionGroup;
+    });
+    setQuestionSelected((prev) => {
+      const newQuestionGroup = [...prev];
+      newQuestionGroup.splice(index, 1);
+      return newQuestionGroup;
+    });
+  };
+
+  const handleAddQuestion = (item, index) => {
+    setQuestionDB((prev) => {
+      const newQuestionGroup = [...prev];
+      newQuestionGroup.splice(index, 1);
+      return newQuestionGroup;
+    });
+    setQuestionSelected((prev) => {
+      const newQuestionGroup = [...prev];
+      newQuestionGroup.push(item);
+      return newQuestionGroup;
+    });
+  };
+
+  const handleQuestionQuantity = (index, quantity) => {
+    setQuestionSelected((prev) => {
+      const newQuestionGroup = [...prev];
+      newQuestionGroup[index].quantity = parseInt(quantity, 10); // or parseFloat(quantity) for decimal values
+      return newQuestionGroup;
+    });
+  };
+
+  const totalQuestion = () => {
+    let total = 0;
+    questionSelected.forEach((item) => {
+      total += item.quantity;
+    });
+    return total;
+  };
+
+  const handleCreateExam = async () => {
+    const examLabel = examLabelRef.current.value;
+    if (examLabel === '') {
+      alert('Exam Label cannot be empty');
+      return;
+    }
+    const data = {
+      examName: examLabel,
+      questionGroup: questionSelected,
+    };
+    console.log(data);
+    const response = await api.post('/exam/' + examLabel, questionSelected);
+    // if (response.status === 200) {
+    // navigate(`/dashboard/exam/${response.data._id}`);
+    // }
+  };
+
+  // console.log(questionSelected);
+
   return (
     <div className="flex flex-col items-center w-full h-full gap-8 py-10">
       <div
@@ -83,56 +137,94 @@ export default function DashboardHome() {
               </button>
               <dialog
                 ref={modalRef}
-                className="rounded-xl shadow-lg bg-whitePlus max-w-md"
+                className="rounded-xl shadow-lg bg-whitePlus max-w-md max-h-[90%]"
               >
-                <div className="flex flex-col items-start p-3 w-fit font-Nunito text-black gap-2 max-w-full">
-                  <div className="font-bold text-xl self-center ">
+                <div className="flex flex-col items-start px-3 w-fit font-Nunito text-black gap-2 max-w-full min-w-[20rem]">
+                  <div className="font-bold text-xl self-center">
                     Create new Exam
                   </div>
-                  <div className="text-md self-start font-bold">Exam Label</div>
+                  <div className="text-md self-start font-bold">Exam name</div>
                   <input
                     type="text"
-                    className="bg-white border-2 border-gray rounded-lg w-full"
+                    ref={examLabelRef}
+                    className="bg-whitePlus shadow-md border-0 rounded-lg w-full"
                     placeholder="exam name..."
                   />
                   <div className="text-md self-start font-bold">
                     Select Question Group
                   </div>
-                  <div className="flex flex-row w-full">
-                    <div className="shadow-md rounded-xl flex flex-row items-center justify-between px-3 py-2 gap-1 min-w-fit w-full">
-                      <p className="text-md font-medium text-black truncate max-w-xxs">
-                        Choose question group to
-                      </p>
-                      <InputText
-                        keyfilter={'int'}
-                        maxLength="3"
-                        placeholder="0"
-                        className="bg-white border-2 border-gray rounded-xl w-12 p-1 focus:border-black focus:shadow-md focus:ring-0 flex text-center"
-                      />
+                  <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
+                    <ScrollPanel style={{ width: '100%', height: '100px' }}>
+                      {questionDB.map((item, index) => (
+                        <button
+                          key={item._id}
+                          className="flex flex-row items-center justify-between px-3 py-1 w-full cursor-pointer hover:bg-slate-50 hover:text-accent1"
+                          onClick={() => handleAddQuestion(item, index)}
+                        >
+                          <p className="text-md text-left font-Nunito select-none truncate">
+                            {item.questionName}
+                          </p>
+                          <i
+                            className="pi pi-plus mr-2 font-bold"
+                            style={{ fontSize: '0.8rem' }}
+                          />
+                        </button>
+                      ))}
+                    </ScrollPanel>
+                  </ul>
+                  <div className="text-md self-start font-bold">
+                    Determine how many questions to use
+                  </div>
+                  <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
+                    <ScrollPanel style={{ width: '100%', height: '100px' }}>
+                      {questionSelected.map((item, index) => (
+                        <li
+                          key={item._id}
+                          className="flex flex-row items-center justify-between px-3 py-1 w-full hover:bg-slate-50 "
+                        >
+                          <p className="text-md text-left font-Nunito select-none truncate">
+                            {item.questionName}
+                          </p>
+                          <div className="flex flex-row">
+                            <InputText
+                              keyfilter={'int'}
+                              maxLength="3"
+                              // placeholder={item.questions.length}
+                              placeholder="00"
+                              className="bg-white border-[0px] w-10 p-0 focus:border-gray focus:shadow-md focus:ring-0 flex text-center"
+                              // onChange={(e) => {
+                              //   console.log(e.target.value);
+                              // }}
+                              onChange={(e) =>
+                                handleQuestionQuantity(index, e.target.value)
+                              }
+                            />
+                            <button
+                              className="pi pi-times text-black mx-2.5"
+                              style={{ fontSize: '0.8rem' }}
+                              onClick={() => handleRemoveQuestion(item, index)}
+                            />
+                          </div>
+                        </li>
+                      ))}
+                    </ScrollPanel>
+                  </ul>
+                  <div className="flex flex-row text-md self-end font-bold items-center">
+                    <span>Total Questions:</span>
+                    <div className="ml-2 px-2 py-1 flex items-center justify-center bg-white rounded-lg shadow-md">
+                      {totalQuestion() || '0'}
                     </div>
-                    <button className="pi pi-times text-black mx-2.5" />
                   </div>
-                  <div className="shadow-md rounded-xl flex flex-row items-center justify-between w-full text-accent1 font-semibold">
-                    <button className="flex flex-row items-center gap-2.5 w-full h-12 px-3 hover:bg-blue-50 hover:bg hover:rounded-l-xl active:bg-blue-100 transition ease-in">
-                      <i className="pi pi-plus" />
-                      <p className="text-md text-left font-Nunito select-none truncate max-w-xxs">
-                        Choose question group to
-                      </p>
-                    </button>
-                    <button className="flex items-center justify-center w-10 h-12 px-2 hover:bg-blue-50 hover:bg hover:rounded-r-xl active:bg-blue-100 transition ease-in ">
-                      <i className="pi pi-chevron-down" />
-                    </button>
-                  </div>
-                  <div className="flex w-full justify-center gap-4 mt-5">
+                  <div className="flex w-full justify-center gap-4 mt-1">
                     <button
                       className="py-2 w-full bg-white rounded-lg text-black font-semibold shadow-md text-lg select-none"
-                      // onClick={() => modal.close()}
+                      onClick={() => modalRef.current.close()}
                     >
                       Cancel
                     </button>
                     <button
                       className="py-2 w-full bg-accent1 rounded-lg text-white font-semibold shadow-md text-lg select-none"
-                      // onClick={handlePositiveOption}
+                      onClick={handleCreateExam}
                     >
                       Add
                     </button>

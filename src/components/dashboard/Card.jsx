@@ -6,10 +6,12 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-US', options);
 }
 
-export function Card({ onClickFunction, title, date }) {
+export function Card({ onClickFunction, title, date, isVerified }) {
   return (
     <div
-      className="flex flex-row items-center w-full gap-4 p-3 shadow-md cursor-pointer bg-whitePlus rounded-2xl"
+      className={`flex flex-row items-center w-full gap-4 p-3 shadow-md cursor-pointer bg-whitePlus rounded-2xl ${
+        isVerified === false ? 'border-2 border-accent2' : ''
+      }`}
       onClick={onClickFunction}
     >
       <div className="flex-1 p-1.5">

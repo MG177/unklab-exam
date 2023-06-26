@@ -130,3 +130,7 @@ body > iframe {
 .p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
   margin: 0px !important;
 }
+
+.p-scrollpanel-content {
+  padding: 0px !important;
+}

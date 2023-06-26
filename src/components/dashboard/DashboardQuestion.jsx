@@ -170,6 +170,7 @@ export default function DashboardQuestion() {
                   }
                   title={question.questionName}
                   date={question.createdAt}
+                  isVerified={question.isVerified}
                 />
               ))}
             </>
