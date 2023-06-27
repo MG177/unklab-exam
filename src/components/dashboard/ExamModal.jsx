@@ -25,7 +25,6 @@ export function ExamModalCreator({ modalRef }) {
   const fetchQuestionGroup = async () => {
     try {
       const response = await api.get('/questions');
-      console.log(response.data);
       const filteredData = response.data.filter((item) => item.isVerified);
 
       const newData = filteredData.filter((item) => {
