@@ -23,6 +23,17 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(initialUser);
   api.defaults.headers.common['Authorization'] = `Bearer ${initialUser}`;
 
+  api.interceptors.response.use(
+    (response) => response, // Return the response if it's successful
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        console.log('Token expired'); // Log "failed" when a 401 unauthorized response is received
+        navigate('/');
+      }
+      return Promise.reject(error);
+    }
+  );
+
   useEffect(() => {
     if (storedAccessToken) {
       setUser(storedAccessToken.replace(/"/g, ''));

@@ -364,7 +364,7 @@ export default function PageDashboard() {
         type="button"
         icon="pi pi-file-excel"
         severity="success"
-        rounded
+        // rounded
         text
         label="Export to Excel"
         onClick={exportExcel}
@@ -378,7 +378,7 @@ export default function PageDashboard() {
       <Button
         type="button"
         icon="pi pi-refresh"
-        rounded
+        // rounded
         text
         raised
         severity="danger"
@@ -388,7 +388,7 @@ export default function PageDashboard() {
         type="button"
         icon="pi pi-refresh"
         severity="success"
-        rounded
+        // rounded
         text
         raised
         label="refresh"
@@ -490,7 +490,7 @@ export default function PageDashboard() {
                 sortOrder={-1}
                 removableSort
                 scrollable
-                rounded
+                // rounded
                 scrollHeight="calc(100vh - 300px)"
                 className="shadow-md p-datatable-sm p-paginator-sm p-datatable-striped p-datatable-gridlines-both p-datatable-hoverable-rows"
                 paginatorRight={footer}

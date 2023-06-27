@@ -151,7 +151,6 @@ export default function QuestionEditor() {
               marginTop: '4rem',
               borderRadius: '1rem',
               boxShadow: '0 0 #0000',
-              overflow: 'hidden',
             }}
             pt={{
               icon: '1rem',

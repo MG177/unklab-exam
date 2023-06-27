@@ -24,7 +24,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`relative z-20 flex flex-col h-screen transition-all duration-300 bg-whitePlus w-fit shadow-right ${
+      className={`fixed z-20 flex flex-col h-screen transition-all duration-300 bg-whitePlus w-fit shadow-right ${
         !isHidden && 'items-center'
       }`}
     >

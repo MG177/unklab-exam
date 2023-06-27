@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Tooltip } from 'primereact/tooltip';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ExamModalEditor } from './dashboard/ExamModal';
+import api from '../config';
+import { Toast } from 'primereact/toast';
 
 export default function Header() {
   return (
@@ -40,10 +43,6 @@ export function HeaderQuestionEditor({
   saveQuestions,
 }) {
   const navigate = useNavigate();
-  const goBack = () => {
-    navigate('/dashboard/questions');
-  };
-
   const statusIcon =
     statusIcons[saveStatus] || 'pi pi-exclamation-circle text-red-500';
   const statusMsg = statusText[saveStatus] || 'Saved successfully';
@@ -74,7 +73,7 @@ export function HeaderQuestionEditor({
       >
         <button
           className="flex flex-row items-center justify-center text-black z-20"
-          onClick={goBack}
+          onClick={() => navigate(-1)}
         >
           <div
             className="mr-3 pi pi-angle-left"
@@ -102,12 +101,107 @@ export function HeaderQuestionEditor({
   );
 }
 
-export function HeaderExamDashboard() {
+export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
+  const { examId } = useParams();
+  const modalRef = useRef(null);
+  const uploadRef = useRef(null);
+  const toast = useRef(null);
+  const navigate = useNavigate();
+
+  const handleOpenModal = () => {
+    if (modalRef.current) {
+      modalRef.current.showModal();
+    }
+  };
+
+  const handleAddExam = async (e) => {
+    e.preventDefault();
+    console.log('tes');
+    try {
+      const formData = new FormData();
+      formData.append('file', e.target.files[0]);
+      const response = await api.patch('/exam/studentList/' + examId, formData);
+      // if (response.status === 201) {
+      //   // fetchData();
+      //   // fetchDataBySession(newSession);
+      //   // setSelectedSession(newSession);
+      //   // newClassDialog.close();
+      //   alert('Exam uploaded successfully');
+      // } else {
+      //   throw new Error('Something went wrong, please try again later');
+      // }
+      e.target.value = '';
+      toast.current.show({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Student list uploaded successfully',
+        life: 3000,
+      });
+      // e.target.value = null;
+    } catch (error) {
+      console.log(error);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to upload student list',
+        life: 3000,
+      });
+      // alert(error.message);
+    }
+  };
+
+  const handleStartExam = async () => {
+    try {
+      const res = await api.patch('/exam/start/' + examId);
+      setTime(res.data.time);
+      setToken(res.data.token);
+      // toast.current.show({
+      //   severity: 'success',
+      //   summary: 'Success',
+      //   detail: 'Exam started successfully',
+      //   life: 1000,
+      //   // sticky: true,
+      // });
+    } catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error when starting exam',
+        detail: err.response.data.message,
+        life: 5000,
+        // sticky: true,
+      });
+    }
+  };
+
+  const handleStopExam = async () => {
+    try {
+      const res = await api.patch('/exam/start/' + examId + '?minute=0');
+      setTime(res.data.time);
+      // toast.current.show({
+      //   severity: 'success',
+      //   summary: 'Success',
+      //   detail: 'Exam started successfully',
+      //   life: 1000,
+      //   // sticky: true,
+      // });
+    } catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error when starting exam',
+        detail: err.response.data.message,
+        life: 5000,
+        // sticky: true,
+      });
+    }
+  };
+
   return (
     <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50">
       <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito">
-        <span>Question Editor /</span>
-        <span className="font-bold indent-1">QuestionName</span>
+        <span>Exam Manager /</span>
+        <span className="font-bold indent-1">{examName || 'QuestionName'}</span>
       </div>
       <div
         style={{ userSelect: 'none' }}
@@ -118,7 +212,8 @@ export function HeaderExamDashboard() {
       >
         <div className="flex flex-row items-center justify-center text-black">
           <button
-            className="mr-3 pi pi-angle-left"
+            className="mr-3 pi pi-angle-left z-50"
+            onClick={() => navigate(-1)}
             style={{ fontSize: '1.5rem' }}
           />
           <p className="font-[Roboto] text-2xl">
@@ -126,18 +221,79 @@ export function HeaderExamDashboard() {
             Exams
           </p>
         </div>
-        <div className="flex flex-row">
-          <button
-            className="w-10 h-10 mr-3 text-white rounded-full pi pi-power-off bg-accent1"
-            style={{ fontSize: '1.3rem' }}
+        <div className="flex flex-row gap-3">
+          <ExamModalEditor
+            modalRef={modalRef}
+            examId={examId}
+            examName={examName}
           />
-          <button className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1">
-            Start
-          </button>
+          <Toast
+            ref={toast}
+            style={{
+              marginTop: '4rem',
+              borderRadius: '1rem',
+              boxShadow: '0 0 #0000',
+              paddingInline: '5px',
+            }}
+            pt={{
+              icon: '1rem',
+            }}
+          />
+          <button
+            className="w-10 h-10 text-white rounded-full pl-1 pi pi-file-edit bg-accent1 z-50"
+            style={{ fontSize: '1.3rem' }}
+            onClick={handleOpenModal}
+          />
+
+          <label
+            className="cursor-pointer flex items-center justify-center py-2 font-bold text-white px-10 rounded-3xl font-Nunito bg-accent1 z-50"
+            htmlFor="uploadCSV"
+          >
+            <p className="text-base text-whitePlus">Import</p>
+            <input
+              type="file"
+              id="uploadCSV"
+              accept=".csv"
+              ref={uploadRef}
+              // onInput={handleAddExam}
+              onChange={handleAddExam}
+              className="hidden"
+            />
+          </label>
+          {/* <button className="flex items-center justify-center py-2 font-bold text-white px-10 rounded-3xl font-Nunito bg-accent1 z-50">
+            Import
+          </button> */}
+          {/* {time === 0 || time < 0 ? (
+            <button
+              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent2 z-50"
+              onClick={handleStopExam}
+            >
+              Stop
+            </button>
+          ) : (
+            <button
+              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"
+              onClick={handleStartExam}
+            >
+              Start
+            </button>
+          )} */}
+          {time === 0 || time < 0 ? (
+            <button
+              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"
+              onClick={handleStartExam}
+            >
+              Start
+            </button>
+          ) : (
+            <button
+              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent2 z-50"
+              onClick={handleStopExam}
+            >
+              Stop
+            </button>
+          )}
         </div>
-        {/* <p className="text-3xl font-bold text-center text-black font-Nunito">
-          {JSON.parse(sessionStorage.getItem('username'))}
-        </p> */}
       </div>
     </div>
   );

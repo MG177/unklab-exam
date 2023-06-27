@@ -74,9 +74,11 @@ body > iframe {
 .p-toast .p-toast-message {
   /* border-radius: 0.5rem;
   overflow: hidden; */
-  box-shadow: 0 0 #0000 !important;
+  /* box-shadow: 0 0 #0000 !important; */
   /* margin-bottom: 0px !important; */
+  /* padding: 0.4rem !important; */
   padding: 0.4rem !important;
+  /* margin-inline: 20px !important; */
   /* padding-top: 4px !important;
   padding-bottom: 4px !important;
   padding-left: 4px !important;
