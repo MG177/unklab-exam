@@ -14,16 +14,18 @@ export default function ProtectedRoute({ children }) {
         console.log('user from protectedRoute = ', user);
         console.log('!!!PROTECTED PAGE!!!');
         setIsAuthenticated(false);
-        navigate('/');
+        // navigate('/');
       } else {
         console.log('!!!ACCESS GRANTED!!!');
         setIsAuthenticated(true);
       }
-      setLoading(false);
+      setInterval(() => {
+        setLoading(false);
+      }, 3000);
     };
     checkAuth();
   }, [user, navigate]);
-  console.log('user.access_token = ', user);
+  // console.log('user.access_token = ', user);
 
   return loading ? (
     <div>Loading...</div>

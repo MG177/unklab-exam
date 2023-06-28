@@ -211,6 +211,7 @@ export default function PageDashboard() {
         setTime={setTime}
         time={time}
         setToken={setToken}
+        fetchExam={fetchExam}
       />
       {!loading ? (
         <>
@@ -281,9 +282,9 @@ export default function PageDashboard() {
                   paginatorRight={footer}
                   paginatorLeft={refresh}
                 >
-                  <Column field="no" header="No."></Column>
-                  <Column field="id" header="ID"></Column>
-                  <Column field="name" header="Name"></Column>
+                  <Column field="number" header="No."></Column>
+                  <Column field="studentId" header="ID"></Column>
+                  <Column field="studentName" header="Name"></Column>
                   <Column field="score.grade" header="Grade"></Column>
                   <Column
                     field="score.totalScore"

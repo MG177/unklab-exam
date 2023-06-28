@@ -1,25 +1,21 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { Tooltip } from 'primereact/tooltip';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ExamModalEditor } from './dashboard/ExamModal';
 import api from '../config';
 import { Toast } from 'primereact/toast';
+import AuthContext from '../contexts/AuthContext';
 
 export default function Header() {
+  const { user } = useContext(AuthContext);
   return (
-    <div
-      style={{ userSelect: 'none' }}
-      onCopy={(event) => {
-        event.preventDefault();
-      }}
-      className="fixed top-0 w-full max-[960px]:h-20 h-24 bg-white rounded-b-[24px] shadow-lg flex flex-row justify-between z-50"
-    >
-      <p className="font-[Roboto] max-[960px]:text-2xl text-3xl max-[960px]:mt-5 mt-8 ml-28 mb-8">
-        <span className="text-[#B55FFE]">Unklab </span>
+    <div className="fixed top-0 w-full h-20 bg-white shadow-lg rounded-b-3xl z-50 flex flex-row justify-between items-center px-10">
+      <p className="font-Roboto text-3xl ">
+        <span className="text-accent1">Unklab </span>
         Exams
       </p>
-      <p className="font-[Nunito] max-[960px]:text-2xl text-3xl text-[#37474F] font-bold mt-8 max-[960px]:mt-5 mr-[120px] mb-8">
-        {JSON.parse(sessionStorage.getItem('username'))}
+      <p className="font-Nunito font-bold text-2xl text-black max-w-[25%] truncate">
+        {user?.studentName || 'Student Name'}
       </p>
     </div>
   );
@@ -101,7 +97,13 @@ export function HeaderQuestionEditor({
   );
 }
 
-export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
+export function HeaderExamDashboard({
+  examName,
+  setTime,
+  time,
+  setToken,
+  fetchExam,
+}) {
   const { examId } = useParams();
   const modalRef = useRef(null);
   const uploadRef = useRef(null);
@@ -114,7 +116,7 @@ export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
     }
   };
 
-  const handleAddExam = async (e) => {
+  const handleImportStudents = async (e) => {
     e.preventDefault();
     console.log('tes');
     try {
@@ -131,6 +133,7 @@ export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
       //   throw new Error('Something went wrong, please try again later');
       // }
       e.target.value = '';
+      fetchExam();
       toast.current.show({
         severity: 'success',
         summary: 'Success',
@@ -226,6 +229,7 @@ export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
             modalRef={modalRef}
             examId={examId}
             examName={examName}
+            fetchExam={fetchExam}
           />
           <Toast
             ref={toast}
@@ -255,8 +259,8 @@ export function HeaderExamDashboard({ examName, setTime, time, setToken }) {
               id="uploadCSV"
               accept=".csv"
               ref={uploadRef}
-              // onInput={handleAddExam}
-              onChange={handleAddExam}
+              // onInput={handleImportStudents}
+              onChange={handleImportStudents}
               className="hidden"
             />
           </label>

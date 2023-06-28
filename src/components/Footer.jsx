@@ -8,7 +8,6 @@ import api from '../config';
 export default function Footer({
   question,
   questions,
-  time,
   answer,
   setAnswer,
   fetchQuestion,
@@ -62,13 +61,13 @@ export default function Footer({
 
   const handleTimeOut = () => {
     console.log('time out');
-    navigate('/score');
+    // navigate('/score');
   };
 
   const handleLogout = () => {
     //clear local storage
-    sessionStorage.clear();
-    window.location.href = '/';
+    // sessionStorage.clear();
+    // window.location.href = '/';
   };
 
   const validateUrlExam = () => {
@@ -88,24 +87,28 @@ export default function Footer({
   };
 
   return (
-    <div
-      style={{ userSelect: 'none' }}
-      onCopy={(event) => {
-        event.preventDefault();
-      }}
-      className="fixed bottom-0 w-full max-[960px]:h-20 h-28 bg-white rounded-t-[24px] shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] flex flex-row items-center justify-between z-50"
-    >
-      <div className="font-nunito my-[40.26px] ml-28 max-[960px]:ml-16 w-content">
-        <p className="text-accent1 text-[29px] max-[960px]:text-[18px]">
-          {user.examName}
+    <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-6 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
+      <div className="font-Nunito w-[30%]">
+        <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
+          {user.examName || 'Exam name'}
+          {/* ouisdf8yhg9348yodfijgdfhjdgfjfgjtgasdasgdagdsg */}
         </p>
-        {validateUrlExam() && (
-          <p className="text-[20px] max-[960px]:text-[18px] max-[960px]:w-[151px] text-black font-normal">
-            {`Question ${question.id} of ${question.totalQuestion}`}
+        {/* {validateUrlExam() && (
+          <p className="text-lg text-black font-normal w-full">
+            {`Question ${question.id || 'null'} of ${
+              question.totalQuestion || 'null'
+            }`}
+            {`Question null of null`}
           </p>
-        )}
+        )} */}
+        <p className="text-lg text-black font-normal w-full">
+          {`Question null of null`}
+        </p>
       </div>
-      {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
+      <div className="flex justify-center self-center w-[30%]">
+        <TimerSmall onTimeUp={handleTimeOut} />
+      </div>
+      {/* {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
       {validateUrlExam() && question !== null && (
         <button
           type="button"
@@ -126,7 +129,15 @@ export default function Footer({
         >
           Logout
         </button>
-      )}
+      )} */}
+      <div className="flex flex-row w-[30%] justify-end">
+        <button
+          className="bg-accent2 font-Nunito font-bold text-2xl text-white rounded-full shadow-lg px-8 py-2"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }

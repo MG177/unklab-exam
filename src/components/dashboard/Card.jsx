@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import Modal from '../Modal';
 
 function formatDate(dateString) {
@@ -64,15 +65,15 @@ export function NewCard({ setIsCreateNew, handleNew }) {
 
 export function EditCard({
   id,
-  handleEditQuestion,
-  handleDeleteQuestion,
   title,
   date,
+  handleEditQuestionName,
+  handleDeleteQuestion,
 }) {
+  const newTitle = useRef(title);
   const handleEdit = () => {
-    const newTitle = document.getElementById('input-title').value;
-    console.log('Edit ', title, ' to ', newTitle);
-    handleEditQuestion(id, newTitle);
+    console.log('Edit ', title, ' to ', newTitle.current.value);
+    handleEditQuestionName(id, newTitle.current.value);
   };
 
   return (
@@ -92,6 +93,7 @@ export function EditCard({
       <div className="flex flex-row w-full gap-2">
         <input
           type="text"
+          ref={newTitle}
           id="input-title"
           placeholder="Title"
           defaultValue={title}

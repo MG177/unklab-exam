@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import EditableOptions from './EditableOptions';
-import AuthContext from '../../contexts/AuthContext';
 import SelectableDropdown from './SelectableDropdown';
 import AddAudio from '../../image/audio.svg';
 import api from '../../config';

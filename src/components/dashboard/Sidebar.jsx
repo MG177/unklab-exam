@@ -1,9 +1,7 @@
 import React, { useState, useContext, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import AuthContext from '../../contexts/AuthContext';
 
 export default function Sidebar() {
-  const { user } = useContext(AuthContext);
   const [isHidden, setIsHidden] = useState(false);
   const location = useLocation();
 

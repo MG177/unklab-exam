@@ -257,18 +257,20 @@ export function ExamModalEditor({ modalRef, examId, examName }) {
 
       const newData = filteredData.filter((item) => {
         const examQuestions = questionFromExamData.questions;
-        return !examQuestions.some((element) => element.id === item._id);
+        return !examQuestions.some(
+          (element) => element.questionId === item._id
+        );
       });
 
       const newDataSelected = filteredData.filter((item) => {
         const examQuestions = questionFromExamData.questions;
-        return examQuestions.some((element) => element.id === item._id);
+        return examQuestions.some((element) => element.questionId === item._id);
       });
 
       newDataSelected.forEach((item) => {
         const examQuestions = questionFromExamData.questions;
         const question = examQuestions.find(
-          (element) => element.id === item._id
+          (element) => element.questionId === item._id
         );
         item.quantity = question.quantity;
       });
@@ -373,6 +375,7 @@ export function ExamModalEditor({ modalRef, examId, examName }) {
         life: 3000,
         // sticky: true,
       });
+      modalRef.current.close();
     } catch (err) {
       console.log(err);
       toast.current.show({
@@ -386,10 +389,7 @@ export function ExamModalEditor({ modalRef, examId, examName }) {
   };
 
   return (
-    <dialog
-      ref={modalRef}
-      className="rounded-xl shadow-lg bg-whitePlus max-w-md max-h-[90%]"
-    >
+    <>
       <Toast
         ref={toast}
         style={{
@@ -402,98 +402,103 @@ export function ExamModalEditor({ modalRef, examId, examName }) {
           icon: '1rem',
         }}
       />
-      <div className="flex flex-col items-start px-3 w-fit font-Nunito text-black gap-2 max-w-full min-w-[20rem]">
-        <div className="font-bold text-xl self-center">Edit Exam</div>
-        <div className="text-md self-start font-bold">Exam name</div>
-        <input
-          type="text"
-          defaultValue={examName}
-          ref={examLabelRef}
-          className="bg-whitePlus shadow-md border-0 rounded-lg w-full"
-          placeholder="exam name..."
-        />
-        <div className="text-md self-start font-bold">
-          Select Question Group
-        </div>
-        <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
-          <ScrollPanel style={{ width: '100%', height: '100px' }}>
-            {questionDB.map((item, index) => (
-              <button
-                key={item._id}
-                className="flex flex-row items-center justify-between px-3 py-1 w-full cursor-pointer hover:bg-slate-50 hover:text-accent1"
-                onClick={() => handleAddQuestion(item, index)}
-              >
-                <p className="text-md text-left font-Nunito select-none truncate">
-                  {item.questionName}
-                </p>
-                <i
-                  className="pi pi-plus mr-2 font-bold"
-                  style={{ fontSize: '0.8rem' }}
-                />
-              </button>
-            ))}
-          </ScrollPanel>
-        </ul>
-        <div className="text-md self-start font-bold">
-          Determine how many questions to use
-        </div>
-        <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
-          <ScrollPanel style={{ width: '100%', height: '100px' }}>
-            {questionSelected.map((item, index) => (
-              <li
-                key={item._id}
-                className="flex flex-row items-center justify-between px-3 py-1 w-full hover:bg-slate-50 "
-              >
-                <p className="text-md text-left font-Nunito select-none truncate">
-                  {item.questionName}
-                </p>
-                <div className="flex flex-row">
-                  <InputText
-                    keyfilter={'int'}
-                    maxLength="3"
-                    // placeholder={item.questions.length}
-                    placeholder={item.quantity || 0}
-                    className="bg-white border-[0px] w-10 p-0 focus:border-gray focus:shadow-md focus:ring-0 flex text-center"
-                    // onChange={(e) => {
-                    //   console.log(e.target.value);
-                    // }}
-                    value={item.quantity || ''}
-                    onChange={(e) =>
-                      handleQuestionQuantity(index, e.target.value)
-                    }
-                  />
-                  <button
-                    className="pi pi-times text-black mx-2.5"
+      <dialog
+        ref={modalRef}
+        className="rounded-xl shadow-lg bg-whitePlus max-w-md max-h-[90%]"
+      >
+        <div className="flex flex-col items-start px-3 w-fit font-Nunito text-black gap-2 max-w-full min-w-[20rem]">
+          <div className="font-bold text-xl self-center">Edit Exam</div>
+          <div className="text-md self-start font-bold">Exam name</div>
+          <input
+            type="text"
+            defaultValue={examName}
+            ref={examLabelRef}
+            className="bg-whitePlus shadow-md border-0 rounded-lg w-full"
+            placeholder="exam name..."
+          />
+          <div className="text-md self-start font-bold">
+            Select Question Group
+          </div>
+          <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              {questionDB.map((item, index) => (
+                <button
+                  key={item._id}
+                  className="flex flex-row items-center justify-between px-3 py-1 w-full cursor-pointer hover:bg-slate-50 hover:text-accent1"
+                  onClick={() => handleAddQuestion(item, index)}
+                >
+                  <p className="text-md text-left font-Nunito select-none truncate">
+                    {item.questionName}
+                  </p>
+                  <i
+                    className="pi pi-plus mr-2 font-bold"
                     style={{ fontSize: '0.8rem' }}
-                    onClick={() => handleRemoveQuestion(item, index)}
                   />
-                </div>
-              </li>
-            ))}
-          </ScrollPanel>
-        </ul>
-        <div className="flex flex-row text-md self-end font-bold items-center">
-          <span>Total Questions:</span>
-          <div className="ml-2 px-2 py-1 flex items-center justify-center bg-white rounded-lg shadow-md">
-            {totalQuestion(questionSelected) || '0'}
+                </button>
+              ))}
+            </ScrollPanel>
+          </ul>
+          <div className="text-md self-start font-bold">
+            Determine how many questions to use
+          </div>
+          <ul className="shadow-md rounded-xl flex flex-col items-center justify-between h-fit w-full text-black font-semibold">
+            <ScrollPanel style={{ width: '100%', height: '100px' }}>
+              {questionSelected.map((item, index) => (
+                <li
+                  key={item._id}
+                  className="flex flex-row items-center justify-between px-3 py-1 w-full hover:bg-slate-50 "
+                >
+                  <p className="text-md text-left font-Nunito select-none truncate">
+                    {item.questionName}
+                  </p>
+                  <div className="flex flex-row">
+                    <InputText
+                      keyfilter={'int'}
+                      maxLength="3"
+                      // placeholder={item.questions.length}
+                      placeholder={item.quantity || 0}
+                      className="bg-white border-[0px] w-10 p-0 focus:border-gray focus:shadow-md focus:ring-0 flex text-center"
+                      // onChange={(e) => {
+                      //   console.log(e.target.value);
+                      // }}
+                      value={item.quantity || ''}
+                      onChange={(e) =>
+                        handleQuestionQuantity(index, e.target.value)
+                      }
+                    />
+                    <button
+                      className="pi pi-times text-black mx-2.5"
+                      style={{ fontSize: '0.8rem' }}
+                      onClick={() => handleRemoveQuestion(item, index)}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ScrollPanel>
+          </ul>
+          <div className="flex flex-row text-md self-end font-bold items-center">
+            <span>Total Questions:</span>
+            <div className="ml-2 px-2 py-1 flex items-center justify-center bg-white rounded-lg shadow-md">
+              {totalQuestion(questionSelected) || '0'}
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 mt-1">
+            <button
+              className="py-2 w-full bg-white rounded-lg text-black font-semibold shadow-md text-lg select-none"
+              onClick={() => modalRef.current.close()}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="py-2 w-full bg-accent1 rounded-lg text-white font-semibold shadow-md text-lg select-none"
+              onClick={handleEditExam}
+            >
+              Add
+            </button>
           </div>
         </div>
-        <div className="flex w-full justify-center gap-4 mt-1">
-          <button
-            className="py-2 w-full bg-white rounded-lg text-black font-semibold shadow-md text-lg select-none"
-            onClick={() => modalRef.current.close()}
-          >
-            Cancel
-          </button>
-
-          <button
-            className="py-2 w-full bg-accent1 rounded-lg text-white font-semibold shadow-md text-lg select-none"
-            onClick={handleEditExam}
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </dialog>
+      </dialog>
+    </>
   );
 }

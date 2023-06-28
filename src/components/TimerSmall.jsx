@@ -1,10 +1,33 @@
 // import { isValidDateValue } from "@testing-library/user-event/dist/utils";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import AuthContext from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import api from '../config';
 
-export default function TimerSmall({ time, classTime }) {
+export default function TimerSmall({ classTime }) {
+  const { user } = useContext(AuthContext);
+  const [time, setTime] = useState(2);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
+
+  const fetchTime = async () => {
+    try {
+      const response = await api.get(`exam/time/${user.examId}`);
+      setTime(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTime();
+
+    const intervalId = setInterval(() => {
+      fetchTime();
+    }, 30000); // Send request every 30 seconds
+
+    return () => clearInterval(intervalId); // Clear interval when component unmounts
+  }, []);
 
   useEffect(() => {
     setTimeRemaining(time);
@@ -15,7 +38,7 @@ export default function TimerSmall({ time, classTime }) {
       setTimeRemaining((prevTimeRemaining) => {
         if (prevTimeRemaining <= 1) {
           clearInterval(intervalId);
-          navigate('/score');
+          // navigate('/score');
         } else {
           return prevTimeRemaining - 1;
         }
@@ -34,13 +57,13 @@ export default function TimerSmall({ time, classTime }) {
   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-  // deploy
+  console.log('timeRemaining = ', timeRemaining);
   return (
-    <div className="flex flex-row justify-center items-center max-h-[60px] bg-white gap-[10px] max-[960px]:w-[180px] max-[960px]:max-h-[46px] max-[960px]:ml-[100px] mt-[40px] mb-[40px] mr-[120px] px-[14px] py-[20px] rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
-      <p className="text-accent2 font-bold font-nunito text-[30px] max-[960px]:text-[16px]">
-        {/* {hours > 0 ? `${hoursStr} : ` : ''}
-        {`${minutesStr} : ${secondsStr}`} */}
-        {hours !== 0
+    <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
+      <p className="text-accent2 font-bold font-nunito text-2xl">
+        {!timeRemaining
+          ? 'Time Out'
+          : hours !== 0
           ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${
               minutes === 1 ? '' : 's'
             }`

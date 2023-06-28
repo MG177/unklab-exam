@@ -22,89 +22,58 @@ export default function Exam() {
   const [question, setQuestion] = useState(null);
   const [loadingQuestion, setLoadingQuestion] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [time, setTime] = useState(2);
   const { user } = useContext(AuthContext);
 
   const fetchQuestion = async () => {
     try {
-      const response = await api.get(`students/${user.noreg}/onebyone`, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      });
-      // console.log('response FetchQuestion = ', response.data[0]);
+      const response = await api.get(`students/${user.noreg}/onebyone`);
       setQuestion(response.data[0]);
       if (response.status === 204) {
-        navigate('/waiting');
+        // navigate('/waiting');
       }
       if (response.status === 404) {
-        navigate('/');
+        // navigate('/');
       }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchQuestions = async () => {
+    console.log('inside fetchQuestions');
+    try {
+      const response = await api.get(`student/${user.noreg}`, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      if (!response.data) {
+        // navigate('/started');
+      } else {
+        const filteredData = response.data.filter((item) => item !== null);
+        setQuestions(filteredData);
+        setLoadingQuestion(false);
+        if (filteredData.length === 0) {
+          // navigate('/waiting');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  async function fetchData() {
+    await fetchQuestions();
+    await fetchQuestion();
+    setLoading(false);
+  }
+
   useEffect(() => {
     // console.log('user from exam = ', user);
-    const fetchQuestions = async () => {
-      console.log('inside fetchQuestions');
-      try {
-        const response = await api.get(`students/${user.noreg}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        });
-        if (!response.data) {
-          navigate('/started');
-        } else {
-          const filteredData = response.data.filter((item) => item !== null);
-          setQuestions(filteredData);
-          setLoadingQuestion(false);
-          if (filteredData.length === 0) {
-            navigate('/waiting');
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
     console.log('question = ', questions);
 
-    const fetchTime = async () => {
-      try {
-        const response = await api.get(
-          `time/${JSON.parse(sessionStorage.getItem('examId'))}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        setTime(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    async function fetchData() {
-      console.log('inside fetchData');
-      await fetchQuestions();
-      await fetchQuestion();
-      await fetchTime();
-      setLoading(false);
-    }
-
-    console.log('inside useEffect');
-
     fetchData();
-
-    const intervalId = setInterval(() => {
-      fetchTime();
-    }, 30000); // Send request every 30 seconds
-
-    return () => clearInterval(intervalId); // Clear interval when component unmounts
   }, [examId, navigate]);
 
   // useEffect(() => {
@@ -129,7 +98,7 @@ export default function Exam() {
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       {!loadingQuestion && (
         <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
           <Question question={question} media={media} />
@@ -151,7 +120,6 @@ export default function Exam() {
         question={question}
         answer={answer}
         setAnswer={setAnswer}
-        time={time}
         fetchQuestion={fetchQuestion}
       />
     </>

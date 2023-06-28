@@ -35,49 +35,28 @@ export default function Login() {
       return;
     }
     try {
-      const studentData = await api.post('/auth/login/student', {
+      const studentAuth = await api.post('/auth/login/student', {
         noreg: studentNoregRef.current.value.trim(),
         token: studentTokenRef.current.value.trim(),
       });
       const startResponse = await api.post(
-        `/students/start/${studentData.data.data.examId}`,
-        {
-          token: studentData.data.data.access_token,
-        },
+        `/student/start`,
+        {},
         {
           headers: {
-            Authorization: `Bearer ${studentData.data.data.access_token}`,
+            Authorization: `Bearer ${studentAuth.data.access_token}`,
           },
         }
       );
-
-      if (startResponse.status >= 200 && startResponse.status < 300) {
-        if (startResponse.data.isScore) {
-          // alert("You already finish the exam");
-          alert(' Login Success\n Click oke to start Unklab Exam');
-          setUser({ ...user, score: startResponse.data.score });
-          sessionStorage.setItem(
-            'isScore',
-            JSON.stringify(startResponse.data.isScore)
-          );
-        }
-        if (startResponse.data.id) {
-          sessionStorage.setItem(
-            'studentId',
-            JSON.stringify(startResponse.data.id)
-          );
-        }
-        Object.entries(studentData.data.data).forEach(([key, value]) => {
-          sessionStorage.setItem(key, JSON.stringify(value));
-        });
-
-        setUser(studentData.data.data);
-
-        // getAllLocalData();
-        navigate('/started');
-      } else {
-        throw new Error('Student not found');
+      if (studentAuth.data.access_token) {
+        sessionStorage.setItem(
+          'access_token',
+          JSON.stringify(studentAuth.data.access_token)
+        );
       }
+      setUser(studentAuth.data);
+      console.log('setUser(studentAuth.data)', studentAuth.data);
+      navigate('/started');
     } catch (error) {
       setErrorMessage(
         'Incorrect Registration number or Token. Please try again.'
@@ -108,7 +87,6 @@ export default function Login() {
     } catch (error) {
       console.log(error);
     }
-    console.log('login admin');
   };
 
   const toggleForm = () => {
@@ -116,7 +94,6 @@ export default function Login() {
   };
 
   function shakeitBaby() {
-    console.log('shake');
     setIsShaking(true);
     setTimeout(() => setIsShaking(false), 1000);
   }

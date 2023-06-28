@@ -54,7 +54,7 @@ function App() {
               }
             />
             <Route
-              path="/exam/:examId" // Include ":session" in the path
+              path="/exam" // Include ":session" in the path
               element={
                 <ProtectedRoute>
                   <Exam />

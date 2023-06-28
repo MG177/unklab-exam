@@ -38,24 +38,24 @@ export default function DashboardQuestion() {
 
   const handleEditQuestionName = async (id, data) => {
     try {
-      const response = await api.patch(`/questions/name/${id}`, {
-        questionName: data,
-      });
+      await api.patch('/questions/name/' + id, { questionName: data });
       alert('Question Edited');
       setIsEdit(false);
       fetchQuestionList();
     } catch (error) {
-      alert('Faield to edit question. Please try again');
+      console.log(error);
+      alert('Failed to edit question. Please try again', error);
     }
   };
 
   const handleDeleteQuestion = async (id) => {
     try {
-      const response = await api.delete(`/questions/${id}`);
+      await api.delete(`/questions/${id}`);
       alert('Question Deleted');
       fetchQuestionList();
     } catch (error) {
-      alert('Faield to delete question. Please try again');
+      console.log(error);
+      alert('Failed to delete question. Please try again', error);
     }
   };
 
@@ -150,7 +150,7 @@ export default function DashboardQuestion() {
                 id={question._id}
                 title={question.questionName}
                 date={question.createdAt}
-                handleEditQuestion={handleEditQuestionName}
+                handleEditQuestionName={handleEditQuestionName}
                 handleDeleteQuestion={handleDeleteQuestion}
               />
             ))
