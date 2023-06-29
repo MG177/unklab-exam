@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import TimerSmall from './TimerSmall';
+import Timer from './Timer';
 import Arrow from '../image/arrow_next.svg';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
@@ -14,6 +14,7 @@ export default function Footer({
 }) {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  console.log('user: ' + user);
 
   // console.log("user: " + user.noreg);
 
@@ -87,7 +88,7 @@ export default function Footer({
   };
 
   return (
-    <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-6 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
+    <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
       <div className="font-Nunito w-[30%]">
         <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
           {user.examName || 'Exam name'}
@@ -101,12 +102,12 @@ export default function Footer({
             {`Question null of null`}
           </p>
         )} */}
-        <p className="text-lg text-black font-normal w-full">
+        <p className="text-lg text-black font-normal w-full leading-none">
           {`Question null of null`}
         </p>
       </div>
       <div className="flex justify-center self-center w-[30%]">
-        <TimerSmall onTimeUp={handleTimeOut} />
+        <Timer onTimeUp={handleTimeOut} />
       </div>
       {/* {validateUrlExam() && <TimerSmall time={time} onTimeUp={handleTimeOut} />}
       {validateUrlExam() && question !== null && (
@@ -130,13 +131,25 @@ export default function Footer({
           Logout
         </button>
       )} */}
-      <div className="flex flex-row w-[30%] justify-end">
+      <div className="flex flex-row w-[30%] justify-end gap-3">
         <button
-          className="bg-accent2 font-Nunito font-bold text-2xl text-white rounded-full shadow-lg px-8 py-2"
+          className="pi pi-arrow-left bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-8 py-2"
+          onClick={handleLogout}
+        />
+        <button
+          className="pi pi-arrow-right bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-8 py-2"
+          onClick={handleLogout}
+        />
+        <button
+          className="pi pi-bookmark bg-white text-xl text-yellow-500 rounded-full shadow-lg border-[1px] border-gray/25 px-3.5 py-2"
+          onClick={handleLogout}
+        />
+        {/* <button
+          className="bg-accent2 font-Nunito font-bold text-xl text-white rounded-full shadow-lg px-8 py-2"
           onClick={handleLogout}
         >
           Logout
-        </button>
+        </button> */}
       </div>
     </div>
   );

@@ -24,8 +24,8 @@ export function AuthProvider({ children }) {
     access_token: initialUser,
   };
   const [user, setUser] = useState(data);
-  api.defaults.headers.common['Authorization'] = `Bearer ${initialUser}`;
 
+  api.defaults.headers.common['Authorization'] = `Bearer ${initialUser}`;
   api.interceptors.response.use(
     (response) => response, // Return the response if it's successful
     (error) => {
@@ -36,6 +36,10 @@ export function AuthProvider({ children }) {
       return Promise.reject(error);
     }
   );
+  // console.log('data.access_token: ' + data.access_token);
+  // if (!user) {
+  //   setUser(data);
+  // }
 
   // useEffect(() => {
   //   if (storedAccessToken) {
@@ -49,9 +53,6 @@ export function AuthProvider({ children }) {
   //   if (!user) {
   //     console.log('user null');
   //     setUser(data);
-  //   } else {
-  //     console.log('byeeee');
-  //     navigate('/');
   //   }
   // }, []);
 

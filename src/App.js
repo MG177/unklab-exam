@@ -4,7 +4,6 @@ import { MoonLoader } from 'react-spinners';
 
 import ScoreCountdown from './page/score/ScoreCountdown';
 import Testing from './page/testing';
-import PageDashboard from './page/dashboard/PageDashboard';
 
 import ProtectedRoute from './utils/ProtectedRoute';
 import AuthContextLayout from './contexts/AuthContextLayout';
@@ -54,7 +53,7 @@ function App() {
               }
             />
             <Route
-              path="/exam" // Include ":session" in the path
+              path="/exam/:questionId" // Include ":session" in the path
               element={
                 <ProtectedRoute>
                   <Exam />

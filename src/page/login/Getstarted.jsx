@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  // useContext,
-  useEffect,
-} from 'react';
-// import AuthContext from "../../contexts/AuthContext";
+import React, { useState } from 'react';
 import TermsConditions from '../../image/terms and conditions.svg';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,26 +35,14 @@ export default function Login() {
   const handleStart = () => {
     if (isChecked) {
       sessionStorage.setItem('agree', true);
-      navigate('/exam');
+      navigate('/exam/start');
     } else {
       shakeitBaby();
     }
   };
   return (
-    <div
-      style={{ userSelect: 'none' }}
-      onCopy={(event) => {
-        event.preventDefault();
-      }}
-      className="w-full h-screen bg-[url('./image/Background.svg')] bg-cover flex justify-center items-center"
-    >
-      <div
-        style={{ userSelect: 'none' }}
-        onCopy={(event) => {
-          event.preventDefault();
-        }}
-        className="px-10 py-8 h-max rounded-3xl  bg-white shadow-xl flex gap-5 flex-col items-center"
-      >
+    <div className="w-full h-screen bg-[url('./image/Background.svg')] bg-cover flex justify-center items-center select-none">
+      <div className="px-10 py-8 h-max rounded-3xl  bg-white shadow-xl flex gap-5 flex-col items-center ">
         <button
           type="button"
           className="py-4 rounded-full bg-[#ff032d] text-white font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
@@ -74,6 +57,47 @@ export default function Login() {
         <div className="max-[720px]:mt-[20px] max-[720px]:w-[500px]">
           <img src={TermsConditions} alt="" />
         </div>
+        {/* <p>
+          Before taking the test, please carefully read and agree to the
+          following terms and conditions:
+          <br />
+          <ul type="1">
+            <li>
+              Test Format: The test will consist of multiple-choice questions
+              with some media like image and audio.
+            </li>
+            <li>
+              Test Rules: You must adhere to the following rules while taking
+              the test:
+            </li>
+            <ul>
+              <li>
+                You must not cheat or use any unauthorized resources during the
+                test.
+              </li>
+              <li>
+                You must not share any information about the test or its
+                contents with anyone else.
+              </li>
+              <li>
+                You must not attempt to record, copy, or reproduce any part of
+                the test.
+              </li>
+              <li>
+                You must not disrupt or interfere with the testing environment
+                or other test-takers.
+              </li>
+            </ul>
+            <li>
+              Test Results: Your test results will be provided to you
+              immediately after the exam is over.
+            </li>
+          </ul>
+          <br />
+          By taking the test, you agree to be bound by these terms and
+          conditions. If you do not agree to these terms and conditions, you may
+          not take the test.
+        </p> */}
         <div className="flex flex-col items-center h-fit">
           <form
             action=""
