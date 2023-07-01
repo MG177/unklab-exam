@@ -73,8 +73,8 @@ export default function Footer({ questions, number, setNumber }) {
     <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
       <div className="font-Nunito w-[30%]">
         <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
-          {user.examName || 'Exam name'}
-          {/* ouisdf8yhg9348yodfijgdfhjdgfjfgjtgasdasgdagdsg */}
+          {/* {user.examName || 'Exam name'} */}
+          ouisdf8yhg9348yodfijgdfhjdgfjfgjtgasdasgdagdsg
         </p>
         <p className="text-lg text-black font-normal w-full leading-none">
           {`Question null of null`}
@@ -87,7 +87,7 @@ export default function Footer({ questions, number, setNumber }) {
       <div className="flex flex-row w-[30%] justify-end gap-3">
         {number === 0 ? null : (
           <button
-            className="pi pi-arrow-left bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-8 py-2 transition ease-out duration-200 hover:scale-[1.05]"
+            className="pi pi-arrow-left bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 py-2.5 px-3.5 md:px-8 md:py-3 transition ease-out duration-200 hover:scale-[1.05]"
             onClick={handlePrevQuestion}
           />
         )}
@@ -100,7 +100,7 @@ export default function Footer({ questions, number, setNumber }) {
           </button>
         ) : (
           <button
-            className="pi pi-arrow-right bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-8 py-2 transition ease-out duration-200 hover:scale-[1.05]"
+            className="pi pi-arrow-right bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 py-2.5 px-3.5 md:px-8 md:py-3 transition ease-out duration-200 hover:scale-[1.05]"
             onClick={handleNextQuestion}
           />
         )}
@@ -108,7 +108,7 @@ export default function Footer({ questions, number, setNumber }) {
         <button
           className={`pi ${
             isBookmark ? 'pi-bookmark-fill' : 'pi-bookmark'
-          } bg-white text-xl text-yellow-500 rounded-full shadow-lg border-[1px] border-gray/25 px-3.5 py-2 transition ease-out duration-200 hover:scale-[1.05]`}
+          } bg-white text-xl text-yellow-500 rounded-full shadow-lg border-[1px] border-gray/25 px-5 md:px-4 py-2 transition ease-out duration-200 hover:scale-[1.05]`}
           onClick={handleBookmark}
         />
       </div>

@@ -59,8 +59,8 @@ export default function TimerSmall({ classTime }) {
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
   // console.log('timeRemaining = ', timeRemaining);
   return (
-    <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
-      <p className="text-accent2 font-bold font-nunito text-2xl">
+    <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-lg text-accent2 font-bold font-Roboto  ">
+      <p className="hidden text-2xl lg:block">
         {!timeRemaining
           ? 'Time Out'
           : hours !== 0
@@ -73,83 +73,12 @@ export default function TimerSmall({ classTime }) {
                 : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
             }`}
       </p>
+      <p className="text-xl lg:hidden">
+        {!timeRemaining
+          ? 'Time Out'
+          : `${hoursStr} : ${minutesStr} : ${secondsStr}
+          `}
+      </p>
     </div>
   );
 }
-
-// import React from 'react';
-// import { useEffect } from 'react';
-// import { useState } from 'react';
-// import api from '../config';
-// import { useNavigate } from 'react-router-dom';
-// // import Clock from "../image/clock_icon.svg";
-
-// export default function Timer() {
-//   // const [time, setTime] = useState(0);
-//   const [timeRemaining, setTimeRemaining] = useState(0);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     const fetchTime = async () => {
-//       try {
-//         const response = await api.get(
-//           `time/${JSON.parse(sessionStorage.getItem('examId'))}`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${JSON.parse(
-//                 sessionStorage.getItem('access_token')
-//               )}`,
-//             },
-//           }
-//         );
-//         setTimeRemaining(response.data);
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     };
-
-//     fetchTime(); // Fetch time once when component mounts
-
-//     const intervalId = setInterval(() => {
-//       fetchTime();
-//     }, 10000); // Send request every 5 seconds
-
-//     return () => clearInterval(intervalId); // Clear interval when component unmounts
-//   }, []);
-
-//   useEffect(() => {
-//     const intervalId = setInterval(() => {
-//       setTimeRemaining((prevTimeRemaining) => {
-//         if (prevTimeRemaining <= 1) {
-//           clearInterval(intervalId);
-//           window.location.reload();
-//           // navigate('/score');
-//         } else {
-//           return prevTimeRemaining - 1;
-//         }
-//       });
-//     }, 1000);
-
-//     return () => {
-//       clearInterval(intervalId);
-//     };
-//   }, [navigate]);
-
-//   const hours = Math.floor(timeRemaining / 3600);
-//   const minutes = Math.floor((timeRemaining % 3600) / 60);
-//   const seconds = Math.floor(timeRemaining % 60);
-
-//   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
-//   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-//   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-
-//   return (
-//     <div className="flex flex-row justify-center items-center max-[960px]:text-[40px] text-[72px] gap-[16px] max-[960px]:px-[16px] max-[960px]:py-[24px] px-[20px] py-[28px] min-w-fit h-[140px] bg-white rounded-[24px]">
-//       <p className="font-bold text-accent2 font-nunito whitespace-nowrap">
-//         {hours === 0
-//           ? `00 : ${minutesStr} : ${secondsStr}`
-//           : `${hoursStr} : ${minutesStr} : ${secondsStr}`}
-//       </p>
-//     </div>
-//   );
-// }

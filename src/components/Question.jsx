@@ -45,13 +45,19 @@ export default function Questions({ questions, number, textSize, size }) {
   return (
     <div className="flex flex-col w-fit min-w-[550px] max-w-[600px] gap-4 font-Nunito">
       <div className="flex flex-col w-full min-h-fit rounded-3xl p-5 gap-1 bg-whitePlus shadow-md border-[1px] border-gray/20 cursor-default select-none mb-2">
-        <h1 className={`font-bold ${textSize[size + 2]} text-accent1`}>
+        <h1
+          className={`font-bold ${textSize[size + 2]} md:${
+            textSize[size + 3]
+          } text-accent1`}
+        >
           Question #{number + 1}
         </h1>
 
         {hasContent() && <Media id={hasContent()} />}
         <p
-          className={`leading-normal ${textSize[size]} text-black`}
+          className={`leading-normal ${textSize[size]} md:${
+            textSize[size + 1]
+          } xl:${textSize[size + 2]} text-black`}
           dangerouslySetInnerHTML={
             {
               __html: question.text.replace(/\n/g, '<br>'),
@@ -67,6 +73,8 @@ export default function Questions({ questions, number, textSize, size }) {
           option={option.text} // Use option.text as the option
           active={handleActive(option.id)} // Pass option.text to handleActive
           handleAnswer={handleAnswer}
+          textSize={textSize}
+          size={size}
         />
       ))}
       {/* </div> */}

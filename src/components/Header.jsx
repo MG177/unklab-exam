@@ -16,9 +16,9 @@ export default function Header() {
     navigate('/');
   };
   return (
-    <div className="fixed top-0 w-full h-20 bg-white shadow-lg rounded-b-3xl z-50 flex flex-row justify-between items-center px-10">
+    <div className="fixed top-0 w-full h-14 lg:h-20 bg-white shadow-lg rounded-b-3xl z-50 flex flex-row justify-between items-center px-10">
       <button
-        className="font-Roboto text-3xl max-w-[25%]"
+        className="font-Roboto text-lg md:text-2xl lg:text-3xl max-w-[25%]"
         onDoubleClick={handleLogout}
       >
         <span className="text-accent1">Unklab </span>
@@ -29,7 +29,7 @@ export default function Header() {
         <span className="text-3xl">Aa</span>
         <button className="pi pi-plus"></button>
       </div> */}
-      <p className="font-Nunito font-bold text-2xl text-black max-w-[25%] truncate">
+      <p className="font-Nunito font-bold text-md md:text-lg lg:text-2xl text-black max-w-[25%] truncate">
         {user?.studentName || 'Student Name'}
       </p>
     </div>

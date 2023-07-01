@@ -1,6 +1,13 @@
 import React from 'react';
 
-export default function Option({ active, option, handleAnswer, answerId }) {
+export default function Option({
+  active,
+  option,
+  handleAnswer,
+  answerId,
+  textSize,
+  size,
+}) {
   return (
     <div
       onClick={() => handleAnswer(answerId)}
@@ -27,7 +34,7 @@ export default function Option({ active, option, handleAnswer, answerId }) {
           active
             ? 'text-white tr  ansition ease-out duration-50 cursor-default'
             : ''
-        } text-lg`}
+        } ${textSize[size]} md:${textSize[size + 1]} xl:${textSize[size + 2]} `}
         dangerouslySetInnerHTML={{ __html: option.replace(/\n/g, '<br>') }}
       ></p>
     </div>
