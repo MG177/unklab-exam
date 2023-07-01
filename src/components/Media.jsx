@@ -12,6 +12,7 @@ export default function Media({ id, dashboard }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
   const audioRef = React.createRef();
+  console.log('Media id = ', id);
 
   const handlePlay = () => {
     if (playCount < MAX_PLAYS) {

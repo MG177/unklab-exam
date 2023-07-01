@@ -8,12 +8,27 @@ import AuthContext from '../contexts/AuthContext';
 
 export default function Header() {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    //clear local storage
+    sessionStorage.clear();
+    navigate('/');
+  };
   return (
     <div className="fixed top-0 w-full h-20 bg-white shadow-lg rounded-b-3xl z-50 flex flex-row justify-between items-center px-10">
-      <p className="font-Roboto text-3xl ">
+      <button
+        className="font-Roboto text-3xl max-w-[25%]"
+        onDoubleClick={handleLogout}
+      >
         <span className="text-accent1">Unklab </span>
         Exams
-      </p>
+      </button>
+      {/* <div className="flex flex-row gap-2 items-center justify-center text-gray/30">
+        <button className="pi pi-minus"></button>
+        <span className="text-3xl">Aa</span>
+        <button className="pi pi-plus"></button>
+      </div> */}
       <p className="font-Nunito font-bold text-2xl text-black max-w-[25%] truncate">
         {user?.studentName || 'Student Name'}
       </p>

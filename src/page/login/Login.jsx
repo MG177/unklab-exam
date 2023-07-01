@@ -112,20 +112,16 @@ export default function Login() {
           className="py-4 rounded-full bg-[#ff032d] text-[#FAFAFA] font-semibold text-lg md:text-[24px] opacity-10 absolute top-0 w-2 h-2 left-390 right-0"
           onClick={() => toggleForm()}
         ></button>
-        {adminForm ? (
-          <form onSubmit={handleLoginAdmin}>
-            <div className="h-fit w-[600px] text-center p-12 min-[960px]: gap-8 rounded-3xl scale-90 bg-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
-              <div className="flex flex-col items-center justify-center gap-3">
-                <div className="flex flex-row text-5xl font-inter font-bold mb-2 max-[960px]:mb-0">
-                  <span className="text-black">Welcome Admin</span>
-                  <span className="text-accent2">!</span>
-                </div>
-                <p className="text-lg font-normal font-Nunito">
-                  Let's get you started with your exams. Enter your login
-                  details and token to access your account.
-                </p>
+        <div className="h-fit w-[600px] text-center p-10 rounded-3xl scale-90 bg-white shadow-lg justify-center items-center ">
+          {adminForm ? (
+            <form onSubmit={handleLoginAdmin}>
+              {/* <div className="flex flex-col items-center justify-center gap-3 mb-3"> */}
+              <div className="flex flex-row text-5xl font-inter justify-center font-bold">
+                <span className="text-black">Welcome Admin</span>
+                <span className="text-accent2">!</span>
               </div>
-              <div className="flex flex-col w-full gap-6 max-[960px]:-mt-[10px]">
+              {/* </div> */}
+              <div className="flex flex-col w-full gap-6 max-[960px]:mt-2.5 my-10">
                 <div className="flex flex-col items-start ">
                   <label htmlFor="username" className="mb-2 max-[960px]:mb-0">
                     Username
@@ -136,7 +132,7 @@ export default function Login() {
                     ref={adminUsernameRef}
                     type="text"
                     placeholder="John"
-                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg
+                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg
                   pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
@@ -150,7 +146,7 @@ export default function Login() {
                     ref={adminPasswordRef}
                     type="password"
                     placeholder="********"
-                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
+                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
               </div>
@@ -161,11 +157,9 @@ export default function Login() {
               >
                 Login as admin
               </button>
-            </div>
-          </form>
-        ) : (
-          <form onSubmit={handleLogin}>
-            <div className="h-fit w-[600px] text-center p-12 gap-8 rounded-3xl scale-90 bg-white shadow-[0_35px_60px_-15px_rgba(0,0,0,0.25)] flex flex-col justify-center items-center">
+            </form>
+          ) : (
+            <form onSubmit={handleLogin}>
               <div className="flex flex-col items-center justify-center">
                 <div className="flex text-5xl font-bold text-14 font-inter ">
                   <h1 className="text-black">Welcome</h1>
@@ -176,13 +170,13 @@ export default function Login() {
                   className="font-Nunito font-normal text-xl text-[24px] leading-normal mt-4"
                 >
                   Let's get you started with your exams. Enter your login
-                  details and token to access your account.
+                  details and token to access your Exam.
                 </p>
               </div>
-              <div className="flex flex-col w-full gap-6">
+              <div className="flex flex-col w-full gap-6 mb-10 mt-3">
                 <div className="flex flex-col items-start ">
-                  <label htmlFor="noreg" className="mb-2">
-                    Registration Number
+                  <label htmlFor="noreg" className="mb-2 font-semibold">
+                    Student ID
                   </label>
                   <input
                     name="noreg"
@@ -190,11 +184,11 @@ export default function Login() {
                     ref={studentNoregRef}
                     type="text"
                     placeholder="S2200000"
-                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
+                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
                   />
                 </div>
                 <div className="flex flex-col items-start ">
-                  <label htmlFor="token" className="mb-2">
+                  <label htmlFor="token" className="mb-2 font-semibold">
                     Token
                   </label>
                   <input
@@ -203,7 +197,7 @@ export default function Login() {
                     ref={studentTokenRef}
                     type="text"
                     placeholder="Token"
-                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-[#00000026] font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
+                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
               </div>
@@ -223,14 +217,14 @@ export default function Login() {
 
                 <button
                   type="submit"
-                  className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-white font-semibold text-lg text-6"
+                  className="uppercase w-full py-4 rounded-full bg-accent1 text-white font-semibold text-lg text-6"
                 >
                   Login
                 </button>
               </div>
-            </div>
-          </form>
-        )}
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );

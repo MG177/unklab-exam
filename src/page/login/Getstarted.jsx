@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TermsConditions from '../../image/terms and conditions.svg';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,15 +16,11 @@ export default function Login() {
     setTimeout(() => setIsShaking(false), 1000);
   }
 
-  // useEffect(() => {
-  //   // if (sessionStorage.getItem('isScore')) {
-  //   //   navigate('/score');
-  //   // }
-  //   if (sessionStorage.getItem('agree')) {
-  //     navigate(/exam/ + JSON.parse(sessionStorage.getItem('examId')));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem('agree')) {
+      navigate('/exam');
+    }
+  }, []);
 
   const logout = async () => {
     //clear local storage
@@ -35,7 +31,7 @@ export default function Login() {
   const handleStart = () => {
     if (isChecked) {
       sessionStorage.setItem('agree', true);
-      navigate('/exam/start');
+      navigate('/exam');
     } else {
       shakeitBaby();
     }
@@ -50,7 +46,7 @@ export default function Login() {
         ></button>
         <div className="font-Nunito text-4xl font-bold text-black">
           <p>
-            Welcome to the English Exam Test
+            Welcome to the Exam Test
             <span className="text-accent2">!</span>
           </p>
         </div>

@@ -43,7 +43,7 @@ export default function ProtectedRoute({ children }) {
 
       setInterval(() => {
         setLoading(false);
-      }, 3 * 1000);
+      }, 2 * 1000);
     };
 
     checkAuth();

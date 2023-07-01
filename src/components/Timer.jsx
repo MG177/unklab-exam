@@ -57,7 +57,7 @@ export default function TimerSmall({ classTime }) {
   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-  console.log('timeRemaining = ', timeRemaining);
+  // console.log('timeRemaining = ', timeRemaining);
   return (
     <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-[2px_3px_7px_0px_rgba(0,0,0,0.15)]">
       <p className="text-accent2 font-bold font-nunito text-2xl">

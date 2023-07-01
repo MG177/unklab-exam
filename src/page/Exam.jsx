@@ -1,99 +1,101 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../config';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Question from '../components/Question';
-import Option from '../components/Option';
-import sound from '../media/no7.mp3';
-import img from '../media/gunting.jpg';
-import AuthContext from '../contexts/AuthContext';
-
-const media = {
-  audio: sound,
-  image: img,
-};
+import { ScrollPanel } from 'primereact/scrollpanel';
+import Questions from '../components/Question';
 
 export default function Exam() {
-  const { questionId } = useParams();
   const navigate = useNavigate();
-  const [answer, setAnswer] = useState('');
-  // const [questions, setQuestions] = useState(null);
-  const [question, setQuestion] = useState(null);
-  const [loadingQuestion, setLoadingQuestion] = useState(true);
+  const [questions, setQuestions] = useState(null);
+  const [number, setNumber] = useState(
+    Number(sessionStorage.getItem('number')) || 0
+  );
   const [loading, setLoading] = useState(true);
-  const { user } = useContext(AuthContext);
+  const textSize = [
+    'text-xs',
+    'text-sm',
+    'text-md',
+    'text-lg',
+    'text-xl',
+    'text-2xl',
+    'text-3xl',
+    'text-4xl',
+    'text-5xl',
+    'text-5xl',
+    'text-5xl',
+    'text-5xl',
+    'text-5xl',
+    'text-5xl',
+    'text-5xl',
+  ];
+  const [size, setSize] = useState(3);
+  console.log('size: ', size);
+  console.log('textSize: ', textSize[size]);
 
   const fetchQuestion = async () => {
     try {
-      const response = await api.get('student/question/' + questionId);
-      setQuestion(response.data);
+      const response = await api.get('student/questions');
+      console.log('fetchQuestion', response.data);
+      // setAnswer(response.data.answer);
+      setQuestions(response.data);
+      setLoading(false);
       if (response.status === 404) {
         throw new Error('Question not found');
       }
     } catch (error) {
-      navigate('/exam/start');
+      navigate('/');
       console.log(error);
     }
   };
-
-  async function fetchData() {
-    await fetchQuestion();
-    setLoading(false);
-  }
-
   useEffect(() => {
-    console.log('question = ', question);
+    fetchQuestion();
+    sessionStorage.setItem('number', number);
+  }, [number]);
 
-    fetchData();
-  }, [questionId, navigate]);
-
-  // useEffect(() => {
-  //   if (question === questions.length) {
-  //     if (question === 0) {
-  //       return;
-  //     }
-  //   }
-  // }, [question, questions.length, navigate]);
-
-  const handleAnswer = (index) => {
-    setAnswer(index);
-  };
-
-  const handleActive = (index) => {
-    return answer === index;
+  const handleSize = (operator) => {
+    if (size === 0 && operator === -1) {
+      return;
+    } else if (size === 8 && operator === +1) {
+      return;
+    }
+    setSize((prev) => prev + operator);
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return (
     <>
       <Header />
-      {!loadingQuestion && (
-        <div className="flex flex-col w-full gap-[18px] py-28 overflow-y-auto justify-center items-center min-h-screen">
-          <Question question={question} media={media} />
-          <div className="flex flex-col gap-[18px] mb-10">
-            {question.options.map((option) => (
-              <Option
-                key={option.id} // Use option.id as the key
-                answerId={option.id} // Pass option.id to handleAnswer
-                option={option.text} // Use option.text as the option
-                active={handleActive(option.id)} // Pass option.text to handleActive
-                handleAnswer={handleAnswer}
-              />
-            ))}
+      {questions && (
+        <>
+          <div className="fixed flex top-24 right-6 flex-row gap-2 items-center justify-center bg-whitePlus rounded-full px-3 py-1 shadow-md border border-gray/20 z-50 opacity-20 hover:opacity-100 transition-all duration-200 ease-out font-bold">
+            <button
+              className="pi pi-minus"
+              onClick={() => handleSize(-1)}
+            ></button>
+            <span className="text-xl font-normal select-none">Aa</span>
+            <button
+              className="pi pi-plus"
+              onClick={() => handleSize(+1)}
+            ></button>
           </div>
-        </div>
+          <ScrollPanel style={{ width: '100%', height: '100vh' }}>
+            <div className="flex flex-col w-full py-28 justify-center items-center min-h-screen">
+              <Questions
+                questions={questions}
+                number={number}
+                textSize={textSize}
+                size={size}
+              />
+            </div>
+          </ScrollPanel>
+          <Footer questions={questions} number={number} setNumber={setNumber} />
+        </>
       )}
-      <Footer
-        questions={questions}
-        question={question}
-        answer={answer}
-        setAnswer={setAnswer}
-        fetchQuestion={fetchQuestion}
-      />
     </>
   );
 }

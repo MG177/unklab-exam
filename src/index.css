@@ -67,8 +67,8 @@ body > iframe {
 
 .p-scrollpanel-bar {
   background-color: #b55ffe !important;
-  opacity: 0.2 !important;
-  /* border-radius: 24px !important; */
+  opacity: 0.4 !important;
+  border-radius: 24px !important;
 }
 
 .p-toast .p-toast-message {
