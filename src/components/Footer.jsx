@@ -6,12 +6,10 @@ import AuthContext from '../contexts/AuthContext';
 import api from '../config';
 
 export default function Footer({ questions, number, setNumber }) {
-  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const question = questions[number];
   const [isBookmark, setIsBookmark] = useState(question.isBookmark || false);
-  console.log('number: ' + number);
-  console.log('isBookmark: ' + isBookmark);
 
   useEffect(() => {
     setIsBookmark(question.isBookmark);
@@ -61,6 +59,16 @@ export default function Footer({ questions, number, setNumber }) {
     }
   };
 
+  const handleSubmitQuestion = async () => {
+    try {
+      const res = await api.get('student/score');
+      console.log('score', res.data);
+      navigate('/score');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // const isBookmarked = () => {
   //   if (isBookmark) {
   //     return 'pi-bookmark-fill';
@@ -70,14 +78,15 @@ export default function Footer({ questions, number, setNumber }) {
   // };
 
   return (
-    <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
+    <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-6 lg:px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
       <div className="font-Nunito w-[30%]">
         <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
-          {/* {user.examName || 'Exam name'} */}
-          ouisdf8yhg9348yodfijgdfhjdgfjfgjtgasdasgdagdsg
+          {user.examName || 'Exam name'}
+          {/* ouisdf8yhg9348yodfijgdfhjdgfjfgjtgasdasgdagdsg */}
         </p>
         <p className="text-lg text-black font-normal w-full leading-none">
-          {`Question null of null`}
+          {/* {`Question null of null`} */}
+          {`Question ${number + 1} of ${questions.length}`}
         </p>
       </div>
       <div className="flex justify-center self-center w-[30%]">
@@ -93,8 +102,8 @@ export default function Footer({ questions, number, setNumber }) {
         )}
         {number === questions.length - 1 ? (
           <button
-            className="bg-white font-Nunito font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-5 py-2 transition ease-out duration-200 hover:scale-[1.05]"
-            onClick={handleNextQuestion}
+            className="bg-white font-Nunito font-bold text-lg lg:text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-3 md:px-5 py-2 transition ease-out duration-200 hover:scale-[1.05]"
+            onClick={handleSubmitQuestion}
           >
             Submit
           </button>

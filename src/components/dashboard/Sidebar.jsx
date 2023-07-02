@@ -57,9 +57,9 @@ export default function Sidebar() {
                 ? 'justify-center items-center'
                 : 'justify-start items-center'
             } p-2 ${selectedClass(
-              '/dashboard/home'
+              '/dashboard/exams'
             )} rounded-xl h-fit transition-all duration-300`}
-            to="/dashboard/home"
+            to="/dashboard/exams"
           >
             <i className="pi pi-home" style={{ fontSize: '1.5rem' }} />
             <p

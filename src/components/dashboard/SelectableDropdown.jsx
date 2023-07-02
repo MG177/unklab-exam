@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react';
-import QuestionContext from '../../contexts/QuestionContext';
+import { useState } from 'react';
 
 export default function SelectableButtons({
   question,

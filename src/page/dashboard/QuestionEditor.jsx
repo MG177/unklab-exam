@@ -1,6 +1,6 @@
 import api from '../../config';
-import { HeaderQuestionEditor } from '../Header';
-import QuestionEditorItem from './QuestionEditorItem';
+import { HeaderQuestionEditor } from '../../components/Header';
+import QuestionEditorItem from '../../components/dashboard/QuestionEditorItem';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Divider } from 'primereact/divider';

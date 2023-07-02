@@ -5,7 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import api from '../../config/index';
-import { HeaderExamDashboard } from '../Header';
+import { HeaderExamDashboard } from '../../components/Header';
 import { InputSwitch } from 'primereact/inputswitch';
 
 export default function PageDashboard() {

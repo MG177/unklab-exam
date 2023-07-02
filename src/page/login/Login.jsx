@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../contexts/AuthContext';
-import Vector from '../login/Vector.svg';
+import Warn from '../../media/Warn.svg';
 import api from '../../config';
 
 export default function Login() {
@@ -208,7 +208,7 @@ export default function Login() {
                       isShaking ? 'animate-horizontal-shaking' : ''
                     }`}
                   >
-                    <img src={Vector} className="" />
+                    <img src={Warn} className="" />
                     <div className="h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-accent2 text-left ml-4 -mb-6">
                       {errorMessage}
                     </div>

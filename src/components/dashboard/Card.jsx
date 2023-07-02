@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import Modal from '../Modal';
+import Modal from '../_Modal';
 
 function formatDate(dateString) {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };

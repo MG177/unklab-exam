@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mask_bg from '../../image/mask_bg.svg';
 import illustration1 from '../../image/illustration1.svg';
-import { Card, NewCard } from './Card';
+import { Card, NewCard } from '../../components/dashboard/Card';
 import { useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
 import { ScrollPanel } from 'primereact/scrollpanel';
 
 import api from '../../config';
-import { ExamModalCreator } from './ExamModal';
+import { ExamModalCreator } from '../../components/dashboard/ExamModal';
 
 export default function DashboardHome() {
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ export default function DashboardHome() {
         {exam.map((item, index) => (
           <Card
             key={item._id}
-            onClickFunction={() => navigate(`/dashboard/exam/${item._id}`)}
+            onClickFunction={() => navigate(`/dashboard/exams/${item._id}`)}
             title={item.examName}
             date={item.createdAt}
           />

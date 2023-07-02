@@ -90,7 +90,7 @@ export function HeaderQuestionEditor({
             className="mr-3 pi pi-angle-left"
             style={{ fontSize: '1.5rem' }}
           />
-          <p className="font-[Roboto] text-2xl">
+          <p className="font-Roboto text-2xl">
             <span className="text-accent1">Unklab </span>
             Exams
           </p>
@@ -216,29 +216,25 @@ export function HeaderExamDashboard({
   };
 
   return (
-    <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50">
+    <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50 select-none">
       <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito">
         <span>Exam Manager /</span>
         <span className="font-bold indent-1">{examName || 'QuestionName'}</span>
       </div>
-      <div
-        style={{ userSelect: 'none' }}
-        onCopy={(event) => {
-          event.preventDefault();
-        }}
-        className="flex flex-row items-center justify-between h-full px-16 "
-      >
-        <div className="flex flex-row items-center justify-center text-black">
-          <button
-            className="mr-3 pi pi-angle-left z-50"
-            onClick={() => navigate(-1)}
+      <div className="flex flex-row items-center justify-between h-full px-16 ">
+        <button
+          className="flex flex-row items-center justify-center text-black z-20"
+          onClick={() => navigate(-1)}
+        >
+          <div
+            className="mr-3 pi pi-angle-left"
             style={{ fontSize: '1.5rem' }}
           />
-          <p className="font-[Roboto] text-2xl">
+          <p className="font-Roboto text-2xl">
             <span className="text-accent1">Unklab </span>
             Exams
           </p>
-        </div>
+        </button>
         <div className="flex flex-row gap-3">
           <ExamModalEditor
             modalRef={modalRef}

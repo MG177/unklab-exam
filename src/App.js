@@ -3,21 +3,16 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 
 import ScoreCountdown from './page/score/ScoreCountdown';
-import Testing from './page/testing';
 
 import ProtectedRoute from './utils/ProtectedRoute';
 import AuthContextLayout from './contexts/AuthContextLayout';
-import QuestionContextLayout from './contexts/QuestionContextLayout';
-import { wait } from '@testing-library/user-event/dist/utils';
 import { Suspense } from 'react';
-import HomepageDashboard from './page/dashboard/Dashboard';
-import Sidebar from './components/dashboard/Sidebar';
+
 import Dashboard from './page/dashboard/Dashboard';
-import DashboardHome from './components/dashboard/DashboardHome';
-import DashboardQuestion from './components/dashboard/DashboardQuestion';
-import QuestionEditor from './components/dashboard/QuestionEditor';
-import ExamPage from './components/dashboard/ExamPage';
-import Questions from './components/Question';
+import DashboardHome from './page/dashboard/DashboardHome';
+import DashboardQuestion from './page/dashboard/DashboardQuestion';
+import QuestionEditor from './page/dashboard/QuestionEditor';
+import ExamPage from './page/dashboard/ExamPage';
 
 const Login = lazy(() => import('./page/login/Login'));
 const Getstarted = lazy(() => import('./page/login/Getstarted'));
@@ -61,14 +56,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
-              path="/exam/:questionId" // Include ":session" in the path
-              element={
-                <ProtectedRoute>
-                  <Exam />
-                </ProtectedRoute>
-              }
-            /> */}
             <Route
               path="/exam" // Include ":session" in the path
               element={
@@ -76,47 +63,20 @@ function App() {
                   <Exam />
                 </ProtectedRoute>
               }
-            >
-              {/* <Route path="/" element={<Questions />} />
-              <Route path="*" element={<Navigate to="/exam" />} /> */}
-              {/* <Route path="0" element={<Navigate to="/exam/start" />} />
-              <Route path="NaN" element={<Navigate to="/exam/start" />} /> */}
-            </Route>
-
+            />
             <Route path="/dashboard" element={<Dashboard />}>
-              <Route path="home" element={<DashboardHome />} />
+              <Route path="exams" element={<DashboardHome />} />
               <Route path="questions" element={<DashboardQuestion />} />
-              <Route path="*" element={<Navigate to="home" />} />
+              <Route path="*" element={<Navigate to="exams" />} />
             </Route>
-            <Route element={<QuestionContextLayout />}>
+            <Route path="/dashboard">
+              <Route path="exams/:examId" element={<ExamPage />} />
               <Route
-                path="/dashboard/question/:questionId"
+                path="questions/:questionId"
                 element={<QuestionEditor />}
               />
-
-              <Route path="/dashboard/exam/:examId" element={<ExamPage />} />
             </Route>
 
-            {/* <Route
-              path="/dashboard/*"
-              element={
-                <ProtectedRoute>
-                  <HomepageDashboard />
-                </ProtectedRoute>
-              }
-            /> */}
-
-            {/* <Route element={<QuestionContextLayout />}>
-              <Route
-                path="/dashboard/:session/:examId" // Include ":session" in the path
-                element={
-                  <ProtectedRoute>
-                    <PageDashboard />
-                  </ProtectedRoute>
-                }
-              />
-            </Route> */}
-            {/* <Route path='/login' element={<Login />} /> */}
             <Route path="*" element={<Navigate to="/" />} />
           </Route>
         </Routes>

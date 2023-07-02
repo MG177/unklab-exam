@@ -1,6 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import check from '../../image/check_small.svg';
-import QuestionContext from '../../contexts/QuestionContext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
 
@@ -12,7 +10,6 @@ export default function EditableOptions({
   setQuestions,
   handleQuestionChange,
 }) {
-  // const { setQuestions, setSaveStatus } = useContext(QuestionContext);
   const [optionValue, setOptionValue] = useState('');
 
   useEffect(() => {

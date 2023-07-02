@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import mask_bg from '../../image/mask_bg.svg';
 import illustration1 from '../../image/illustration1.svg';
-import { Card, NewCard, EditCard } from './Card';
+import { Card, NewCard, EditCard } from '../../components/dashboard/Card';
 import { useNavigate } from 'react-router-dom';
 import api from '../../config';
-import Modal from '../Modal';
 
 export default function DashboardQuestion() {
   const navigate = useNavigate();
@@ -166,7 +165,7 @@ export default function DashboardQuestion() {
                 <Card
                   key={question._id}
                   onClickFunction={() =>
-                    navigate(`/dashboard/question/${question._id}`)
+                    navigate(`/dashboard/questions/${question._id}`)
                   }
                   title={question.questionName}
                   date={question.createdAt}
