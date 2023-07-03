@@ -85,6 +85,7 @@ export default function PageDashboard() {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      navigate('/dashboard');
     }
   };
 
@@ -94,6 +95,7 @@ export default function PageDashboard() {
       setTime(response.data);
     } catch (error) {
       console.log(error);
+      navigate('/dashboard');
     }
   };
 
@@ -249,7 +251,9 @@ export default function PageDashboard() {
                 >
                   {hours === 0
                     ? `00:${minutesStr}:${secondsStr}`
-                    : `${hoursStr}:${minutesStr}:${secondsStr} `}
+                    : time != 'NaN'
+                    ? `${hoursStr}:${minutesStr}:${secondsStr}`
+                    : '00:00:00'}
                 </div>
                 <div className="flex flex-row items-center gap-2 min-w-[150px]">
                   <div className="h-full px-4 py-2 text-xl font-bold text-center bg-whitePlus shadow-md min-w-[150px] text-accent1 rounded-2xl">

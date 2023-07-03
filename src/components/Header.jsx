@@ -260,7 +260,7 @@ export function HeaderExamDashboard({
             className="rounded-2xl shadow-md h-10 w-10 bg-accent1 border-2 border-accent1"
             onClick={(e) => op.current.toggle(e)}
           />
-          {time === 0 || time < 0 ? (
+          {time === 0 || time < 0 || time === 'NaN' ? (
             <button
               className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"
               onClick={handleStartExam}

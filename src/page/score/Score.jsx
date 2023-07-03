@@ -137,12 +137,12 @@ export default function Score() {
               <div className="flex flex-row justify-center items-center bg-white rounded-3xl py-4 px-6 gap-4 w-[400px] h-[200px]">
                 <div className="flex flex-col border-[14px] min-h-[170px] min-w-[170px] border-accent2 rounded-full shadow-lg justify-center items-center">
                   <p className="text-3xl indent-tight font-bold text-black font-Nunito z-10">
-                    {`${score.score || '100'}/100`}
+                    {`${score.score || 'Error'}/100`}
                   </p>
                 </div>
-                <div className="flex flex-col justify-center h-full font-Nunito gap-3 max-w-[10]">
-                  <div className="text-black w-fit bg-white shadow-lg rounded-3xl h-fit w-full py-2 px-4 border border-gray/20">
-                    <p className="text-lg font-bold font-Nunito text-black text-center h-10 leading-none">
+                <div className="flex flex-col justify-center h-full font-Nunito gap-3 max-w-[13rem]">
+                  <div className="w-fit bg-white shadow-lg rounded-3xl h-fit w-full py-2 px-4 min-h-[2.5rem] border border-gray/20">
+                    <p className="text-lg font-bold font-Nunito text-black text-center leading-tight">
                       {convertName(user.studentName) ||
                         'Mangerongkoda Jason Timothy'}
                       {/* {convertName('Jason Timothy asfdsadgsdfg Mangerongkoda')} */}
@@ -150,7 +150,7 @@ export default function Score() {
                   </div>
                   <div className="text-black w-fit bg-white shadow-lg rounded-3xl w-full h-fit py-3 px-4 border border-gray/20 leading-none">
                     <p className="text-3xl font-bold leading-none">
-                      {`${score.correct || '100'}/${score.total || '100'}`}
+                      {`${score.correct || 'Error'}/${score.total || 'Error'}`}
                     </p>
                     <span className="text-lg whitespace-nowrap leading-none">
                       Right answers

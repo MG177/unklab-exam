@@ -147,11 +147,11 @@ export default function QuestionEditorItem({
             <h3 className="text-xl font-bold font-Nunito text-accent1">
               Question #{index + 1}
             </h3>
-            <SelectableDropdown
+            {/* <SelectableDropdown
               question={question}
               setQuestions={setQuestions}
               handleQuestionChange={handleQuestionChange}
-            />
+            /> */}
           </div>
           {hasContent && (
             <Media id={question.image || question.audio} dashboard />
