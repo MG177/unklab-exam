@@ -2,61 +2,24 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import classHeader from '../../image/class-header.svg';
 import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
 import api from '../../config/index';
 import { HeaderExamDashboard } from '../../components/Header';
-import { InputSwitch } from 'primereact/inputswitch';
+
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
 
 export default function PageDashboard() {
   const { examId } = useParams();
   const navigate = useNavigate();
   const [exam, setExam] = useState({});
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
   const [time, setTime] = useState(null);
   const [token, setToken] = useState(null);
-  // const [time, setTime] = useState(10);
-  // const [token, setToken] = useState('');
-  // const loadingDataGrid = [
-  //   {
-  //     noreg: 'Loading...',
-  //     status: 'Loading...',
-  //     name: 'Loading...',
-  //     score: {
-  //       reading: {
-  //         total: 'Loading...',
-  //         correct: 'Loading...',
-  //         score: 'Loading...',
-  //         string: 'Loading...',
-  //       },
-  //       vocabulary: {
-  //         total: 'Loading...',
-  //         correct: 'Loading...',
-  //         score: 'Loading...',
-  //         string: 'Loading...',
-  //       },
-  //       listening: {
-  //         total: 'Loading...',
-  //         correct: 'Loading...',
-  //         score: 'Loading...',
-  //         string: 'Loading...',
-  //       },
-  //       grammar: {
-  //         total: 'Loading...',
-  //         correct: 'Loading...',
-  //         score: 'Loading...',
-  //         string: 'Loading...',
-  //       },
-  //       totalQuestion: 'Loading...',
-  //       totalCorrect: 'Loading...',
-  //       totalScore: 'Loading...',
-  //       grade: 'Loading...',
-  //     },
-  //   },
-  // ];
   const [dataGrid, setDataGrid] = useState([]);
   const dt = useRef(null);
+  const uploadRef = useRef(null);
+  const toast = useRef(null);
 
   const formattedData = dataGrid.map((item) => {
     const formattedItem = {
@@ -204,6 +167,43 @@ export default function PageDashboard() {
     </div>
   );
 
+  const handleImportStudents = async (e) => {
+    e.preventDefault();
+    console.log('tes');
+    try {
+      const formData = new FormData();
+      formData.append('file', e.target.files[0]);
+      const response = await api.patch('/exam/studentList/' + examId, formData);
+      // if (response.status === 201) {
+      //   // fetchData();
+      //   // fetchDataBySession(newSession);
+      //   // setSelectedSession(newSession);
+      //   // newClassDialog.close();
+      //   alert('Exam uploaded successfully');
+      // } else {
+      //   throw new Error('Something went wrong, please try again later');
+      // }
+      e.target.value = '';
+      fetchExam();
+      toast.current.show({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Student list uploaded successfully',
+        life: 3000,
+      });
+      // e.target.value = null;
+    } catch (error) {
+      console.log(error);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to upload student list',
+        life: 3000,
+      });
+      // alert(error.message);
+    }
+  };
+
   return (
     <div className="relative flex items-center justify-center w-full ">
       <HeaderExamDashboard
@@ -216,53 +216,48 @@ export default function PageDashboard() {
       {!loading ? (
         <>
           <div className="container p-4 bg-[#FCF9FF] flex flex-col mt-[70px] w-5/6 gap-4">
-            {/* <div className="relative flex flex-row justify-between min-h-[100px] p-4 ">
-              <img
-                src={classHeader}
-                alt=""
-                className="absolute top-0 left-0 z-0 object-cover w-full h-full rounded-2xl"
-              />
-              <div className="z-10 flex flex-row justify-between w-full ">
-                <h1 className="max-w-md text-3xl font-black leading-tight text-white h-fit font-Nunito">
-                  {exam.examName || 'Exam Name Exam Name Exam Name Exam Name '}
-                </h1>
-              </div>
-            </div> */}
-            <div className="flex flex-row justify-end gap-3 min-w-fit">
-              {/* <button className="flex items-center justify-center py-2 font-bold text-black px-5 rounded-3xl font-Nunito bg-whitePlus shadow-md">
-                Go to Question Editor
-              </button> */}
-              {token != undefined && time > 0 && (
-                <div className="flex flex-row gap-3 self-end">
-                  <div
-                    className={`text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl `}
-                  >
-                    {hours === 0
-                      ? `00:${minutesStr}:${secondsStr}`
-                      : `${hoursStr}:${minutesStr}:${secondsStr} `}
-                  </div>
-                  <div className="flex flex-row items-center gap-2 min-w-[150px]">
-                    <div className="h-full px-4 py-2 text-xl font-bold text-center bg-whitePlus shadow-md min-w-[150px] text-accent1 rounded-2xl">
-                      {token || 'null'}
-                    </div>
+            <Toast
+              ref={toast}
+              style={{
+                marginTop: '4rem',
+                borderRadius: '1rem',
+                boxShadow: '0 0 #0000',
+                paddingInline: '5px',
+              }}
+              pt={{
+                icon: '1rem',
+              }}
+            />
+            <div className="flex flex-row justify-between gap-3 min-w-fit">
+              <label
+                className="cursor-pointer flex items-center justify-center py-2 font-bold text-white px-10 rounded-3xl font-Nunito bg-accent1 z-50"
+                htmlFor="uploadCSV"
+              >
+                <p className="text-base text-whitePlus">Import</p>
+                <input
+                  type="file"
+                  id="uploadCSV"
+                  accept=".csv"
+                  ref={uploadRef}
+                  onChange={handleImportStudents}
+                  className="hidden"
+                />
+              </label>
+              <div className="flex flex-row gap-3 ">
+                <div
+                  className={`text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl `}
+                >
+                  {hours === 0
+                    ? `00:${minutesStr}:${secondsStr}`
+                    : `${hoursStr}:${minutesStr}:${secondsStr} `}
+                </div>
+                <div className="flex flex-row items-center gap-2 min-w-[150px]">
+                  <div className="h-full px-4 py-2 text-xl font-bold text-center bg-whitePlus shadow-md min-w-[150px] text-accent1 rounded-2xl">
+                    {token || 'null'}
                   </div>
                 </div>
-              )}
+              </div>
             </div>
-            {/* <div>
-              <div className="flex flex-row items-center justify-between w-2/12 gap-2 p-1 rounded-lg shadow-md bg-gray backdrop:opacity-30">
-                <div className="flex flex-col w-1/2 text-center bg-white rounded-lg">
-                  Junior
-                </div>
-                <div className="flex flex-col w-1/2 text-center bg-white rounded-lg">
-                  Senior
-                </div>
-              </div>
-            </div> */}
-            {/* <InputSwitch
-              checked={checked}
-              onChange={(e) => setChecked(e.value)}
-            /> */}
             <div className="relative overflow-hidden border-white shadow-lg rounded-2xl">
               {dataGrid.length > 0 ? (
                 <DataTable
@@ -285,7 +280,6 @@ export default function PageDashboard() {
                   <Column field="number" header="No."></Column>
                   <Column field="studentId" header="ID"></Column>
                   <Column field="studentName" header="Name"></Column>
-                  <Column field="score.grade" header="Grade"></Column>
                   <Column
                     field="score.totalScore"
                     header="Total Score"

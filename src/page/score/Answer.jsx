@@ -1,40 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import Check from '../score/Check';
+import React from 'react';
 
-export default function Aanswer({ question }) {
-  const [colors, setColor] = useState('');
-  useEffect(() => {
-    if (question.correct) {
-      setColor('green');
+export default function Answer({ question, index }) {
+  // const [colors, setColor] = useState('');
+  // useEffect(() => {
+  //   if (question.correct) {
+  //     setColor('green');
+  //   } else {
+  //     setColor('accent2');
+  //   }
+  //   console.log('correct? ' + question.correct);
+  // }, [question.correct]);
+  // console.log(question);
+  // console.log(question.correctAnswer);
+  // console.log(question.answer);
+  const color = () => {
+    if (question.correctAnswer === question.answer) {
+      return 'green';
     } else {
-      setColor('accent2');
+      return 'accent2';
     }
-    console.log('correct? ' + question.correct);
-  }, [question.correct]);
+  };
+  const icon = () => {
+    if (question.correctAnswer === question.answer) {
+      return 'pi-times';
+    } else {
+      return 'pi-check';
+    }
+  };
+  // console.log(color());
   return (
-    <div
-      className={`w-[700px] max-[960px]:w-[560px] pt-[30px] pb-2 px-2 ${
-        !question.correct ? 'bg-accent2' : 'bg-green'
-      } shadow-lg flex flex-col justify-end mt-[20px] rounded-[24px] gap-[14px]`}
-    >
-      <div className="bg-[#FFFFFF] w-full rounded-[24px] px-[24px] py-[14px] shadow-[2px_3px_7px_0px_rgba(0, 0, 0, 0.15) ">
+    <div className={`p-1.5 pt-5 bg-${color()} shadow-lg rounded-3xl`}>
+      <div className="bg-[#FFFFFF] w-full rounded-[24px] px-[24px] py-[14px] shadow-lg ">
         <div className="flex flex-col gap-1 mb-2">
           <p
-            className={`font-bold ${
-              !question.correct ? 'text-accent2' : 'text-green'
-            } font-Nunito text-[29px] max-[960px]:text-[24px] mt-[15px] mb-2}`}
+            className={`font-bold text-${color()} font-Nunito text-[29px] max-[960px]:text-[24px] mt-[15px] mb-2}`}
           >
-            Question #{question.index}
+            Question #{index + 1}
           </p>
           <p className="w-full mb-4 font-bold font-Nunito text-[#37474F] max-[960px]:text-[16px] text-[20px] leading-[24px]">
             {question.text}
           </p>
         </div>
-        <Check
-          answer={question.answer}
-          correct={question.correct}
-          color={colors}
-        />
+
+        <div className="relative left-[40px] border-x-[2px] border-t-[2px] border-[#cccccc] w-fit px-2.5 pt-0.5 bg-white drop-shadow-lg font-semibold font-Nunito max-[960px]:text-[8px] text-[12px] text-black rounded-t-[15px] ">
+          Your answer
+        </div>
+        <div className="w-full h-fit max-[960px]:w-[500px] max-[960px]:h-[40px] rounded-[24px] px-[15px] py-[20px] flex bg-white items-center drop-shadow-lg border-[2px] border-[#cccccc] mb-6">
+          <div className="max-[960px]:w-7 max-[960px]:h-7 w-[45px] h-[40px] rounded-full bg-[#fAfAfA] border-[#D9D9D9] border-[1px] flex justify-center items-center ml-2">
+            <i
+              className={`pi ${icon()} text-${color()}`}
+              style={{ fontSize: '1.5rem' }}
+            ></i>
+          </div>
+          <p className="w-full ml-6  text-left font-Nunito font-bold max-[960px]:text-[15px] text-[17px] text-black">
+            {question.answer || ' -- no answer --'}
+          </p>
+        </div>
       </div>
     </div>
   );

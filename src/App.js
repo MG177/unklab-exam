@@ -2,8 +2,6 @@ import React, { lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 
-import ScoreCountdown from './page/score/ScoreCountdown';
-
 import ProtectedRoute from './utils/ProtectedRoute';
 import AuthContextLayout from './contexts/AuthContextLayout';
 import { Suspense } from 'react';

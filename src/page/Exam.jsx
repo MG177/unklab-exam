@@ -4,6 +4,7 @@ import api from '../config';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { ScrollPanel } from 'primereact/scrollpanel';
+import { Sidebar } from 'primereact/sidebar';
 import Questions from '../components/Question';
 
 export default function Exam() {
@@ -42,6 +43,7 @@ export default function Exam() {
     143, 144, 145,
   ];
   const [size, setSize] = useState(3);
+  const [visibleBottom, setVisibleBottom] = useState(false);
 
   const fetchQuestion = async () => {
     try {
@@ -128,11 +130,7 @@ export default function Exam() {
               onClick={() => handleSize(+1)}
             ></button>
           </div>
-          {/* {navigator && (
-            <div className="w-screen h-screen bg-black/10 z-10"></div>
-          )} */}
           <div
-            // open
             className={`fixed bottom-28 ${
               navigator ? '-right-0' : '-right-[calc(30rem-1.7rem)]'
             } z-20 w-[30rem] h-[calc(100vh-15rem)] flex items-end transition-all duration-400 ease-in-out bg-transparent`}
@@ -142,12 +140,20 @@ export default function Exam() {
               className={`sticky flex left-10 pi ${
                 navigator ? 'pi-chevron-right' : 'pi-chevron-left'
               } items-center justify-center text-xl bg-whitePlus rounded-l-3xl h-[6rem] w-[1.7rem] border border-r-0 border-gray/20 z-20 transition-all duration-200 ease-out font-bold mb-5 z-30 shadow-md`}
-              onClick={() => handleNavigator()}
+              onClick={() => setVisibleBottom(true)}
+              // onClick={() => handleNavigator()}
             />
             {/* {navigator && ( */}
-            <div className="bg-whitePlus px-4 py-3 z-30 shadow-md border border-gray/20 rounded-2xl w-full h-full">
+            {/* <div className="bg-whitePlus px-4 py-3 z-30 shadow-md border border-gray/20 rounded-2xl w-full h-full"> */}
+
+            <Sidebar
+              visible={visibleBottom}
+              position="right"
+              onHide={() => setVisibleBottom(false)}
+              className="w-fit h-screen rounded-l-3xl bg-white shadow-lg"
+            >
               <ScrollPanel style={{ width: '100%', height: '100%' }}>
-                <div className="sticky top-0 bg-whitePlus font-bold font-Nunito">
+                <div className="sticky top-0 bg-white font-bold font-Nunito text-xl z-10">
                   Navigate question :
                 </div>
                 <div className="grid grid-cols-10 gap-2 mr-5 my-2">
@@ -174,7 +180,8 @@ export default function Exam() {
                   ))}
                 </div>
               </ScrollPanel>
-            </div>
+            </Sidebar>
+            {/* </div> */}
             {/* )} */}
           </div>
           <ScrollPanel style={{ width: '100%', height: '100vh' }}>

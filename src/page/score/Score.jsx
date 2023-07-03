@@ -1,193 +1,190 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
-import ProgressBar from '../score/progress_bar.svg';
-import Footer from '../../components/Footer';
+// import ProgressBar from '../score/progress_bar.svg';
+import Footer, { FooterCountdown } from '../../components/Footer';
 import api from '../../config';
-import Answer from '../score/Answer';
 import AuthContext from '../../contexts/AuthContext';
-import Timer from '../../components/Timer';
+import Answer from './Answer';
+import { Sidebar } from 'primereact/sidebar';
+import { ScrollPanel } from 'primereact/scrollpanel';
+
+function convertName(fullName) {
+  // check if fullName is a non-empty string and contains a comma
+  if (
+    typeof fullName !== 'string' ||
+    fullName.trim().length === 0 ||
+    !fullName.includes(',')
+  ) {
+    const nameParts = fullName.split(' ');
+    // if fullName is a single word, return it
+    if (nameParts.length === 1) {
+      return fullName;
+    }
+    // if fullName is morethan one word, return the first and the last word
+    return nameParts[0] + ' ' + nameParts[nameParts.length - 1];
+  }
+
+  // split the full name into last name and given names
+  const nameParts = fullName.split(', ');
+  let lastName = nameParts[0];
+  let givenNames = nameParts[1];
+
+  // if the left side of the comma is empty, get the last two words of the given names
+  if (!lastName) {
+    const nameWords = givenNames.split(' ');
+    if (nameWords.length === 1) {
+      return nameWords[0];
+    } else if (nameWords.length >= 2) {
+      givenNames = nameWords.slice(-2).join(' ');
+    } else {
+      return '';
+    }
+    return givenNames;
+  }
+
+  // get the first two words of the given names
+  const givenNameWords = givenNames.split(' ');
+  if (givenNameWords.length === 1) {
+    return fullName;
+  } else if (givenNameWords.length >= 2) {
+    givenNames = givenNameWords.slice(0, 2).join(' ');
+  } else {
+    return lastName;
+  }
+
+  // combine the modified last name and given names
+  return lastName + ', ' + givenNames;
+}
 
 export default function Score() {
   const { user } = useContext(AuthContext);
-  const [time, setTime] = useState(0);
-  const { examId } = useParams();
   const navigate = useNavigate();
-  const [score, setScore] = useState({
-    totalScore: 0,
-    totalCorrect: 0,
-    totalQuestion: 0,
-    grade: 'null',
-  });
-  useEffect(() => {
-    const fetchTime = async () => {
-      try {
-        const response = await api.get(
-          `time/${JSON.parse(sessionStorage.getItem('examId'))}`,
-          {
-            headers: {
-              Authorization: `Bearer ${JSON.parse(
-                sessionStorage.getItem('access_token')
-              )}`,
-            },
-          }
-        );
-        setTime(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchTime();
-  }, [examId, navigate]);
+  const [time, setTime] = useState();
+  const [score, setScore] = useState([]);
+  const [questionList, setQeustionList] = useState([]);
+  const [visibleBottom, setVisibleBottom] = useState(false);
 
-  useEffect(() => {
-    fetchScore();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const fetchScore = async () => {
+  const fetchTime = async () => {
     try {
-      const response = await api.get('/students/score/' + user.noreg, {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      });
-      if (!response.data) {
-        sessionStorage.clear();
-        navigate('/started');
-      } else {
-        setScore(response.data);
-      }
+      const response = await api.get(`exam/time/${user.examId}`);
+      setTime(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  function convertName(fullName) {
-    // check if fullName is a non-empty string and contains a comma
-    if (
-      typeof fullName !== 'string' ||
-      fullName.trim().length === 0 ||
-      !fullName.includes(',')
-    ) {
-      return fullName;
-    }
-
-    // split the full name into last name and given names
-    const nameParts = fullName.split(', ');
-    let lastName = nameParts[0];
-    let givenNames = nameParts[1];
-
-    // if the left side of the comma is empty, get the last two words of the given names
-    if (!lastName) {
-      const nameWords = givenNames.split(' ');
-      if (nameWords.length === 1) {
-        return nameWords[0];
-      } else if (nameWords.length >= 2) {
-        givenNames = nameWords.slice(-2).join(' ');
-      } else {
-        return '';
+  const fetchScore = async () => {
+    try {
+      const response = await api.get('/student/score');
+      setScore(extractScore(response.data.score));
+      setQeustionList(response.data.questionList);
+    } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/');
       }
-      return givenNames;
+      console.log(error);
     }
+  };
 
-    // get the first two words of the given names
-    const givenNameWords = givenNames.split(' ');
-    if (givenNameWords.length === 1) {
-      return fullName;
-    } else if (givenNameWords.length >= 2) {
-      givenNames = givenNameWords.slice(0, 2).join(' ');
+  const extractScore = (objArray) => {
+    let count = {
+      total: 0,
+      correct: 0,
+      score: 0,
+    };
+
+    for (let i = 0; i < objArray.length; i++) {
+      const obj = objArray[i];
+      const keys = Object.keys(obj);
+
+      for (let j = 0; j < keys.length; j++) {
+        const field = keys[j];
+        const fieldValue = obj[field];
+
+        count.total += fieldValue.total || 0;
+        count.correct += fieldValue.correct || 0;
+      }
+    }
+    count.score = (count.correct / count.total) * 100;
+
+    return count;
+  };
+
+  useEffect(() => {
+    fetchTime();
+    if (time > 0) {
+      return;
     } else {
-      return lastName;
+      fetchScore();
     }
+  }, []);
 
-    // combine the modified last name and given names
-    return lastName + ', ' + givenNames;
-  }
-
-  if (time > 0) {
-    return (
-      <div
-        style={{ userSelect: 'none' }}
-        onCopy={(event) => {
-          event.preventDefault();
-        }}
-        className="w-full h-screen justify-center items-center flex flex-col bg-[#FCF9FF]"
-      >
-        {/* <Header /> */}
-        <div className="bg-white p-[50px] max-[960px]:p-[20px] max-[960px]:max-w-[80vh] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
-          <div className="shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px]">
-            <Timer />
-          </div>
-          <p className="font-Nunito font-bold text-black text-[35px] max-[960px]:text-[26px] w-full text-center min-[720px]:">
+  return (
+    <div className="w-screen h-full justify-center items-center flex flex-col bg-[#FCF9FF] select-none">
+      <Header />
+      {time > 0 ? (
+        <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
+          <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
             Your score will be visible after the exam duration ends, or you can
             choose to log out at this time.
           </p>
         </div>
-        <Footer time={time} />
-      </div>
-    );
-  } else {
-    return (
-      <div
-        style={{ userSelect: 'none' }}
-        onCopy={(event) => {
-          event.preventDefault();
-        }}
-        className="relative flex flex-col items-center w-full min-h-screen bg-[#FCF9FF]"
-      >
-        {/* <Header /> */}
-        <p className="mt-[183px] max-[960px]:text-4xl max-[960px]:mt-[120px] text-black text-6xl font-Nunito font-bold">
-          YOUR SCORE
-        </p>
-        <div className="mb-[30vh] flex flex-col justify-center items-center max-[960px]:-mt-[30px]">
-          <div className="bg-taccent1 w-max h-max mt-16 rounded-[37px] flex justify-center items-center p-[22px] shadow-[0_5.95px_29.74px_rgba(0,0,0,0.1)]">
-            <div className="bg-white w-max h-max max-[960px]:py-[0px] px-[40px] gap-7 py-[27px] rounded-[24px] flex flex-row justify-center items-center shadow-[0_5.95px_29.74px_rgba(0,0,0,0.58)] ">
-              <div className="flex flex-col border-[16px] h-[250px] w-[250px] border-accent2 rounded-full justify-center items-center drop-shadow-[2px_3px_7px_rgba(0,0,0,0.15)]">
-                {/* <img
-                  src={ProgressBar}
-                  alt=""
-                  className="absolute inset-0 w-full h-full"
-                /> */}
-                <p className="text-6xl max-[960px]:text-3xl font-bold text-black font-Nunito max-[960px]:mt-[83px] relative z-10">
-                  {`${score.totalScore}/100`}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-row font-Nunito gap-[10px] ">
-                  <div className="text-black w-fit bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] h-fit max-[960px]:py-[8px] max-[960px]:px-20 py-4 px-5 max-[960px]:w-[40px]">
-                    <p className="text-5xl max-[960px]:text-xl font-bold max-[960px]:-ml-[53px]">
-                      {`${score.totalCorrect}/${score.totalQuestion}`}
+      ) : (
+        <ScrollPanel style={{ width: '100%', height: '100vh' }}>
+          <div className="flex flex-col w-full justify-center items-center min-h-screen">
+            <div className="relative flex flex-col justify-center items-center bg-accent1/70 rounded-3xl p-4 shadow-lg md:scale-125">
+              <div className="flex flex-row justify-center items-center bg-white rounded-3xl py-4 px-6 gap-4 w-[400px] h-[200px]">
+                <div className="flex flex-col border-[14px] min-h-[170px] min-w-[170px] border-accent2 rounded-full shadow-lg justify-center items-center">
+                  <p className="text-3xl indent-tight font-bold text-black font-Nunito z-10">
+                    {`${score.score || '100'}/100`}
+                  </p>
+                </div>
+                <div className="flex flex-col justify-center h-full font-Nunito gap-3 max-w-[10]">
+                  <div className="text-black w-fit bg-white shadow-lg rounded-3xl h-fit w-full py-2 px-4 border border-gray/20">
+                    <p className="text-lg font-bold font-Nunito text-black text-center h-10 leading-none">
+                      {convertName(user.studentName) ||
+                        'Mangerongkoda Jason Timothy'}
+                      {/* {convertName('Jason Timothy asfdsadgsdfg Mangerongkoda')} */}
                     </p>
-                    <span className="text-2xl max-[960px]:text-lg whitespace-nowrap max-[960px]:-ml-[53px]">
+                  </div>
+                  <div className="text-black w-fit bg-white shadow-lg rounded-3xl w-full h-fit py-3 px-4 border border-gray/20 leading-none">
+                    <p className="text-3xl font-bold leading-none">
+                      {`${score.correct || '100'}/${score.total || '100'}`}
+                    </p>
+                    <span className="text-lg whitespace-nowrap leading-none">
                       Right answers
                     </span>
                   </div>
-                  <div className="text-white bg-accent1 shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-[24px] max-[960px]:py-2 max-[960px]:px-5 py-4 px-7 w-full">
-                    <p className="text-5xl max-[960px]:text-lg font-bold text-left">
-                      {/* {score.grade} */}-
-                    </p>
-                    <p className="text-2xl max-[960px]:text-lg font-bold">
-                      Grade
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-white shadow-[2px_3px_7px_rgba(0,0,0,0.15)] rounded-3xl max-w-[350px] h-fit flex items-center justify-center max-[960px]:px-[8px] max-[960px]:py-[4px] px-[16px] py-[30px] leading-[35px]">
-                  <p className="text-[35px] max-[960px]:text-[20px] font-bold font-[Nunito] text-black text-center">
-                    {convertName(user.username)}
-                  </p>
                 </div>
               </div>
             </div>
+            <Sidebar
+              visible={visibleBottom}
+              position="right"
+              onHide={() => setVisibleBottom(false)}
+              className="w-fit h-screen rounded-l-3xl bg-white shadow-lg"
+            >
+              <ScrollPanel style={{ width: '100%', height: '100%' }}>
+                <div className="max-w-lg flex flex-col gap-8">
+                  {questionList.map((question, index) => (
+                    <Answer
+                      key={question.id}
+                      question={question}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              </ScrollPanel>
+            </Sidebar>
           </div>
-          {/* {score.questions &&
-            score.questions.map((question) => {
-              return <Answer key={question.index} question={question} />;
-            })} */}
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+        </ScrollPanel>
+      )}
+      <FooterCountdown
+        setTime={setTime}
+        time={time}
+        setVisibleBottom={setVisibleBottom}
+      />
+    </div>
+  );
 }

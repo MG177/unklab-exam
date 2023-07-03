@@ -1,10 +1,15 @@
-import React, { useRef, useContext } from 'react';
-import { Tooltip } from 'primereact/tooltip';
+import React, { useRef, useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ExamModalEditor } from './dashboard/ExamModal';
-import api from '../config';
-import { Toast } from 'primereact/toast';
 import AuthContext from '../contexts/AuthContext';
+import { ExamModalEditor } from './dashboard/ExamModal';
+
+import api from '../config';
+
+import { Button } from 'primereact/button';
+import { Tooltip } from 'primereact/tooltip';
+import { Toast } from 'primereact/toast';
+import { InputSwitch } from 'primereact/inputswitch';
+import { OverlayPanel } from 'primereact/overlaypanel';
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -120,51 +125,16 @@ export function HeaderExamDashboard({
   fetchExam,
 }) {
   const { examId } = useParams();
+  const [checked, setChecked] = useState(false);
   const modalRef = useRef(null);
-  const uploadRef = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
+
+  const op = useRef(null);
 
   const handleOpenModal = () => {
     if (modalRef.current) {
       modalRef.current.showModal();
-    }
-  };
-
-  const handleImportStudents = async (e) => {
-    e.preventDefault();
-    console.log('tes');
-    try {
-      const formData = new FormData();
-      formData.append('file', e.target.files[0]);
-      const response = await api.patch('/exam/studentList/' + examId, formData);
-      // if (response.status === 201) {
-      //   // fetchData();
-      //   // fetchDataBySession(newSession);
-      //   // setSelectedSession(newSession);
-      //   // newClassDialog.close();
-      //   alert('Exam uploaded successfully');
-      // } else {
-      //   throw new Error('Something went wrong, please try again later');
-      // }
-      e.target.value = '';
-      fetchExam();
-      toast.current.show({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Student list uploaded successfully',
-        life: 3000,
-      });
-      // e.target.value = null;
-    } catch (error) {
-      console.log(error);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to upload student list',
-        life: 3000,
-      });
-      // alert(error.message);
     }
   };
 
@@ -254,45 +224,42 @@ export function HeaderExamDashboard({
               icon: '1rem',
             }}
           />
+          <OverlayPanel ref={op} className="rounded-xl">
+            <div className="flex flex-col justify-start gap-2  text-md font-Nunito font-semibold text-black">
+              <div className="flex justify-start items-center gap-2">
+                <InputSwitch
+                  checked={checked}
+                  onChange={(e) => setChecked(e.value)}
+                />
+                <span>Randomize the question and option</span>
+              </div>
+              <div className="flex justify-start items-center gap-2">
+                <InputSwitch
+                  checked={checked}
+                  onChange={(e) => setChecked(e.value)}
+                />
+                <span>Show Correct Answer</span>
+              </div>
+              <div className="flex justify-start items-center gap-2">
+                <InputSwitch
+                  checked={checked}
+                  onChange={(e) => setChecked(e.value)}
+                />
+                <span>Show Correct Answer</span>
+              </div>
+            </div>
+          </OverlayPanel>
           <button
             className="w-10 h-10 text-white rounded-full pl-1 pi pi-file-edit bg-accent1 z-50"
             style={{ fontSize: '1.3rem' }}
             onClick={handleOpenModal}
           />
-
-          <label
-            className="cursor-pointer flex items-center justify-center py-2 font-bold text-white px-10 rounded-3xl font-Nunito bg-accent1 z-50"
-            htmlFor="uploadCSV"
-          >
-            <p className="text-base text-whitePlus">Import</p>
-            <input
-              type="file"
-              id="uploadCSV"
-              accept=".csv"
-              ref={uploadRef}
-              // onInput={handleImportStudents}
-              onChange={handleImportStudents}
-              className="hidden"
-            />
-          </label>
-          {/* <button className="flex items-center justify-center py-2 font-bold text-white px-10 rounded-3xl font-Nunito bg-accent1 z-50">
-            Import
-          </button> */}
-          {/* {time === 0 || time < 0 ? (
-            <button
-              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent2 z-50"
-              onClick={handleStopExam}
-            >
-              Stop
-            </button>
-          ) : (
-            <button
-              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"
-              onClick={handleStartExam}
-            >
-              Start
-            </button>
-          )} */}
+          <Button
+            type="button"
+            icon="pi pi-cog"
+            className="rounded-2xl shadow-md h-10 w-10 bg-accent1 border-2 border-accent1"
+            onClick={(e) => op.current.toggle(e)}
+          />
           {time === 0 || time < 0 ? (
             <button
               className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"

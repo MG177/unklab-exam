@@ -55,7 +55,13 @@ export default function Login() {
         );
       }
       setUser(studentAuth.data);
-      console.log('setUser(studentAuth.data)', studentAuth.data);
+      // if (
+      //   startResponse.data.isSubmitted === true ||
+      //   startResponse.data.score != null
+      // ) {
+      //   navigate('/score');
+      // } else {
+      // }
       navigate('/started');
     } catch (error) {
       setErrorMessage(

@@ -36,25 +36,6 @@ export function AuthProvider({ children }) {
       return Promise.reject(error);
     }
   );
-  // console.log('data.access_token: ' + data.access_token);
-  // if (!user) {
-  //   setUser(data);
-  // }
-
-  // useEffect(() => {
-  //   if (storedAccessToken) {
-  //     setUser(storedAccessToken.replace(/"/g, ''));
-  //   } else {
-  //     navigate('/');
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     console.log('user null');
-  //     setUser(data);
-  //   }
-  // }, []);
 
   const value = useMemo(() => ({ user, setUser }), [user, setUser]);
 
