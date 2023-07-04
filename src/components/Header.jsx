@@ -284,7 +284,7 @@ export function HeaderExamDashboard({
           <Button
             type="button"
             icon="pi pi-cog"
-            className="rounded-2xl shadow-md h-10 w-10 bg-accent1 border-2 border-accent1"
+            className="rounded-3xl shadow-md h-10 w-10 bg-accent1 border-2 border-accent1"
             onClick={(e) => op.current.toggle(e)}
           />
           {time === 0 || time < 0 || time === 'NaN' ? (

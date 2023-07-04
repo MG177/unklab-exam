@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import classHeader from '../../image/class-header.svg';
 import { DataTable } from 'primereact/datatable';
 import api from '../../config/index';
 import { HeaderExamDashboard } from '../../components/Header';
@@ -8,7 +7,6 @@ import { HeaderExamDashboard } from '../../components/Header';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { InputText } from 'primereact/inputtext';
 
 export default function PageDashboard() {
   const { examId } = useParams();
@@ -23,41 +21,49 @@ export default function PageDashboard() {
   const uploadRef = useRef(null);
   const toast = useRef(null);
 
-  // const formattedData = dataGrid.map((item) => {
-  //   const formattedItem = {
-  //     name: item.name,
-  //     noreg: item.noreg,
-  //     status: item.status,
-  //   };
+  console.log('item', dataGrid);
+  const formattedData = dataGrid.map((item) => {
+    const formattedItem = {
+      No: item.number,
+      noreg: item.studentId,
+      name: item.studentName,
+      totalScore: item.totalScore,
+    };
 
-  //   if (item.score) {
-  //     formattedItem.grade = item.score.grade || '';
-  //     formattedItem.totalScore = item.score.totalScore || '';
-  //     formattedItem.vocabulary = item.score.vocabulary?.string || '';
-  //     formattedItem.reading = item.score.reading?.string || '';
-  //     formattedItem.listening = item.score.listening?.string || '';
-  //     formattedItem.grammar = item.score.grammar?.string || '';
-  //   }
+    //extract obj to array
+    const score = Object.entries(item.score);
+    console.log('score', score);
+    console.log('score', score);
 
-  //   return formattedItem;
-  // });
+    if (score) {
+      score.forEach((item) => {
+        const [key, value] = item;
+        formattedItem[`${key} correct`] = value.correct;
+        formattedItem[`${key} total question`] = value.total;
+        formattedItem[`${key} score`] = value.score;
+      });
+    }
 
-  // const exportExcel = () => {
-  //   import('xlsx').then((xlsx) => {
-  //     const worksheet = xlsx.utils.json_to_sheet(formattedData);
+    // console.log('formatted item', formattedItem);
+    return formattedItem;
+  });
 
-  //     // Set the column order
-  //     worksheet['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 30 }];
+  const exportExcel = () => {
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(formattedData);
 
-  //     const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-  //     const excelBuffer = xlsx.write(workbook, {
-  //       bookType: 'xlsx',
-  //       type: 'array',
-  //     });
+      // Set the column order
+      worksheet['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 30 }];
 
-  //     saveAsExcelFile(excelBuffer, `Exam_export_${exam.examName}`);
-  //   });
-  // };
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+
+      saveAsExcelFile(excelBuffer, `Exam_export_${exam.examName}`);
+    });
+  };
 
   const saveAsExcelFile = (buffer, fileName) => {
     import('file-saver').then((module) => {
@@ -127,11 +133,7 @@ export default function PageDashboard() {
         if (!scoreItem) {
           return {
             ...item,
-            score: {
-              score: '',
-              correct: '',
-              total: '',
-            },
+            score: '',
             totalScore: '',
           };
         } else {
@@ -203,7 +205,7 @@ export default function PageDashboard() {
         text
         label="Export to Excel"
         className="shadow-md border border-gray/20 mt-2"
-        // onClick={exportExcel}
+        onClick={exportExcel}
         data-pr-tooltip="XLS"
       />
     </div>
@@ -232,15 +234,6 @@ export default function PageDashboard() {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
       const response = await api.patch('/exam/studentList/' + examId, formData);
-      // if (response.status === 201) {
-      //   // fetchData();
-      //   // fetchDataBySession(newSession);
-      //   // setSelectedSession(newSession);
-      //   // newClassDialog.close();
-      //   alert('Exam uploaded successfully');
-      // } else {
-      //   throw new Error('Something went wrong, please try again later');
-      // }
       e.target.value = '';
       fetchExam();
       toast.current.show({
