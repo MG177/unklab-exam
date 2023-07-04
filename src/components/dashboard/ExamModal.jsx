@@ -236,7 +236,6 @@ export function ExamModalCreator({ modalRef }) {
 }
 
 export function ExamModalEditor({ modalRef, examId, examName }) {
-  const navigate = useNavigate();
   const examLabelRef = useRef(null);
   const [questionSelected, setQuestionSelected] = useState([]);
   const [questionDB, setQuestionDB] = useState([]);
@@ -277,21 +276,16 @@ export function ExamModalEditor({ modalRef, examId, examName }) {
 
       console.log('newData', newData);
       console.log('newDataSelected', newDataSelected);
-
-      // console.log('examQuestions', questionFromExamData.questions);
-      // console.log('newData', newData);
-
-      // setQuestionSelected(questionFromExamData.questions);
       setQuestionSelected(newDataSelected);
       setQuestionDB(newData);
     } catch (error) {
       console.log(error);
-      // toast.current.show({
-      //   severity: 'error',
-      //   summary: 'Error',
-      //   detail: 'Cannot fetch question group',
-      //   life: 3000,
-      // });
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Cannot fetch question group',
+        life: 3000,
+      });
     }
   };
 

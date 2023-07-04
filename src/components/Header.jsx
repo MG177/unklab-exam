@@ -185,6 +185,29 @@ export function HeaderExamDashboard({
     }
   };
 
+  const handleSwitch = async (changes) => {
+    try {
+      const res = await api.patch('/exam/switch/' + examId, {
+        [changes]: !checked[changes],
+      });
+      const initialSwitch = {
+        isRandom: res.data.isRandom,
+        isShowScore: res.data.isShowScore,
+        isShowAnswer: res.data.isShowAnswer,
+      };
+      setChecked(initialSwitch);
+    } catch (err) {
+      console.log(err);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error when switching exam',
+        detail: err.response.data.message,
+        life: 5000,
+        // sticky: true,
+      });
+    }
+  };
+
   return (
     <div className="fixed top-0 w-full h-16 bg-white shadow-lg rounded-b-[24px] z-50 select-none">
       <div className="absolute flex items-center justify-center w-full h-full text-xl text-center font-Nunito">
@@ -228,32 +251,32 @@ export function HeaderExamDashboard({
             <div className="flex flex-col justify-start gap-2  text-md font-Nunito font-semibold text-black">
               <div className="flex justify-start items-center gap-2">
                 <InputSwitch
-                  checked={checked}
-                  onChange={(e) => setChecked(e.value)}
+                  checked={checked.isRandom}
+                  onChange={(e) => handleSwitch('isRandom')}
                 />
-                <span>Randomize the question and option</span>
+                <span>Randomize student question and option</span>
               </div>
               <div className="flex justify-start items-center gap-2">
                 <InputSwitch
-                  checked={checked}
-                  onChange={(e) => setChecked(e.value)}
+                  checked={checked.isShowScore}
+                  onChange={(e) => handleSwitch('isShowScore')}
                 />
-                <span>Show Correct Answer</span>
+                <span>Show score to student</span>
               </div>
               <div className="flex justify-start items-center gap-2">
                 <InputSwitch
-                  checked={checked}
-                  onChange={(e) => setChecked(e.value)}
+                  checked={checked.isShowAnswer}
+                  onChange={(e) => handleSwitch('isShowAnswer')}
                 />
-                <span>Show Correct Answer</span>
+                <span>Show correct answer to student</span>
               </div>
             </div>
           </OverlayPanel>
-          <button
+          {/* <button
             className="w-10 h-10 text-white rounded-full pl-1 pi pi-file-edit bg-accent1 z-50"
             style={{ fontSize: '1.3rem' }}
             onClick={handleOpenModal}
-          />
+          /> */}
           <Button
             type="button"
             icon="pi pi-cog"

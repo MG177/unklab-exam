@@ -77,7 +77,7 @@ export default function Score() {
   const fetchScore = async () => {
     try {
       const response = await api.get('/student/score');
-      setScore(extractScore(response.data.score));
+      setScore(response.data.score);
       setQeustionList(response.data.questionList);
     } catch (error) {
       if (error.response.status === 403) {
@@ -85,30 +85,6 @@ export default function Score() {
       }
       console.log(error);
     }
-  };
-
-  const extractScore = (objArray) => {
-    let count = {
-      total: 0,
-      correct: 0,
-      score: 0,
-    };
-
-    for (let i = 0; i < objArray.length; i++) {
-      const obj = objArray[i];
-      const keys = Object.keys(obj);
-
-      for (let j = 0; j < keys.length; j++) {
-        const field = keys[j];
-        const fieldValue = obj[field];
-
-        count.total += fieldValue.total || 0;
-        count.correct += fieldValue.correct || 0;
-      }
-    }
-    count.score = (count.correct / count.total) * 100;
-
-    return count;
   };
 
   useEffect(() => {
@@ -137,7 +113,7 @@ export default function Score() {
               <div className="flex flex-row justify-center items-center bg-white rounded-3xl py-4 px-6 gap-4 w-[400px] h-[200px]">
                 <div className="flex flex-col border-[14px] min-h-[170px] min-w-[170px] border-accent2 rounded-full shadow-lg justify-center items-center">
                   <p className="text-3xl indent-tight font-bold text-black font-Nunito z-10">
-                    {`${score.score || 'Error'}/100`}
+                    {`${score.score || '0'}/100`}
                   </p>
                 </div>
                 <div className="flex flex-col justify-center h-full font-Nunito gap-3 max-w-[13rem]">
@@ -150,7 +126,7 @@ export default function Score() {
                   </div>
                   <div className="text-black w-fit bg-white shadow-lg rounded-3xl w-full h-fit py-3 px-4 border border-gray/20 leading-none">
                     <p className="text-3xl font-bold leading-none">
-                      {`${score.correct || 'Error'}/${score.total || 'Error'}`}
+                      {`${score.correct || '0'}/${score.total || '0'}`}
                     </p>
                     <span className="text-lg whitespace-nowrap leading-none">
                       Right answers

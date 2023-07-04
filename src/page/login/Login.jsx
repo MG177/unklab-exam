@@ -88,7 +88,7 @@ export default function Login() {
             JSON.stringify(admin.access_token)
           );
           setUser(response.data.data);
-          navigate('/dashboard/home');
+          navigate('/dashboard/exams');
         });
     } catch (error) {
       console.log(error);
@@ -129,7 +129,7 @@ export default function Login() {
               {/* </div> */}
               <div className="flex flex-col w-full gap-6 max-[960px]:mt-2.5 my-10">
                 <div className="flex flex-col items-start ">
-                  <label htmlFor="username" className="mb-2 max-[960px]:mb-0">
+                  <label htmlFor="username" className="mb-2 font-semibold">
                     Username
                   </label>
                   <input
@@ -143,7 +143,7 @@ export default function Login() {
                   />
                 </div>
                 <div className="flex flex-col items-start ">
-                  <label htmlFor="password" className="mb-2 max-[960px]:mb-0">
+                  <label htmlFor="password" className="mb-2 font-semibold">
                     Password
                   </label>
                   <input

@@ -10,21 +10,21 @@ function formatDate(dateString) {
 export function Card({ onClickFunction, title, date, isVerified }) {
   return (
     <div
-      className={`flex flex-row items-center w-full gap-4 p-3 shadow-md cursor-pointer bg-whitePlus rounded-2xl ${
+      className={`flex flex-row items-center w-full gap-4 p-3 shadow-md cursor-pointer bg-whitePlus rounded-2xl overflow-hidden ${
         isVerified === false ? 'border-2 border-accent2' : ''
       }`}
       onClick={onClickFunction}
     >
-      <div className="flex-1 p-1.5">
+      <div className="flex-1 p-1.5 w-[calc(100%-10rem)]">
         <div className="w-full font-Roboto text-black text-xs">
           {formatDate(date) || 'No Date'}
         </div>
-        <div className="w-full  font-Nunito text-black font-black text-xl">
+        <div className="w-full font-Nunito text-black font-black text-xl whitespace-nowrap truncate">
           {title || 'No Title'}
         </div>
       </div>
       <i
-        className="pi pi-angle-right text-accent1"
+        className="pi pi-angle-right text-accent1 w-fit"
         style={{ fontSize: '1.5rem' }}
       />
     </div>

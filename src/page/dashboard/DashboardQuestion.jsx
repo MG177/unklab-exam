@@ -64,19 +64,8 @@ export default function DashboardQuestion() {
     setIsCreateNew(false);
   }, []);
 
-  const handleModalAction = () => {};
-
   return (
     <div className="flex flex-col items-center w-full h-full gap-8 py-10">
-      {/* <Modal
-        text={{
-          title: 'Are you sure you want to delete this question?',
-          body: "You can't retrieve this question once you delete it",
-          negativeOption: 'Cancel',
-          positiveOption: 'Delete',
-        }}
-        handleFunction={handleModalAction}
-      /> */}
       <div
         id="header"
         className="flex flex-col items-center justify-center w-5/6 "
@@ -123,12 +112,6 @@ export default function DashboardQuestion() {
                     >
                       Edit
                     </button>
-                    {/* <button
-                      className={`px-4 py-2 font-semibold ml-3 bg-white text-black shadow-md w-fit rounded-xl `}
-                      // onClick={() => modal.showModal()}
-                    >
-                      show Modal
-                    </button> */}
                   </>
                 )}
               </div>
