@@ -112,7 +112,7 @@ export default function QuestionEditorItem({
     });
   };
 
-  const handleDeleteQuestion = async (questionId) => {
+  const handleDelete = async (questionId) => {
     try {
       if (questions.length === 1) {
         setQuestions(initialQuestions);
@@ -125,7 +125,7 @@ export default function QuestionEditorItem({
         console.log('newData:', newData);
         return newData;
       });
-      console.log('questions - handleDeleteQuestion', questions);
+      console.log('questions - handleDelete', questions);
       handleQuestionChange();
     } catch (error) {
       console.error(error);
@@ -193,7 +193,7 @@ export default function QuestionEditorItem({
       <div className="flex flex-col gap-3">
         <button
           className="flex items-center justify-center w-8 h-8 text-white rounded-full bg-accent2"
-          onClick={() => handleDeleteQuestion(question.id)}
+          onClick={() => handleDelete(question.id)}
         >
           {/* <i className='fa-solid fa-trash' /> */}
           <i className="pi pi-trash" />

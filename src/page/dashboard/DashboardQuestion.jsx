@@ -35,7 +35,7 @@ export default function DashboardQuestion() {
     }
   };
 
-  const handleEditQuestionName = async (id, data) => {
+  const handleEditName = async (id, data) => {
     try {
       await api.patch('/questions/name/' + id, { questionName: data });
       alert('Question Edited');
@@ -47,7 +47,7 @@ export default function DashboardQuestion() {
     }
   };
 
-  const handleDeleteQuestion = async (id) => {
+  const handleDelete = async (id) => {
     try {
       await api.delete(`/questions/${id}`);
       alert('Question Deleted');
@@ -132,8 +132,8 @@ export default function DashboardQuestion() {
                 id={question._id}
                 title={question.questionName}
                 date={question.createdAt}
-                handleEditQuestionName={handleEditQuestionName}
-                handleDeleteQuestion={handleDeleteQuestion}
+                handleEditName={handleEditName}
+                handleDelete={handleDelete}
               />
             ))
           ) : (

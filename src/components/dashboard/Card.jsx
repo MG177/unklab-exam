@@ -63,17 +63,11 @@ export function NewCard({ setIsCreateNew, handleNew }) {
   );
 }
 
-export function EditCard({
-  id,
-  title,
-  date,
-  handleEditQuestionName,
-  handleDeleteQuestion,
-}) {
+export function EditCard({ id, title, date, handleEditName, handleDelete }) {
   const newTitle = useRef(title);
   const handleEdit = () => {
     console.log('Edit ', title, ' to ', newTitle.current.value);
-    handleEditQuestionName(id, newTitle.current.value);
+    handleEditName(id, newTitle.current.value);
   };
 
   return (
@@ -106,7 +100,7 @@ export function EditCard({
               style={{ fontSize: '1.5rem' }}
             />
           </button>
-          <button className="mx-2" onClick={() => handleDeleteQuestion(id)}>
+          <button className="mx-2" onClick={() => handleDelete(id)}>
             <i
               className="pi pi-trash text-accent1"
               style={{ fontSize: '1.5rem' }}
