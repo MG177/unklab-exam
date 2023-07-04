@@ -123,9 +123,10 @@ export function HeaderExamDashboard({
   time,
   setToken,
   fetchExam,
+  checked,
+  setChecked,
 }) {
   const { examId } = useParams();
-  const [checked, setChecked] = useState(false);
   const modalRef = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
@@ -270,6 +271,9 @@ export function HeaderExamDashboard({
                 />
                 <span>Show correct answer to student</span>
               </div>
+              {/* <button className="flex self-end items-center justify-center bg-red-500 text-white w-fit gap-2 rounded-xl px-3 py-3 opacity-10 scale-50 translate-y-1/2 translate-x-1/2">
+                <i className="pi pi-trash" />
+              </button> */}
             </div>
           </OverlayPanel>
           {/* <button

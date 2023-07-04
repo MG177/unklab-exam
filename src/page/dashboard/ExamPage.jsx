@@ -17,6 +17,7 @@ export default function PageDashboard() {
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(null);
   const [token, setToken] = useState(null);
+  const [checked, setChecked] = useState(false);
   const [dataGrid, setDataGrid] = useState([]);
   const dt = useRef(null);
   const uploadRef = useRef(null);
@@ -80,8 +81,11 @@ export default function PageDashboard() {
     try {
       const response = await api.get(`/exam/${examId}`);
       setExam(response.data);
-      // console.log('exam fetch', response.data);
-      // setDataGrid(response.data.students);
+      setChecked({
+        isRandom: response.data.isRandom,
+        isShowScore: response.data.isShowScore,
+        isShowAnswer: response.data.isShowAnswer,
+      });
       setToken(response.data.token);
       fetchDataGrid(response.data);
     } catch (error) {
@@ -259,10 +263,11 @@ export default function PageDashboard() {
   };
 
   const handleColumnHeader = (column) => {
-    if (column.length > 17) {
+    const length = 17;
+    if (column.length > length) {
       return (
         <div title={column} className="text-[100%]">
-          {column.substring(0, 17) + '...'}
+          {column.substring(0, length) + '...'}
         </div>
       );
     } else {
@@ -271,7 +276,6 @@ export default function PageDashboard() {
           {column}
         </div>
       );
-      return column;
     }
   };
 
@@ -283,6 +287,8 @@ export default function PageDashboard() {
         time={time}
         setToken={setToken}
         fetchExam={fetchExam}
+        checked={checked}
+        setChecked={setChecked}
       />
       {!loading ? (
         <>
