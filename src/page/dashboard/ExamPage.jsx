@@ -7,6 +7,7 @@ import { HeaderExamDashboard } from '../../components/Header';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
+import { Tooltip } from 'primereact/tooltip';
 
 export default function PageDashboard() {
   const { examId } = useParams();
@@ -21,7 +22,6 @@ export default function PageDashboard() {
   const uploadRef = useRef(null);
   const toast = useRef(null);
 
-  console.log('item', dataGrid);
   const formattedData = dataGrid.map((item) => {
     const formattedItem = {
       No: item.number,
@@ -32,8 +32,6 @@ export default function PageDashboard() {
 
     //extract obj to array
     const score = Object.entries(item.score);
-    console.log('score', score);
-    console.log('score', score);
 
     if (score) {
       score.forEach((item) => {
@@ -145,7 +143,6 @@ export default function PageDashboard() {
           };
         }
       });
-      console.log('merged data', mergedData);
 
       return mergedData;
     } catch (error) {
@@ -184,7 +181,7 @@ export default function PageDashboard() {
     if (time > 0) {
       intervalId = setInterval(countDown, 1000);
     }
-    console.log(time);
+    // console.log(time);
     return () => clearInterval(intervalId);
   }, [time]);
 
@@ -272,6 +269,42 @@ export default function PageDashboard() {
     }
   };
 
+  // const handleCell = (rowData, questionName) => {
+  //   const score = rowData.score[questionName];
+  //   // console.log('rowData', rowData);
+  //   // console.log('questionName', questionName);
+  //   // console.log('score', score);
+  //   // return (
+  //   //   <div title={questionName} className="text-[100%]">
+  //   //     {/* {score.score} */}
+  //   //     sadas
+  //   //   </div>
+  //   // );
+  //   return 123;
+  // };
+
+  const handleCell = (rowData, questionName) => {
+    const score = rowData.score[questionName];
+    if (!score) {
+      return <div title={questionName} className="text-[100%]"></div>;
+    }
+    return (
+      <>
+        <Tooltip target={`#cell_score_${rowData.studentId}_${questionName}`} />
+        <div
+          data-pr-position="right"
+          className="text-[100%]"
+          id={`cell_score_${rowData.studentId}_${questionName}`}
+          data-pr-tooltip={`Correct answer: ${score.correct || ''} / ${
+            score.total || ''
+          }`}
+        >
+          {score.score || ''}
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="relative flex items-center justify-center w-full ">
       <HeaderExamDashboard
@@ -314,9 +347,7 @@ export default function PageDashboard() {
                 />
               </label>
               <div className="flex flex-row gap-3 ">
-                <div
-                  className={`text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl `}
-                >
+                <div className="text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl">
                   {hours === 0
                     ? `00:${minutesStr}:${secondsStr}`
                     : time != 'NaN'
@@ -360,9 +391,21 @@ export default function PageDashboard() {
                   {exam.questions.map((question, index) => {
                     return (
                       <Column
-                        // field={`score.${question.questionName}.correct`}
-                        field={`score.${question.questionName}.score`}
-                        // header={`${question.questionName}`}
+                        // field={`score.${question.questionName}.score`}
+
+                        body={(rowData) =>
+                          handleCell(rowData, question.questionName)
+                        }
+                        // pt={{
+                        // }}
+
+                        // pt={{
+                        //   sortBadge: { className: 'bg-primary' },
+                        //   headerCell: { style: { width: '25%' } },
+                        //   bodyCell: {
+                        //     tooltip: 'testatasedtgstd',
+                        //   },
+                        // }}
                         header={handleColumnHeader(question.questionName)}
                         key={index}
                         sortable
