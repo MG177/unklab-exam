@@ -55,6 +55,11 @@ export default function Login() {
         );
       }
       setUser(studentAuth.data);
+      if (startResponse.data === true) {
+        navigate('/started');
+      } else {
+        navigate('/score');
+      }
       // if (
       //   startResponse.data.isSubmitted === true ||
       //   startResponse.data.score != null
@@ -62,7 +67,7 @@ export default function Login() {
       //   navigate('/score');
       // } else {
       // }
-      navigate('/started');
+      // navigate('/started');
     } catch (error) {
       setErrorMessage(
         'Incorrect Registration number or Token. Please try again.'
