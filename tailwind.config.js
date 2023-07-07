@@ -20,7 +20,6 @@ module.exports = {
         taccent1: '#DCB5FF',
         grayPlus: '#D9D9D9',
         gray: '#98A0A4',
-        green: '#51B330',
       },
       maxWidth: {
         xxs: '16rem',

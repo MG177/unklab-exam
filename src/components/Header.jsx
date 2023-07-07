@@ -230,12 +230,12 @@ export function HeaderExamDashboard({
           </p>
         </button>
         <div className="flex flex-row gap-3">
-          <ExamModalEditor
+          {/* <ExamModalEditor
             modalRef={modalRef}
             examId={examId}
             examName={examName}
             fetchExam={fetchExam}
-          />
+          /> */}
           <Toast
             ref={toast}
             style={{

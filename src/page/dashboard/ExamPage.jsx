@@ -3,24 +3,38 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import api from '../../config/index';
 import { HeaderExamDashboard } from '../../components/Header';
+import { ScoreCard } from '../score/Score';
+import Answer from '../score/Answer';
 
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
 import { Tooltip } from 'primereact/tooltip';
+import { Sidebar } from 'primereact/sidebar';
+import { ScrollPanel } from 'primereact/scrollpanel';
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
 export default function PageDashboard() {
   const { examId } = useParams();
   const navigate = useNavigate();
+
   const [exam, setExam] = useState({});
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(null);
   const [token, setToken] = useState(null);
   const [checked, setChecked] = useState(false);
   const [dataGrid, setDataGrid] = useState([]);
+  const [visibleBottom, setVisibleBottom] = useState(false);
+  const [studentName, setStudentName] = useState('');
+  const [studentScore, setStudentScore] = useState({});
+  const [studentId, setStudentId] = useState('');
+  const [questionList, setQuestionList] = useState([]);
+  const [confirmResetPopup, setConfirmResetPopup] = useState(false);
+
   const dt = useRef(null);
   const uploadRef = useRef(null);
   const toast = useRef(null);
+  const confirmResetRef = useRef(null);
 
   const formattedData = dataGrid.map((item) => {
     const formattedItem = {
@@ -101,8 +115,6 @@ export default function PageDashboard() {
   const fetchDataGrid = async (exam) => {
     try {
       const response = await api.get(`/exam/score/${examId}`);
-      console.log('student score', response.data);
-      console.log('exam', exam);
       // setDataGrid(response.data);
       const mergedData = await mergeDatagridWithScore(response.data, exam);
       // if (mergedData) {
@@ -226,7 +238,6 @@ export default function PageDashboard() {
 
   const handleImportStudents = async (e) => {
     e.preventDefault();
-    console.log('tes');
     try {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
@@ -256,32 +267,18 @@ export default function PageDashboard() {
     const length = 17;
     if (column.length > length) {
       return (
-        <div title={column} className="text-[100%]">
+        <div title={column} className="text-[100%] capitalize">
           {column.substring(0, length) + '...'}
         </div>
       );
     } else {
       return (
-        <div title={column} className="text-[100%]">
+        <div title={column} className="text-[100%] capitalize">
           {column}
         </div>
       );
     }
   };
-
-  // const handleCell = (rowData, questionName) => {
-  //   const score = rowData.score[questionName];
-  //   // console.log('rowData', rowData);
-  //   // console.log('questionName', questionName);
-  //   // console.log('score', score);
-  //   // return (
-  //   //   <div title={questionName} className="text-[100%]">
-  //   //     {/* {score.score} */}
-  //   //     sadas
-  //   //   </div>
-  //   // );
-  //   return 123;
-  // };
 
   const handleCell = (rowData, questionName) => {
     const score = rowData.score[questionName];
@@ -303,6 +300,71 @@ export default function PageDashboard() {
         </div>
       </>
     );
+  };
+
+  const fetchScore = async (studentId, studentName) => {
+    try {
+      const response = await api.get(`/student/score/${examId}/${studentId}`);
+      setStudentScore(response.data.score);
+      setQuestionList(response.data.questionList);
+      setStudentName(studentName);
+      setStudentId(studentId);
+      setVisibleBottom(true);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const viewDetailsButton = (rowData) => {
+    // console.log(rowData);
+    if (typeof rowData.score === 'object') {
+      return (
+        <button
+          className="shadow-md border border-gray/20 px-1 py-1 font-semibold rounded-md text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200 ease-in-out scale-90 w-full"
+          // onClick={() => handleViewDetails(rowData.studentId)}
+          onClick={() => fetchScore(rowData.studentId, rowData.studentName)}
+        >
+          View Details
+        </button>
+      );
+    } else {
+      return (
+        <button
+          className="shadow-md border border-gray/20 px-1 py-1 font-semibold rounded-md text-gray transition duration-200 ease-in-out scale-90 w-full"
+          disabled
+        >
+          View Details
+        </button>
+      );
+    }
+  };
+
+  const handleResetStudent = async () => {
+    if (!studentId) {
+      console.log('studentId is null', studentId);
+      return;
+    }
+    console.log(studentId);
+    try {
+      const response = await api.delete('/student/' + examId + '/' + studentId);
+      fetchExam();
+      setVisibleBottom(false);
+      toast.current.show({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Student reset successfully',
+        life: 3000,
+      });
+    } catch (error) {
+      console.log(error);
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to reset student',
+        life: 3000,
+      });
+    }
   };
 
   return (
@@ -362,6 +424,61 @@ export default function PageDashboard() {
               </div>
             </div>
             <div className="relative overflow-hidden border-white shadow-lg rounded-2xl">
+              <Sidebar
+                visible={visibleBottom}
+                position="right"
+                onHide={() => setVisibleBottom(false)}
+                className="relative w-fit h-screen rounded-l-3xl bg-white shadow-lg"
+                pt={{
+                  content: { className: 'relative' },
+                }}
+                // maskClassName="bg-accent1 opacity-50"
+              >
+                <ScrollPanel
+                  style={{ width: '100%', height: '100%' }}
+                  className="px-2"
+                >
+                  {/* <div className="sticky top-0 bg-white font-bold font-Nunito text-xl z-10">
+                    Navigate question :
+                  </div> */}
+                  <div className="scale-75">
+                    <ScoreCard score={studentScore} user={{ studentName }} />
+                  </div>
+                  <div className="max-w-2xl px-1 pb-3 flex flex-col gap-5 mt-4 mb-12">
+                    {questionList.map((question, index) => (
+                      <Answer
+                        key={question.id}
+                        question={question}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                </ScrollPanel>
+                <ConfirmPopup
+                  target={confirmResetRef.current}
+                  visible={confirmResetPopup}
+                  onHide={() => setConfirmResetPopup(false)}
+                  message={`Are you sure you want to reset "${studentName}" ?`}
+                  icon="pi pi-exclamation-triangle"
+                  accept={handleResetStudent}
+                  reject={() => setConfirmResetPopup(false)}
+                  className="rounded-2xl w-[300px]"
+                  rejectClassName="rounded-xl bg-whitePlus hover:bg-blue-100 text-blue-600 border border-whitePlus hover:border-whitePlus"
+                  acceptClassName="rounded-xl bg-red-500 hover:bg-red-600 text-white border border-red-500 hover:border-red-600"
+                />
+                <div
+                  className=" absolute bottom-0 left-0 flex flex-row justify-end px-3 py-2 z-10 bg-whitePlus w-full"
+                  ref={confirmResetRef}
+                >
+                  <button
+                    className="shadow-lg border border-red-400 py-2 
+                  text-2xl font-semibold font-Nunito rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition duration-200 ease-in-out scale-90 w-full"
+                    onClick={() => setConfirmResetPopup(true)}
+                  >
+                    Reset this student
+                  </button>
+                </div>
+              </Sidebar>
               {dataGrid.length > 0 ? (
                 <DataTable
                   value={dataGrid}
@@ -396,23 +513,18 @@ export default function PageDashboard() {
                         body={(rowData) =>
                           handleCell(rowData, question.questionName)
                         }
-                        // pt={{
-                        // }}
-
-                        // pt={{
-                        //   sortBadge: { className: 'bg-primary' },
-                        //   headerCell: { style: { width: '25%' } },
-                        //   bodyCell: {
-                        //     tooltip: 'testatasedtgstd',
-                        //   },
-                        // }}
                         header={handleColumnHeader(question.questionName)}
                         key={index}
                         sortable
                       ></Column>
                     );
                   })}
-                  <Column field="isSubmitted" header="status"></Column>
+                  {/* <Column field="isSubmitted" header="status"></Column> */}
+                  <Column
+                    body={viewDetailsButton}
+                    header="View details"
+                    headerClassName="text-center justify-center"
+                  ></Column>
                 </DataTable>
               ) : (
                 <div className="flex flex-col items-center justify-center w-full max-h-full p-3 text-2xl font-Nunito text-gray">
