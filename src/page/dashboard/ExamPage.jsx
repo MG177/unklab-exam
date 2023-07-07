@@ -13,6 +13,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { Sidebar } from 'primereact/sidebar';
 import { ScrollPanel } from 'primereact/scrollpanel';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import DownloadCSVTemplate from '../../components/dashboard/CSVDownload';
 
 export default function PageDashboard() {
   const { examId } = useParams();
@@ -394,20 +395,23 @@ export default function PageDashboard() {
               }}
             />
             <div className="flex flex-row justify-between gap-3 min-w-fit">
-              <label
-                className="cursor-pointer flex items-center justify-center font-bold text-accent1 py-2 px-10 rounded-2xl font-Nunito bg-whitePlus border border-accent1 shadow-md z-50 h-fit self-end"
-                htmlFor="uploadCSV"
-              >
-                <p className="text-base leading-none">Import</p>
-                <input
-                  type="file"
-                  id="uploadCSV"
-                  accept=".csv"
-                  ref={uploadRef}
-                  onChange={handleImportStudents}
-                  className="hidden"
-                />
-              </label>
+              <div className="flex flex-row gap-3 font-bold font-Nunito text-accent1 text-lg text-base leading-none">
+                <label
+                  className="cursor-pointer flex items-center justify-center py-2 px-10 rounded-2xl bg-whitePlus border border-accent1 shadow-md z-50 h-fit self-end"
+                  htmlFor="uploadCSV"
+                >
+                  <p>Import</p>
+                  <input
+                    type="file"
+                    id="uploadCSV"
+                    accept=".csv"
+                    ref={uploadRef}
+                    onChange={handleImportStudents}
+                    className="hidden"
+                  />
+                </label>
+                <DownloadCSVTemplate />
+              </div>
               <div className="flex flex-row gap-3 ">
                 <div className="text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl">
                   {hours === 0

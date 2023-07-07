@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import Modal from '../_Modal';
 
 function formatDate(dateString) {
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -72,15 +71,6 @@ export function EditCard({ id, title, date, handleEditName, handleDelete }) {
 
   return (
     <div className="flex flex-col items-end justify-between w-full  p-3 gap-1 shadow-md bg-whitePlus rounded-2xl">
-      {/* <Modal
-        text={{
-          title: 'Are you sure you want to delete this question?',
-          body: "You can't retrieve this question once you delete it",
-          negativeOption: 'Cancel',
-          positiveOption: 'Delete',
-        }}
-        handleFunction={handleModalAction}
-      /> */}
       <div className="w-full font-Roboto text-black text-xs">
         {formatDate(date) || 'No Date'}
       </div>

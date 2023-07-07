@@ -188,24 +188,26 @@ export function HeaderExamDashboard({
 
   const handleSwitch = async (changes) => {
     try {
-      const res = await api.patch('/exam/switch/' + examId, {
-        [changes]: !checked[changes],
-      });
+      const change = { [changes]: !checked[changes] };
+      if (change.isShowAnswer) change.isShowScore = true;
+      if (!change.isShowScore) change.isShowAnswer = false;
+      console.log(change);
+      const res = await api.patch('/exam/switch/' + examId, change);
       const initialSwitch = {
-        isRandom: res.data.isRandom,
-        isShowScore: res.data.isShowScore,
+        isShowScore: res.data.isShowAnswer ? true : res.data.isShowScore,
         isShowAnswer: res.data.isShowAnswer,
+        isRandom: res.data.isRandom,
       };
       setChecked(initialSwitch);
     } catch (err) {
       console.log(err);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error when switching exam',
-        detail: err.response.data.message,
-        life: 5000,
-        // sticky: true,
-      });
+      // toast.current.show({
+      //   severity: 'error',
+      //   summary: 'Error when switching exam',
+      //   detail: 'Something went wrong',
+      //   life: 5000,
+      //   // sticky: true,
+      // });
     }
   };
 
@@ -249,14 +251,7 @@ export function HeaderExamDashboard({
             }}
           />
           <OverlayPanel ref={op} className="rounded-xl">
-            <div className="flex flex-col justify-start gap-2  text-md font-Nunito font-semibold text-black">
-              <div className="flex justify-start items-center gap-2">
-                <InputSwitch
-                  checked={checked.isRandom}
-                  onChange={(e) => handleSwitch('isRandom')}
-                />
-                <span>Randomize student question and option</span>
-              </div>
+            <div className="flex flex-col justify-start gap-2  text-md font-Nunito font-semibold text-black select-none">
               <div className="flex justify-start items-center gap-2">
                 <InputSwitch
                   checked={checked.isShowScore}
@@ -270,6 +265,13 @@ export function HeaderExamDashboard({
                   onChange={(e) => handleSwitch('isShowAnswer')}
                 />
                 <span>Show correct answer to student</span>
+              </div>
+              <div className="flex justify-start items-center gap-2">
+                <InputSwitch
+                  checked={checked.isRandom}
+                  onChange={(e) => handleSwitch('isRandom')}
+                />
+                <span>Randomize student question and option</span>
               </div>
               {/* <button className="flex self-end items-center justify-center bg-red-500 text-white w-fit gap-2 rounded-xl px-3 py-3 opacity-10 scale-50 translate-y-1/2 translate-x-1/2">
                 <i className="pi pi-trash" />

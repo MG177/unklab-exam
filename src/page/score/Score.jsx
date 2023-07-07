@@ -97,16 +97,18 @@ export default function Score() {
   }, []);
 
   return (
-    <div className="w-screen h-full justify-center items-center flex flex-col bg-[#FCF9FF] select-none">
+    <div className="w-screen h-screen justify-center items-center flex flex-col bg-[#FCF9FF] select-none">
       <Header />
       {time > 0 ? (
-        <div className="bg-white p-[50px] max-w-[100vh] flex flex-col justify-center items-center gap-[28px] rounded-[24px] shadow-[0_5px_25px_rgba(0,0,0,0.2)]">
-          <p className="font-Nunito font-bold text-black text-[35px] w-full text-center">
+        // <div className="bg-white max-w-xl flex flex-col justify-center items-center rounded-3xl shadow-xl">
+        <div className="bg-white h-fit py-8 px-10 max-w-xl flex flex-col justify-center items-center rounded-3xl shadow-xl">
+          <p className="font-Nunito font-bold text-black text-4xl w-full text-center">
             Your score will be visible after the exam duration ends, or you can
             choose to log out at this time.
           </p>
         </div>
       ) : (
+        // </div>
         <ScrollPanel style={{ width: '100%', height: '100vh' }}>
           <div className="flex flex-col w-full justify-center items-center min-h-screen">
             <ScoreCard user={user} score={score} />
