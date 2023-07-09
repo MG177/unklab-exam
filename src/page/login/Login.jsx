@@ -16,7 +16,7 @@ export default function Login() {
 
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
-  const studentNoregRef = useRef(null);
+  const studentStudentIdRef = useRef(null);
   const studentTokenRef = useRef(null);
   const adminUsernameRef = useRef(null);
   const adminPasswordRef = useRef(null);
@@ -27,7 +27,7 @@ export default function Login() {
   const handleLogin = async (event) => {
     event.preventDefault();
     sessionStorage.clear();
-    if (!studentNoregRef.current.value || !studentTokenRef.current.value) {
+    if (!studentStudentIdRef.current.value || !studentTokenRef.current.value) {
       setErrorMessage(
         'Missing required fields. Please fill in all required fields.'
       );
@@ -36,7 +36,7 @@ export default function Login() {
     }
     try {
       const studentAuth = await api.post('/auth/login/student', {
-        noreg: studentNoregRef.current.value.trim(),
+        studentId: studentStudentIdRef.current.value.trim(),
         token: studentTokenRef.current.value.trim(),
       });
       const startResponse = await api.post(
@@ -140,6 +140,7 @@ export default function Login() {
                   <input
                     name="username"
                     id="username"
+                    key="usernameAdmin"
                     ref={adminUsernameRef}
                     type="text"
                     placeholder="John"
@@ -154,6 +155,7 @@ export default function Login() {
                   <input
                     name="password"
                     id="password"
+                    key="passwordAdmin"
                     ref={adminPasswordRef}
                     type="password"
                     placeholder="********"
@@ -186,13 +188,13 @@ export default function Login() {
               </div>
               <div className="flex flex-col w-full gap-6 mb-10 mt-3">
                 <div className="flex flex-col items-start ">
-                  <label htmlFor="noreg" className="mb-2 font-semibold">
+                  <label htmlFor="studentid" className="mb-2 font-semibold">
                     Student ID
                   </label>
                   <input
-                    name="noreg"
-                    id="noreg"
-                    ref={studentNoregRef}
+                    name="studentid"
+                    id="studentid"
+                    ref={studentStudentIdRef}
                     type="text"
                     placeholder="S2200000"
                     className="w-full py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
@@ -205,6 +207,7 @@ export default function Login() {
                   <input
                     name="token"
                     id="token"
+                    key="token"
                     ref={studentTokenRef}
                     type="text"
                     placeholder="Token"

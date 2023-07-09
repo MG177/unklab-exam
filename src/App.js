@@ -62,6 +62,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/dashboard" element={<Navigate to="exams" />} />
             <Route path="/dashboard" element={<Dashboard />}>
               <Route path="exams" element={<DashboardHome />} />
               <Route path="questions" element={<DashboardQuestion />} />
