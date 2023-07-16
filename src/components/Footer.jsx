@@ -1,14 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import Timer, { TimerBig } from './Timer';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../contexts/AuthContext';
 import api from '../config';
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
-export default function Footer({ questions, number, setNumber }) {
+export default function Footer({ questions, number, setNumber, fetchQuestion }) {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const question = questions[number];
   const [isBookmark, setIsBookmark] = useState(question.isBookmark || false);
+  const confirmSubmitRef = useRef(null);
+  const [confirmSubmitPopup, setConfirmSubmitPopup] = useState(false);
 
   useEffect(() => {
     setIsBookmark(question.isBookmark);
@@ -17,12 +20,6 @@ export default function Footer({ questions, number, setNumber }) {
   const handleTimeOut = () => {
     console.log('time out');
     // navigate('/score');
-  };
-
-  const handleLogout = () => {
-    //clear local storage
-    // sessionStorage.clear();
-    // window.location.href = '/';
   };
 
   const handleNextQuestion = () => {
@@ -53,6 +50,7 @@ export default function Footer({ questions, number, setNumber }) {
       });
       console.log('bookmark', res.data);
       setIsBookmark(res.data);
+      fetchQuestion();
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +96,18 @@ export default function Footer({ questions, number, setNumber }) {
       </div>
 
       <div className="flex flex-row w-[30%] justify-end gap-3">
+        <ConfirmPopup
+          target={confirmSubmitRef.current}
+          visible={confirmSubmitPopup}
+          onHide={() => setConfirmSubmitPopup(false)}
+          message="Are you sure you want to submit now?"
+          icon="pi pi-exclamation-triangle"
+          accept={handleSubmitQuestion}
+          reject={() => setConfirmSubmitPopup(false)}
+          className="rounded-2xl w-[300px]"
+          rejectClassName="rounded-xl bg-whitePlus hover:bg-blue-100 text-blue-600 border border-whitePlus hover:border-whitePlus"
+          acceptClassName="rounded-xl bg-blue-500 hover:bg-blue-600 text-white border border-blue-500 hover:border-blue-600"
+        />
         {number === 0 ? null : (
           <button
             className="pi pi-arrow-left bg-white font-bold text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 py-2.5 px-3.5 md:px-8 md:py-3 transition ease-out duration-200 hover:scale-[1.05]"
@@ -107,7 +117,9 @@ export default function Footer({ questions, number, setNumber }) {
         {number === questions.length - 1 ? (
           <button
             className="bg-white font-Nunito font-bold text-lg lg:text-xl text-accent1 rounded-full shadow-lg border-[1px] border-gray/25 px-3 md:px-5 py-2 transition ease-out duration-200 hover:scale-[1.05]"
-            onClick={handleSubmitQuestion}
+            // onClick={handleSubmitQuestion}
+            ref={confirmSubmitRef}
+            onClick={() => setConfirmSubmitPopup(true)}
           >
             Submit
           </button>
@@ -119,9 +131,8 @@ export default function Footer({ questions, number, setNumber }) {
         )}
 
         <button
-          className={`pi ${
-            isBookmark ? 'pi-bookmark-fill' : 'pi-bookmark'
-          } bg-white text-xl text-yellow-500 rounded-full shadow-lg border-[1px] border-gray/25 px-5 md:px-4 py-2 transition ease-out duration-200 hover:scale-[1.05]`}
+          className={`pi ${isBookmark ? 'pi-bookmark-fill' : 'pi-bookmark'
+            } bg-white text-xl text-yellow-500 rounded-full shadow-lg border-[1px] border-gray/25 px-5 md:px-4 py-2 transition ease-out duration-200 hover:scale-[1.05]`}
           onClick={handleBookmark}
         />
       </div>
@@ -132,6 +143,8 @@ export default function Footer({ questions, number, setNumber }) {
 export function FooterCountdown({ setTime, time, setVisibleBottom }) {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const confirmLogoutRef = useRef(null);
+  const [confirmLogoutPopup, setConfirmLogoutPopup] = useState(false);
 
   const handleLogout = () => {
     //clear local storage
@@ -158,7 +171,7 @@ export function FooterCountdown({ setTime, time, setVisibleBottom }) {
         ) : (
           user.isShowAnswer && (
             <button
-              className="flex items-center justify-center text-xl bg-whitePlus rounded-3xl py-2 px-4 border border-gray/20 z-20 transition-all duration-200 ease-out font-bold z-30 shadow-md font-Nunito whitespace-nowrap leading-none"
+              className="flex items-center justify-center text-xl bg-whitePlus rounded-3xl py-2 px-4 border border-gray/20 transition-all duration-200 ease-out font-bold z-30 shadow-md font-Nunito whitespace-nowrap leading-none"
               onClick={() => setVisibleBottom(true)}
             >
               Show answer
@@ -169,9 +182,23 @@ export function FooterCountdown({ setTime, time, setVisibleBottom }) {
       </div>
 
       <div className="flex flex-row w-[30%] justify-end gap-3">
+        <ConfirmPopup
+          target={confirmLogoutRef.current}
+          visible={confirmLogoutPopup}
+          onHide={() => setConfirmLogoutPopup(false)}
+          message="Are you sure you want to logout?"
+          icon="pi pi-exclamation-triangle"
+          accept={handleLogout}
+          reject={() => setConfirmLogoutPopup(false)}
+          className="rounded-2xl w-[300px]"
+          rejectClassName="rounded-xl bg-whitePlus hover:bg-blue-100 text-blue-600 border border-whitePlus hover:border-whitePlus"
+          acceptClassName="rounded-xl bg-red-500 hover:bg-red-600 text-white border border-red-500 hover:border-red-600"
+        />
         <button
           className="bg-accent2 font-Nunito flex font-bold text-lg lg:text-xl text-white rounded-full shadow-lg border-[1px] border-gray/25 px-5 py-2 transition ease-out duration-200 hover:scale-[1.05]"
-          onClick={handleLogout}
+          ref={confirmLogoutRef}
+          onClick={() => setConfirmLogoutPopup(true)}
+        // onClick={handleLogout}
         >
           Logout
         </button>

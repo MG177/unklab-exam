@@ -54,29 +54,29 @@ export default function Exam() {
     sessionStorage.setItem('number', number);
   }, [number]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        navigatorRef.current &&
-        !navigatorRef.current.contains(event.target) &&
-        navigator === true
-      ) {
-        console.log('You clicked outside of me!');
-        setNavigator(false);
-      } else {
-        console.log('You clicked inside of me!');
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (
+  //       navigatorRef.current &&
+  //       !navigatorRef.current.contains(event.target) &&
+  //       navigator === true
+  //     ) {
+  //       console.log('You clicked outside of me!');
+  //       setNavigator(false);
+  //     } else {
+  //       console.log('You clicked inside of me!');
+  //     }
+  //   };
 
-    // Add event listener on component mount
-    document.addEventListener('click', handleClickOutside);
+  //   // Add event listener on component mount
+  //   document.addEventListener('click', handleClickOutside);
 
-    // Clean up the event listener on component unmount
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-  console.log('navigator', navigator);
+  //   // Clean up the event listener on component unmount
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside);
+  //   };
+  // }, []);
+  // console.log('navigator', navigator);
 
   const handleSize = (operator) => {
     if (size === 0 && operator === -1) {
@@ -91,9 +91,9 @@ export default function Exam() {
     return null;
   }
 
-  const handleNavigator = () => {
-    setNavigator((prev) => !prev);
-  };
+  // const handleNavigator = () => {
+  //   setNavigator((prev) => !prev);
+  // };
 
   return (
     <div className="overflow-hidden">
@@ -120,17 +120,15 @@ export default function Exam() {
             ></button>
           </div>
           <div
-            className={`fixed bottom-28 ${
-              navigator ? '-right-0' : '-right-[calc(30rem-1.7rem)]'
-            } z-20 w-[30rem] h-[calc(100vh-15rem)] flex items-end transition-all duration-400 ease-in-out bg-transparent`}
+            className={`fixed bottom-28 ${navigator ? '-right-0' : '-right-[calc(30rem-1.7rem)]'
+              } z-20 w-[30rem] h-[calc(100vh-15rem)] flex items-end transition-all duration-400 ease-in-out bg-transparent`}
             ref={navigatorRef}
           >
             <button
-              className={`sticky flex left-10 pi ${
-                navigator ? 'pi-chevron-right' : 'pi-chevron-left'
-              } items-center justify-center text-xl bg-whitePlus rounded-l-3xl h-[6rem] w-[1.7rem] border border-r-0 border-gray/20 z-20 transition-all duration-200 ease-out font-bold mb-5 z-30 shadow-md`}
+              className={`sticky flex left-10 pi ${navigator ? 'pi-chevron-right' : 'pi-chevron-left'
+                } items-center justify-center text-xl bg-whitePlus rounded-l-3xl h-[6rem] w-[1.7rem] border border-r-0 border-gray/20 transition-all duration-200 ease-out font-bold mb-5 z-30 shadow-md`}
               onClick={() => setVisibleBottom(true)}
-              // onClick={() => handleNavigator()}
+            // onClick={() => handleNavigator()}
             />
             {/* {navigator && ( */}
             {/* <div className="bg-whitePlus px-4 py-3 z-30 shadow-md border border-gray/20 rounded-2xl w-full h-full"> */}
@@ -148,12 +146,11 @@ export default function Exam() {
                 <div className="grid grid-cols-10 gap-2 mr-5 my-2">
                   {questions.map((question, index) => (
                     <button
-                      key={index}
-                      className={`relative w-8 h-8 shadow-md rounded-lg border-2 text-xs font-Nunito font-semibold ${
-                        index === number
-                          ? 'bg-accent1/70 text-white'
-                          : 'bg-white text-black'
-                      }
+                      key={`${index}_${question.isBookmark}`}
+                      className={`relative w-8 h-8 shadow-md rounded-lg border-2 text-xs font-Nunito font-semibold ${index === number
+                        ? 'bg-accent1/70 text-white'
+                        : 'bg-white text-black'
+                        }
                       ${question.answer ? 'border-accent1/70' : ''} 
                       border-gray/20 transition-all duration-200 ease-out`}
                       onClick={() => setNumber(index)}
@@ -161,6 +158,7 @@ export default function Exam() {
                       {index + 1}
                       {question.isBookmark && (
                         <i
+                          key={index}
                           className="pi pi-bookmark-fill text-yellow-400 ml-1 absolute -top-1 -right-1"
                           style={{ fontSize: '0.6rem' }}
                         ></i>
@@ -183,7 +181,7 @@ export default function Exam() {
               />
             </div>
           </ScrollPanel>
-          <Footer questions={questions} number={number} setNumber={setNumber} />
+          <Footer questions={questions} number={number} setNumber={setNumber} fetchQuestion={fetchQuestion} />
         </>
       )}
     </div>

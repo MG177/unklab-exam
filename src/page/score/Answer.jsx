@@ -1,6 +1,22 @@
 import React from 'react';
 
 export default function Answer({ question, index }) {
+  // filter answer from question, the answer is one of the question.options.text. it will be filtered by comparing the question.answer and question.options.id
+
+  // const answer = question.options.filter(
+  //   (option) => option.id === question.answer
+  // )[0];
+
+  const answer = () => {
+    if (question.answer === null) return null;
+    const answer = question.options.filter(
+      (option) => option.id === question.answer
+    )[0];
+    return answer.text;
+  }
+  // const answer = "123"
+  // console.log(question);
+
   if (question.correctAnswer === question.answer) {
     return (
       <div className="p-1.5 pt-5 bg-green-500 shadow-lg rounded-3xl min-w-[400px] font-Nunito">
@@ -27,7 +43,7 @@ export default function Answer({ question, index }) {
               ></i>
             </div>
             <p className="w-full ml-6 text-left  font-bold text-md text-black">
-              {question.answer || ' -- no answer --'}
+              {answer() || ' -- no answer --'}
             </p>
           </div>
         </div>
@@ -61,7 +77,7 @@ export default function Answer({ question, index }) {
               ></i>
             </div>
             <p className="w-full ml-6 text-left  font-bold text-md text-black">
-              {question.answer || ' -- no answer --'}
+              {answer() || ' -- no answer --'}
             </p>
           </div>
         </div>

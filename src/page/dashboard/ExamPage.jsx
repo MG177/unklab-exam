@@ -152,7 +152,7 @@ export default function PageDashboard() {
             ...item,
             isSubmitted: scoreItem.isSubmitted,
             score: scoreItem.score,
-            totalScore: scoreItem.totalScore,
+            totalScore: Math.round(scoreItem.totalScore),
           };
         }
       });
@@ -293,11 +293,10 @@ export default function PageDashboard() {
           data-pr-position="right"
           className="text-[100%]"
           id={`cell_score_${rowData.studentId}_${questionName}`}
-          data-pr-tooltip={`Correct answer: ${score.correct || ''} / ${
-            score.total || ''
-          }`}
+          data-pr-tooltip={`Correct answer: ${score.correct || ''} / ${score.total || ''
+            }`}
         >
-          {score.score || ''}
+          {score.score || '0'}
         </div>
       </>
     );
@@ -395,7 +394,7 @@ export default function PageDashboard() {
               }}
             />
             <div className="flex flex-row justify-between gap-3 min-w-fit">
-              <div className="flex flex-row gap-3 font-bold font-Nunito text-accent1 text-lg text-base leading-none">
+              <div className="flex flex-row gap-3 font-bold font-Nunito text-accent1 text-lg leading-none">
                 <label
                   className="cursor-pointer flex items-center justify-center py-2 px-10 rounded-2xl bg-whitePlus border border-accent1 shadow-md z-50 h-fit self-end"
                   htmlFor="uploadCSV"
@@ -417,8 +416,8 @@ export default function PageDashboard() {
                   {hours === 0
                     ? `00:${minutesStr}:${secondsStr}`
                     : time != 'NaN'
-                    ? `${hoursStr}:${minutesStr}:${secondsStr}`
-                    : '00:00:00'}
+                      ? `${hoursStr}:${minutesStr}:${secondsStr}`
+                      : '00:00:00'}
                 </div>
                 <div className="flex flex-row items-center gap-2 min-w-[150px]">
                   <div className="h-full px-4 py-2 text-xl font-bold text-center bg-whitePlus shadow-md min-w-[150px] text-accent1 rounded-2xl">
@@ -436,7 +435,7 @@ export default function PageDashboard() {
                 pt={{
                   content: { className: 'relative' },
                 }}
-                // maskClassName="bg-accent1 opacity-50"
+              // maskClassName="bg-accent1 opacity-50"
               >
                 <ScrollPanel
                   style={{ width: '100%', height: '100%' }}

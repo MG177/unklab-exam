@@ -101,12 +101,12 @@ export function HeaderQuestionEditor({
           </p>
         </button>
         <div className="flex flex-row">
-          <button
+          {/* <button
             className="w-10 h-10 mr-3 text-white rounded-full pi pi-eye bg-accent1 z-20"
             style={{ fontSize: '1.4rem' }}
-          />
+          /> */}
           <button
-            className="flex items-center justify-center px-12 font-bold text-white rounded-3xl font-Nunito bg-accent1 z-20"
+            className="flex items-center justify-center px-12 font-bold text-white rounded-3xl font-Nunito bg-accent1 z-20 h-10"
             onClick={() => saveQuestions(true)}
           >
             Save

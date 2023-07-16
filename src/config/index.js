@@ -5,9 +5,4 @@ const api = axios.create({
   baseURL: '//localhost:8080',
 });
 
-// const storedAccessToken = sessionStorage.getItem('access_token');
-// const token = storedAccessToken ? storedAccessToken.replace(/"/g, '') : null;
-// console.log(token);
-
-// api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 export default api;
