@@ -9,11 +9,13 @@ export default function TimerSmall() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
   const [time, setTime] = useState(2);
+  const [loading, setLoading] = useState(true);
 
   const fetchTime = async () => {
     try {
       const response = await api.get(`exam/time/${user.examId}`);
       setTime(response.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -36,7 +38,7 @@ export default function TimerSmall() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 1) {
+        if (prevTimeRemaining <= 1 && !loading) {
           clearInterval(intervalId);
           navigate('/score');
         } else {
@@ -49,6 +51,8 @@ export default function TimerSmall() {
       clearInterval(intervalId);
     };
   }, [navigate]);
+
+
 
   const hours = Math.floor(timeRemaining / 3600);
   const minutes = Math.floor((timeRemaining % 3600) / 60);
@@ -64,13 +68,11 @@ export default function TimerSmall() {
         {!timeRemaining
           ? 'Time Out'
           : hours !== 0
-          ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${
-              minutes === 1 ? '' : 's'
+            ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${minutes === 1 ? '' : 's'
             }`
-          : `${
-              minutes !== 0
-                ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
-                : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
+            : `${minutes !== 0
+              ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
+              : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
             }`}
       </p>
       <p className="text-xl lg:hidden">
@@ -142,13 +144,11 @@ export function TimerBig({ timeRemaining, setTimeRemaining }) {
         {!timeRemaining
           ? 'Time Out'
           : hours !== 0
-          ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${
-              minutes === 1 ? '' : 's'
+            ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${minutes === 1 ? '' : 's'
             }`
-          : `${
-              minutes !== 0
-                ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
-                : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
+            : `${minutes !== 0
+              ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
+              : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
             }`}
       </p>
       <p className="text-xl lg:hidden">

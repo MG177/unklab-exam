@@ -14,6 +14,7 @@ export default function Exam() {
     Number(sessionStorage.getItem('number')) || 0
   );
   const [loading, setLoading] = useState(true);
+  const [networkError, setNetworkError] = useState(false);
   const [navigator, setNavigator] = useState(false);
   const navigatorRef = useRef(null);
   const textSize = [
@@ -41,11 +42,18 @@ export default function Exam() {
       // setAnswer(response.data.answer);
       setQuestions(response.data);
       setLoading(false);
+      setNetworkError(false);
       if (response.status === 404) {
         throw new Error('Question not found');
       }
     } catch (error) {
-      navigate('/');
+      if (error.code === "ERR_NETWORK") {
+        // alert("Network error, please check your internet connection");
+        // setLoading(true);
+        setNetworkError(true);
+      } else {
+        navigate('/');
+      }
       console.log(error);
     }
   };
@@ -86,6 +94,21 @@ export default function Exam() {
     }
     setSize((prev) => prev + operator);
   };
+
+  if (networkError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-3xl font-bold">Network error</h1>
+        <button
+          className="px-4 py-2 mt-4 text-white bg-accent1 rounded-md"
+          onClick={() => fetchQuestion()}
+        >
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
 
   if (loading) {
     return null;
@@ -130,8 +153,6 @@ export default function Exam() {
               onClick={() => setVisibleBottom(true)}
             // onClick={() => handleNavigator()}
             />
-            {/* {navigator && ( */}
-            {/* <div className="bg-whitePlus px-4 py-3 z-30 shadow-md border border-gray/20 rounded-2xl w-full h-full"> */}
 
             <Sidebar
               visible={visibleBottom}
@@ -151,8 +172,8 @@ export default function Exam() {
                         ? 'bg-accent1/70 text-white'
                         : 'bg-white text-black'
                         }
-                      ${question.answer ? 'border-accent1/70' : ''} 
-                      border-gray/20 transition-all duration-200 ease-out`}
+                      ${question.answer != null ? 'border-accent1/70' : 'border-gray/20'} 
+                      transition-all duration-200 ease-out`}
                       onClick={() => setNumber(index)}
                     >
                       {index + 1}
@@ -168,8 +189,6 @@ export default function Exam() {
                 </div>
               </ScrollPanel>
             </Sidebar>
-            {/* </div> */}
-            {/* )} */}
           </div>
           <ScrollPanel style={{ width: '100%', height: '100vh' }}>
             <div className="flex flex-col w-full py-28 justify-center items-center min-h-screen z-0">

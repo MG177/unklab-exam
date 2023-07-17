@@ -34,6 +34,7 @@ export default function Questions({ questions, number, textSize, size }) {
       setAnswer(index);
     } catch (error) {
       console.log(error);
+      alert('Error, please check your internet connection');
     }
   };
 
@@ -46,18 +47,16 @@ export default function Questions({ questions, number, textSize, size }) {
     <div className="flex flex-col w-fit min-w-[550px] max-w-[600px] gap-4 font-Nunito">
       <div className="flex flex-col w-full min-h-fit rounded-3xl p-5 gap-1 bg-whitePlus shadow-md border-[1px] border-gray/20 cursor-default select-none mb-2">
         <h1
-          className={`font-bold ${textSize[size + 2]} md:${
-            textSize[size + 3]
-          } text-accent1`}
+          className={`font-bold ${textSize[size + 2]} md:${textSize[size + 3]
+            } text-accent1`}
         >
           Question #{number + 1}
         </h1>
 
         {hasContent() && <Media id={hasContent()} />}
         <p
-          className={`leading-normal ${textSize[size]} md:${
-            textSize[size + 1]
-          } xl:${textSize[size + 2]} text-black`}
+          className={`leading-normal ${textSize[size]} md:${textSize[size + 1]
+            } xl:${textSize[size + 2]} text-black`}
           dangerouslySetInnerHTML={
             {
               __html: question.text.replace(/\n/g, '<br>'),
