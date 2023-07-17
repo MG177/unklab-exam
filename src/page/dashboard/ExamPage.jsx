@@ -453,6 +453,7 @@ export default function PageDashboard() {
                         key={question.id}
                         question={question}
                         index={index}
+                        showOrigin={true}
                       />
                     ))}
                   </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Answer({ question, index }) {
+export default function Answer({ question, index, showOrigin }) {
   // filter answer from question, the answer is one of the question.options.text. it will be filtered by comparing the question.answer and question.options.id
 
   // const answer = question.options.filter(
@@ -19,15 +19,16 @@ export default function Answer({ question, index }) {
 
   if (question.correctAnswer === question.answer) {
     return (
-      <div className="p-1.5 pt-5 bg-green-500 shadow-lg rounded-3xl min-w-[400px] font-Nunito">
+      <div className="p-1.5 pt-5 bg-green-500 shadow-lg rounded-3xl min-w-[400px] font-Nunito select-none">
         <div className="bg-whitePlus w-full rounded-3xl px-6 py-4">
           <div className="flex flex-col gap-1 mb-2">
             <p
-              className={`font-bold text-green-500  text-[29px] max-[960px]:text-[24px] mt-[15px] mb-2}`}
+              className="font-bold text-green-500 flex flex-row text-2xl w-full mb-2 truncate"
+              {...(showOrigin && { title: question.questionOrigin.questionName })}
             >
-              Question #{index + 1}
+              {`Question #${index + 1} ${showOrigin ? "- " + question.questionOrigin.questionName : ""}`}
             </p>
-            <p className="w-full mb-4 font-bold  text-[#37474F] max-[960px]:text-[16px] text-[20px] leading-[24px]">
+            <p className="w-full mb-4 font-semibold  text-[#37474F] max-[960px]:text-[16px] text-[20px] leading-[24px]">
               {question.text}
             </p>
           </div>
@@ -47,7 +48,7 @@ export default function Answer({ question, index }) {
             </p>
           </div>
         </div>
-      </div>
+      </div >
     );
   } else {
     return (
@@ -57,11 +58,12 @@ export default function Answer({ question, index }) {
         <div className="bg-whitePlus w-full rounded-3xl px-6 py-4 ">
           <div className="flex flex-col gap-1 mb-2">
             <p
-              className={`font-bold text-accent2 text-[29px] max-[960px]:text-[24px] mt-[15px] mb-2}`}
+              className="font-bold text-accent2 flex flex-row text-2xl w-full mb-2 truncate"
+              {...(showOrigin && { title: question.questionOrigin.questionName })}
             >
-              Question #{index + 1}
+              {`Question #${index + 1} ${showOrigin ? "- " + question.questionOrigin.questionName : ""}`}
             </p>
-            <p className="w-full mb-4 font-bold  text-[#37474F] max-[960px]:text-[16px] text-[20px] leading-[24px]">
+            <p className="w-full mb-4 font-semibold  text-[#37474F] max-[960px]:text-[16px] text-[20px] leading-[24px]">
               {question.text}
             </p>
           </div>

@@ -10,6 +10,8 @@ import { Tooltip } from 'primereact/tooltip';
 import { Toast } from 'primereact/toast';
 import { InputSwitch } from 'primereact/inputswitch';
 import { OverlayPanel } from 'primereact/overlaypanel';
+import { InputText } from 'primereact/inputtext';
+
 
 export default function Header() {
   const { user } = useContext(AuthContext);
@@ -130,8 +132,10 @@ export function HeaderExamDashboard({
   const modalRef = useRef(null);
   const toast = useRef(null);
   const navigate = useNavigate();
+  const [minute, setMinute] = useState(90);
 
   const op = useRef(null);
+  const minuteOverlayRef = useRef(null);
 
   const handleOpenModal = () => {
     if (modalRef.current) {
@@ -141,7 +145,7 @@ export function HeaderExamDashboard({
 
   const handleStartExam = async () => {
     try {
-      const res = await api.patch('/exam/start/' + examId);
+      const res = await api.patch('/exam/start/' + examId + '?minute=' + minute);
       setTime(res.data.time);
       setToken(res.data.token);
       // toast.current.show({
@@ -190,11 +194,12 @@ export function HeaderExamDashboard({
     try {
       const change = { [changes]: !checked[changes] };
       if (change.isShowAnswer) change.isShowScore = true;
-      if (!change.isShowScore) change.isShowAnswer = false;
+      if (change.isShowScore === false) change.isShowAnswer = false;
+      // if (!change.isShowScore) change.isShowAnswer = false;
       console.log(change);
       const res = await api.patch('/exam/switch/' + examId, change);
       const initialSwitch = {
-        isShowScore: res.data.isShowAnswer ? true : res.data.isShowScore,
+        isShowScore: res.data.isShowScore,
         isShowAnswer: res.data.isShowAnswer,
         isRandom: res.data.isRandom,
       };
@@ -290,12 +295,38 @@ export function HeaderExamDashboard({
             onClick={(e) => op.current.toggle(e)}
           />
           {time === 0 || time < 0 || time === 'NaN' ? (
-            <button
-              className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent1 z-50"
-              onClick={handleStartExam}
-            >
-              Start
-            </button>
+            <div className='flex flex-row'>
+              <button
+                className="flex items-center justify-center py-2 font-bold text-white pl-10 pr-7 rounded-l-3xl font-Nunito bg-accent1 z-50"
+                onClick={handleStartExam}
+              // onClick={() => console.log("start")}
+              >
+                Start
+              </button>
+              <button className='flex items-center justify-center py-2 font-bold text-accent1 pr-2 pl-1.5 rounded-r-3xl font-Nunito bg-accent1/20 border-2 border-accent1 z-50'
+                // onClick={() => console.log("timer")}
+                onClick={(e) => minuteOverlayRef.current.toggle(e)}
+              >
+                <i className="pi pi-angle-down " />
+              </button>
+              <OverlayPanel ref={minuteOverlayRef} className="rounded-2xl">
+                <div className='flex flex-row gap-2'>
+
+                  <span className="p-input-icon-left ">
+                    <i className="pi pi-clock " />
+                    <InputText className='rounded-md py-1 w-[100px]' value={minute} onChange={(e) => setMinute(e.target.value)} />
+                  </span>
+
+                  {/* <button
+                    className="flex items-center justify-center py-2 font-bold text-accent font-Nunito z-50"
+                    onClick={handleStartExam}
+                  // onClick={() => console.log("start")}
+                  >
+                    start
+                  </button> */}
+                </div>
+              </OverlayPanel>
+            </div>
           ) : (
             <button
               className="flex items-center justify-center py-2 font-bold text-white px-14 rounded-3xl font-Nunito bg-accent2 z-50"
