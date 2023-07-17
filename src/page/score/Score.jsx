@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 // import ProgressBar from '../score/progress_bar.svg';
-import Footer, { FooterCountdown } from '../../components/Footer';
+import { FooterCountdown } from '../../components/Footer';
 import api from '../../config';
 import AuthContext from '../../contexts/AuthContext';
 import Answer from './Answer';
