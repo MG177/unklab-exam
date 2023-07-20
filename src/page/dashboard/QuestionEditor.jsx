@@ -41,7 +41,6 @@ export default function QuestionEditor() {
       summary: 'Error when saving questions',
       detail: msg,
       life: 5000,
-      // sticky: true,
     });
   };
 
@@ -85,7 +84,6 @@ export default function QuestionEditor() {
 
   const saveQuestions = async (toast) => {
     try {
-      console.log('questions - saveQuestions: ', questions);
 
       const res = await api.put('/questions/update/' + questionId, {
         questions,
@@ -141,6 +139,9 @@ export default function QuestionEditor() {
         saveStatus={saveStatus}
         questionName={questionName}
         saveQuestions={saveQuestions}
+        toast={toast}
+        questionId={questionId}
+        fetchQuestions={fetchQuestions}
       />
 
       <ScrollPanel style={{ width: '100%', height: '100vh' }}>
@@ -174,7 +175,7 @@ export default function QuestionEditor() {
         </div>
       </ScrollPanel>
       <button
-        className="p-4 flex justify-center items-center fixed bottom-7 z-20 right-7 bg-accent1 rounded-full text-white"
+        className="fixed z-20 flex items-center justify-center p-4 text-white rounded-full bottom-7 right-7 bg-accent1"
         onClick={handleAddNewQuestion}
       >
         <i className="pi pi-plus"></i>

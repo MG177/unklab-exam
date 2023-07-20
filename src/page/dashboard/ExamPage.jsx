@@ -214,7 +214,7 @@ export default function PageDashboard() {
         rounded
         text
         label="Export to Excel"
-        className="shadow-md border border-gray/20 mt-2"
+        className="mt-2 border shadow-md border-gray/20"
         onClick={exportExcel}
         data-pr-tooltip="XLS"
       />
@@ -231,7 +231,7 @@ export default function PageDashboard() {
         text
         raised
         label="refresh"
-        className="shadow-md border border-gray/20 mt-2"
+        className="mt-2 border shadow-md border-gray/20"
         onClick={fetchExam}
       />
     </div>
@@ -242,8 +242,8 @@ export default function PageDashboard() {
     try {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
-      const response = await api.patch('/exam/studentList/' + examId, formData);
       e.target.value = '';
+      const response = await api.patch('/exam/studentList/' + examId, formData);
       fetchExam();
       toast.current.show({
         severity: 'success',
@@ -321,7 +321,7 @@ export default function PageDashboard() {
     if (typeof rowData.score === 'object') {
       return (
         <button
-          className="shadow-md border border-gray/20 px-1 py-1 font-semibold rounded-md text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200 ease-in-out scale-90 w-full"
+          className="w-full px-1 py-1 font-semibold text-blue-500 transition duration-200 ease-in-out scale-90 border rounded-md shadow-md border-gray/20 hover:bg-blue-500 hover:text-white"
           // onClick={() => handleViewDetails(rowData.studentId)}
           onClick={() => fetchScore(rowData.studentId, rowData.studentName)}
         >
@@ -331,7 +331,7 @@ export default function PageDashboard() {
     } else {
       return (
         <button
-          className="shadow-md border border-gray/20 px-1 py-1 font-semibold rounded-md text-gray transition duration-200 ease-in-out scale-90 w-full"
+          className="w-full px-1 py-1 font-semibold transition duration-200 ease-in-out scale-90 border rounded-md shadow-md border-gray/20 text-gray"
           disabled
         >
           View Details
@@ -394,9 +394,9 @@ export default function PageDashboard() {
               }}
             />
             <div className="flex flex-row justify-between gap-3 min-w-fit">
-              <div className="flex flex-row gap-3 font-bold font-Nunito text-accent1 text-lg leading-none">
+              <div className="flex flex-row gap-3 text-lg font-bold leading-none font-Nunito text-accent1">
                 <label
-                  className="cursor-pointer flex items-center justify-center py-2 px-10 rounded-2xl bg-whitePlus border border-accent1 shadow-md z-50 h-fit self-end"
+                  className="z-50 flex items-center self-end justify-center px-10 py-2 border shadow-md cursor-pointer rounded-2xl bg-whitePlus border-accent1 h-fit"
                   htmlFor="uploadCSV"
                 >
                   <p>Import</p>
@@ -431,7 +431,7 @@ export default function PageDashboard() {
                 visible={visibleBottom}
                 position="right"
                 onHide={() => setVisibleBottom(false)}
-                className="relative w-fit h-screen rounded-l-3xl bg-white shadow-lg"
+                className="relative h-screen bg-white shadow-lg w-fit rounded-l-3xl"
                 pt={{
                   content: { className: 'relative' },
                 }}
@@ -441,13 +441,13 @@ export default function PageDashboard() {
                   style={{ width: '100%', height: '100%' }}
                   className="px-2"
                 >
-                  {/* <div className="sticky top-0 bg-white font-bold font-Nunito text-xl z-10">
+                  {/* <div className="sticky top-0 z-10 text-xl font-bold bg-white font-Nunito">
                     Navigate question :
                   </div> */}
                   <div className="scale-75">
                     <ScoreCard score={studentScore} user={{ studentName }} />
                   </div>
-                  <div className="max-w-2xl px-1 pb-3 flex flex-col gap-5 mt-4 mb-12">
+                  <div className="flex flex-col max-w-2xl gap-5 px-1 pb-3 mt-4 mb-12">
                     {questionList.map((question, index) => (
                       <Answer
                         key={question.id}
@@ -471,12 +471,11 @@ export default function PageDashboard() {
                   acceptClassName="rounded-xl bg-red-500 hover:bg-red-600 text-white border border-red-500 hover:border-red-600"
                 />
                 <div
-                  className=" absolute bottom-0 left-0 flex flex-row justify-end px-3 py-2 z-10 bg-whitePlus w-full"
+                  className="absolute bottom-0 left-0 z-10 flex flex-row justify-end w-full px-3 py-2 bg-whitePlus"
                   ref={confirmResetRef}
                 >
                   <button
-                    className="shadow-lg border border-red-400 py-2 
-                  text-2xl font-semibold font-Nunito rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition duration-200 ease-in-out scale-90 w-full"
+                    className="w-full py-2 text-2xl font-semibold text-red-500 transition duration-200 ease-in-out scale-90 border border-red-400 shadow-lg font-Nunito rounded-2xl hover:bg-red-500 hover:text-white"
                     onClick={() => setConfirmResetPopup(true)}
                   >
                     Reset this student
