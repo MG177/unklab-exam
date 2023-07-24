@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import '../styles/audio.css';
 import Media from './Media';
 import Option from '../components/Option';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import api from '../config';
 
 export default function Questions({ questions, number, textSize, size }) {
   // const [questions, answer, setAnswer, number] = useOutletContext();
+  const navigate = useNavigate();
   const question = questions[number];
   const [answer, setAnswer] = useState(question.answer);
   // console.log(`question ${question.id}: ` + question);
@@ -33,6 +34,9 @@ export default function Questions({ questions, number, textSize, size }) {
       });
       setAnswer(index);
     } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/score');
+      }
       console.log(error);
       alert('Error, please check your internet connection');
     }

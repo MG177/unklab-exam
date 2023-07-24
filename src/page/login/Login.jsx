@@ -57,7 +57,9 @@ export default function Login() {
       setUser(studentAuth.data);
       if (startResponse.data === true) {
         navigate('/started');
-      } else {
+      }
+
+      if (startResponse.data === false) {
         navigate('/score');
       }
       // if (
@@ -69,9 +71,18 @@ export default function Login() {
       // }
       // navigate('/started');
     } catch (error) {
-      setErrorMessage(
-        'Incorrect Registration number or Token. Please try again.'
-      );
+      // setErrorMessage(
+      //   'Incorrect Registration number or Token. Please try again.'
+      // );
+      if (error.response.status === 401 || error.response.status === 404) {
+        setErrorMessage(
+          'Incorrect Registration number or Token. Please try again.'
+        );
+      } else if (error.response.status === 403) {
+        setErrorMessage('Exam timeout or has not started yet.');
+      } else {
+        setErrorMessage('There are something wrong, please try again.');
+      }
       shakeitBaby();
       console.log(error);
     }
@@ -144,7 +155,7 @@ export default function Login() {
                     ref={adminUsernameRef}
                     type="text"
                     placeholder="John"
-                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg
+                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg font-inter font-normal text-lg
                   pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
@@ -159,14 +170,14 @@ export default function Login() {
                     ref={adminPasswordRef}
                     type="password"
                     placeholder="********"
-                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
+                    className="w-full max-[960px]:py-3 py-6 border-none rounded-xl shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
               </div>
               <button
                 type="submit"
                 className="uppercase w-full py-4 rounded-full bg-[#B55FFE] text-[#FAFAFA] font-semibold text-lg text-[24px] max-[960px]:py-3 max-[960px]:text-[16px]"
-                // onClick={() => (adminFormRef.current = true)}
+              // onClick={() => (adminFormRef.current = true)}
               >
                 Login as admin
               </button>
@@ -197,7 +208,7 @@ export default function Login() {
                     ref={studentStudentIdRef}
                     type="text"
                     placeholder="S2200000"
-                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
+                    className="w-full py-6 border-none rounded-xl shadow-lg font-inter font-normal text-lg pl-[22px] placeholder:text-[#37474F40]"
                   />
                 </div>
                 <div className="flex flex-col items-start ">
@@ -211,16 +222,15 @@ export default function Login() {
                     ref={studentTokenRef}
                     type="text"
                     placeholder="Token"
-                    className="w-full py-6 border-none rounded-xl shadow-lg shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
+                    className="w-full py-6 border-none rounded-xl shadow-lg font-inter font-normal text-lg pl-5 placeholder:text-[#37474F40]"
                   />
                 </div>
               </div>
               <div className="flex flex-col w-full gap-4">
                 {errorMessage && (
                   <div
-                    className={`flex justify-center h-fit ${
-                      isShaking ? 'animate-horizontal-shaking' : ''
-                    }`}
+                    className={`flex justify-center h-fit ${isShaking ? 'animate-horizontal-shaking' : ''
+                      }`}
                   >
                     <img src={Warn} className="" />
                     <div className="h-fit font-Nunito font-normal text-[17px] leading-[20.4px] text-accent2 text-left ml-4 -mb-6">

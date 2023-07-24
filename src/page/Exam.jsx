@@ -51,6 +51,8 @@ export default function Exam() {
         // alert("Network error, please check your internet connection");
         // setLoading(true);
         setNetworkError(true);
+      } else if (error.response.status === 403) {
+        navigate('/score');
       } else {
         navigate('/');
       }
@@ -61,30 +63,6 @@ export default function Exam() {
     fetchQuestion();
     sessionStorage.setItem('number', number);
   }, [number]);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     if (
-  //       navigatorRef.current &&
-  //       !navigatorRef.current.contains(event.target) &&
-  //       navigator === true
-  //     ) {
-  //       console.log('You clicked outside of me!');
-  //       setNavigator(false);
-  //     } else {
-  //       console.log('You clicked inside of me!');
-  //     }
-  //   };
-
-  //   // Add event listener on component mount
-  //   document.addEventListener('click', handleClickOutside);
-
-  //   // Clean up the event listener on component unmount
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside);
-  //   };
-  // }, []);
-  // console.log('navigator', navigator);
 
   const handleSize = (operator) => {
     if (size === 0 && operator === -1) {

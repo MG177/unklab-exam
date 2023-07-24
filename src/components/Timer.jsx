@@ -17,6 +17,9 @@ export default function TimerSmall() {
       setTime(response.data);
       setLoading(false);
     } catch (error) {
+      if (error.response.status === 403) {
+        navigate('/score');
+      }
       console.log(error);
     }
   };
@@ -38,9 +41,9 @@ export default function TimerSmall() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 1 && !loading) {
-          clearInterval(intervalId);
+        if (prevTimeRemaining <= 1 && loading === false) {
           navigate('/score');
+          clearInterval(intervalId);
         } else {
           return prevTimeRemaining - 1;
         }
@@ -61,11 +64,10 @@ export default function TimerSmall() {
   const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
   const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
   const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-  // console.log('timeRemaining = ', timeRemaining);
   return (
     <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-lg text-accent2 font-bold font-Roboto  ">
       <p className="hidden text-2xl lg:block">
-        {!timeRemaining
+        {timeRemaining <= 0
           ? 'Time Out'
           : hours !== 0
             ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${minutes === 1 ? '' : 's'
@@ -76,7 +78,7 @@ export default function TimerSmall() {
             }`}
       </p>
       <p className="text-xl lg:hidden">
-        {!timeRemaining
+        {timeRemaining <= 0
           ? 'Time Out'
           : `${hoursStr} : ${minutesStr} : ${secondsStr}
           `}
