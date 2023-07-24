@@ -15,6 +15,22 @@ const totalQuestion = (data) => {
   return total;
 };
 
+const compressQuestion = (data) => {
+  const question = [];
+  data.forEach((item) => {
+    if (typeof item.quantity === 'number' && !isNaN(item.quantity)) {
+      question.push({
+        _id: item._id,
+        questionName: item.questionName,
+        quantity: item.quantity,
+        questionLength: item.questions.length,
+      });
+    }
+  });
+  return question;
+};
+
+
 export function ExamModalCreator({ modalRef }) {
   const navigate = useNavigate();
   const examLabelRef = useRef(null);
@@ -111,7 +127,7 @@ export function ExamModalCreator({ modalRef }) {
         return;
       }
       //   console.log(data);
-      const response = await api.post('/exam/' + examLabel, questionSelected);
+      const response = await api.post('/exam/' + examLabel, compressQuestion(questionSelected));
       navigate('/dashboard/exam/' + response.data._id);
     } catch (err) {
       console.log(err);

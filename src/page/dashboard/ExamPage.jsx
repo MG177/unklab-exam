@@ -281,16 +281,6 @@ export default function PageDashboard() {
     }
   };
 
-
-
-  const replaceSpacesWithHyphen = (inputString) => {
-    if (typeof inputString !== 'string') {
-      throw new Error('Input must be a string.');
-    }
-
-    return inputString.replace(/\s+/g, '_');
-  }
-
   const handleCell = (rowData, questionName, index) => {
     const score = rowData.score[questionName];
     if (!score) {
