@@ -281,18 +281,29 @@ export default function PageDashboard() {
     }
   };
 
-  const handleCell = (rowData, questionName) => {
+
+
+  const replaceSpacesWithHyphen = (inputString) => {
+    if (typeof inputString !== 'string') {
+      throw new Error('Input must be a string.');
+    }
+
+    return inputString.replace(/\s+/g, '_');
+  }
+
+  const handleCell = (rowData, questionName, index) => {
     const score = rowData.score[questionName];
     if (!score) {
       return <div title={questionName} className="text-[100%]"></div>;
     }
+    console.log('rowData', rowData);
     return (
       <>
-        <Tooltip target={`#cell_score_${rowData.studentId}_${questionName}`} />
+        <Tooltip target={`#cell_score_${rowData.studentId}_${index}`} />
         <div
           data-pr-position="right"
           className="text-[100%]"
-          id={`cell_score_${rowData.studentId}_${questionName}`}
+          id={`cell_score_${rowData.studentId}_${index}`}
           data-pr-tooltip={`Correct answer: ${score.correct || ''} / ${score.total || ''
             }`}
         >
@@ -514,7 +525,7 @@ export default function PageDashboard() {
                         // field={`score.${question.questionName}.score`}
 
                         body={(rowData) =>
-                          handleCell(rowData, question.questionName)
+                          handleCell(rowData, question.questionName, index)
                         }
                         header={handleColumnHeader(question.questionName)}
                         key={index}
