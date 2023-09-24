@@ -9,41 +9,43 @@ export default function TimerSmall() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const navigate = useNavigate();
   const [time, setTime] = useState(2);
-  const [loading, setLoading] = useState(true);
 
   const fetchTime = async () => {
     try {
       const response = await api.get(`exam/time/${user.examId}`);
-      setTime(response.data);
-      setLoading(false);
+      return response.data;  // Return the fetched time
     } catch (error) {
       if (error.response.status === 403) {
         navigate('/score');
       }
       console.log(error);
+      return null;  // Return null in case of an error
     }
   };
 
   useEffect(() => {
-    fetchTime();
+    const fetchTimeAndSetTimeRemaining = async () => {
+      const fetchedTime = await fetchTime();
+      if (fetchedTime !== null) {
+        setTime(fetchedTime);
+        setTimeRemaining(fetchedTime);
+      }
+    };
 
-    const intervalId = setInterval(() => {
-      fetchTime();
-    }, 30000); // Send request every 30 seconds
+    fetchTimeAndSetTimeRemaining();
+
+    const intervalId = setInterval(fetchTimeAndSetTimeRemaining, 30000); // Send request every 30 seconds
 
     return () => clearInterval(intervalId); // Clear interval when component unmounts
-  }, []);
-
-  useEffect(() => {
-    setTimeRemaining(time);
-  }, [time]);
+  }, [navigate, user.examId]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 1 && loading === false) {
+        if (prevTimeRemaining <= 1) {
           navigate('/score');
           clearInterval(intervalId);
+          return 0;  // Time out, set remaining time to 0
         } else {
           return prevTimeRemaining - 1;
         }
@@ -53,7 +55,7 @@ export default function TimerSmall() {
     return () => {
       clearInterval(intervalId);
     };
-  }, [navigate]);
+  }, [navigate, setTimeRemaining]);
 
 
 
