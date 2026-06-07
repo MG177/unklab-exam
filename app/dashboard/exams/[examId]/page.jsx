@@ -1,20 +1,74 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { DataTable } from 'primereact/datatable';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import {
+  Upload,
+  Download,
+  RefreshCw,
+  Play,
+  Square,
+  Settings,
+  FileSpreadsheet,
+} from 'lucide-react';
+import { toast } from 'sonner';
 import api from '@/lib/api/client';
-import { HeaderExamDashboard } from '@/components/Header';
+import { Topbar, Stats, StatCard, StatusBadge, TokenStrip } from '@/components/dashboard/shell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { ConfirmDialog } from '@/components/dashboard/dialogs';
+import DownloadCSVTemplate from '@/components/dashboard/CSVDownload';
 import ScoreCard from '@/components/score/ScoreCard';
 import Answer from '@/components/score/Answer';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { Toast } from 'primereact/toast';
-import { Tooltip } from 'primereact/tooltip';
-import { Sidebar } from 'primereact/sidebar';
-import { ScrollPanel } from 'primereact/scrollpanel';
-import { ConfirmPopup } from 'primereact/confirmpopup';
-import DownloadCSVTemplate from '@/components/dashboard/CSVDownload';
+import { cn } from '@/lib/utils';
+
+function pad(n) {
+  return String(n).padStart(2, '0');
+}
+
+function formatTime(time) {
+  if (time === null || time === undefined || isNaN(time) || time <= 0) {
+    return '00:00:00';
+  }
+  const h = Math.floor(time / 3600);
+  const m = Math.floor((time % 3600) / 60);
+  const s = Math.floor(time % 60);
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+function rowStatus(row) {
+  if (row.isSubmitted) return 'Submitted';
+  if (typeof row.score === 'object') return 'In progress';
+  return 'Not started';
+}
 
 export default function ExamDetailPage() {
   const params = useParams();
@@ -22,500 +76,491 @@ export default function ExamDetailPage() {
   const router = useRouter();
 
   const [exam, setExam] = useState({});
-  const [loading, setLoading] = useState(false);
   const [time, setTime] = useState(null);
   const [token, setToken] = useState(null);
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState({});
   const [dataGrid, setDataGrid] = useState([]);
-  const [visibleBottom, setVisibleBottom] = useState(false);
+  const [minute, setMinute] = useState(90);
+
+  // student score sheet
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [studentName, setStudentName] = useState('');
-  const [studentScore, setStudentScore] = useState({});
   const [studentId, setStudentId] = useState('');
+  const [studentScore, setStudentScore] = useState({});
   const [questionList, setQuestionList] = useState([]);
-  const [confirmResetPopup, setConfirmResetPopup] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
 
-  const dt = useRef(null);
   const uploadRef = useRef(null);
-  const toast = useRef(null);
-  const confirmResetRef = useRef(null);
 
-  const formattedData = (dataGrid ?? []).map((item) => {
-    const formattedItem = {
-      No: item.number,
-      noreg: item.studentId,
-      name: item.studentName,
-      totalScore: item.totalScore,
-    };
+  const isLive = time > 0;
 
-    const score = Object.entries(item.score || {});
-
-    score.forEach(([key, value]) => {
-      formattedItem[`${key} correct`] = value.correct;
-      formattedItem[`${key} total question`] = value.total;
-      formattedItem[`${key} score`] = value.score;
-    });
-
-    return formattedItem;
-  });
-
-  const exportExcel = () => {
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(formattedData);
-      worksheet['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 30 }];
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer = xlsx.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array',
-      });
-      saveAsExcelFile(excelBuffer, `Exam_export_${exam.examName}`);
+  /* ── data ── */
+  const mergeScores = (scores, examData) => {
+    const students = examData?.students ?? [];
+    const list = Array.isArray(scores) ? scores : [];
+    return students.map((item) => {
+      const s = list.find((x) => x.studentId === item.studentId);
+      if (!s) return { ...item, score: '', totalScore: '' };
+      return {
+        ...item,
+        isSubmitted: s.isSubmitted,
+        score: s.score,
+        totalScore: Math.round(s.totalScore),
+      };
     });
   };
 
-  const saveAsExcelFile = (buffer, fileName) => {
-    import('file-saver').then((module) => {
-      if (module && module.default) {
-        const EXCEL_TYPE =
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        const EXCEL_EXTENSION = '.xlsx';
-        const data = new Blob([buffer], {
-          type: EXCEL_TYPE,
-        });
-
-        module.default.saveAs(
-          data,
-          fileName + '_' + new Date().getTime() + EXCEL_EXTENSION
-        );
-      }
-    });
-  };
-
-  const mergeDatagridWithScore = (data, examData) => {
+  const fetchDataGrid = async (examData) => {
     try {
-      const students = examData?.students ?? [];
-      const scores = Array.isArray(data) ? data : [];
-
-      return students.map((item) => {
-        const scoreItem = scores.find((s) => s.studentId === item.studentId);
-        if (!scoreItem) {
-          return {
-            ...item,
-            score: '',
-            totalScore: '',
-          };
-        }
-        return {
-          ...item,
-          isSubmitted: scoreItem.isSubmitted,
-          score: scoreItem.score,
-          totalScore: Math.round(scoreItem.totalScore),
-        };
-      });
-    } catch (error) {
-      console.log(error);
-      return [];
+      const res = await api.get(`/exam/score/${examId}`);
+      setDataGrid(mergeScores(res.data, examData));
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to get score data');
     }
   };
 
   const fetchExam = async () => {
     try {
-      const response = await api.get(`/exam/${examId}`);
-      setExam(response.data);
+      const res = await api.get(`/exam/${examId}`);
+      setExam(res.data);
       setChecked({
-        isRandom: response.data.isRandom,
-        isShowScore: response.data.isShowScore,
-        isShowAnswer: response.data.isShowAnswer,
+        isRandom: res.data.isRandom,
+        isShowScore: res.data.isShowScore,
+        isShowAnswer: res.data.isShowAnswer,
       });
-      setToken(response.data.token);
-      fetchDataGrid(response.data);
-    } catch (error) {
-      console.log(error);
+      setToken(res.data.token);
+      fetchDataGrid(res.data);
+    } catch (err) {
+      console.log(err);
       router.push('/dashboard/exams');
-    }
-  };
-
-  const fetchDataGrid = async (examData) => {
-    try {
-      const response = await api.get(`/exam/score/${examId}`);
-      const mergedData = mergeDatagridWithScore(response.data, examData);
-      setDataGrid(mergedData ?? []);
-    } catch (error) {
-      console.log(error);
-      toast.current?.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to get score data',
-        life: 3000,
-      });
     }
   };
 
   const fetchTime = async () => {
     try {
-      const response = await api.get(`/exam/time/${examId}`);
-      setTime(response.data);
-    } catch (error) {
-      console.log(error);
+      const res = await api.get(`/exam/time/${examId}`);
+      setTime(res.data);
+    } catch (err) {
+      console.log(err);
       router.push('/dashboard/exams');
     }
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchExam();
     fetchTime();
-    setLoading(false);
-
-    const intervalId = setInterval(() => {
-      fetchTime();
-    }, 30000);
-
-    return () => clearInterval(intervalId);
+    const id = setInterval(fetchTime, 30000);
+    return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [examId]);
 
   useEffect(() => {
-    let intervalId;
-
-    const countDown = () => setTime((prevTime) => prevTime - 1);
-
     if (time > 0) {
-      intervalId = setInterval(countDown, 1000);
+      const id = setInterval(() => setTime((t) => t - 1), 1000);
+      return () => clearInterval(id);
     }
-    return () => clearInterval(intervalId);
   }, [time]);
 
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = Math.floor(time % 60);
-  const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
-  const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-  const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
+  /* ── actions ── */
+  const handleStart = async () => {
+    try {
+      const res = await api.patch(`/exam/start/${examId}?minute=${minute}`);
+      setTime(res.data.time);
+      setToken(res.data.token);
+      toast.success('Exam started');
+    } catch (err) {
+      console.log(err);
+      toast.error('Could not start exam', { description: err.response?.data?.message });
+    }
+  };
 
-  const footer = (
-    <div className="flex justify-end gap-2 align-items-center">
-      <Button
-        type="button"
-        icon="pi pi-file-excel"
-        severity="success"
-        rounded
-        text
-        label="Export to Excel"
-        className="mt-2 border shadow-md border-gray/20"
-        onClick={exportExcel}
-        data-pr-tooltip="XLS"
-      />
-    </div>
-  );
+  const handleStop = async () => {
+    try {
+      const res = await api.patch(`/exam/start/${examId}?minute=0`);
+      setTime(res.data.time);
+      toast.success('Exam stopped');
+    } catch (err) {
+      console.log(err);
+      toast.error('Could not stop exam', { description: err.response?.data?.message });
+    }
+  };
 
-  const refresh = (
-    <div className="flex items-center justify-end gap-2">
-      <Button
-        type="button"
-        icon="pi pi-refresh"
-        severity="info"
-        rounded
-        text
-        raised
-        label="refresh"
-        className="mt-2 border shadow-md border-gray/20"
-        onClick={fetchExam}
-      />
-    </div>
-  );
+  const handleSwitch = async (key) => {
+    try {
+      const change = { [key]: !checked[key] };
+      if (change.isShowAnswer) change.isShowScore = true;
+      if (change.isShowScore === false) change.isShowAnswer = false;
+      const res = await api.patch(`/exam/switch/${examId}`, change);
+      setChecked({
+        isShowScore: res.data.isShowScore,
+        isShowAnswer: res.data.isShowAnswer,
+        isRandom: res.data.isRandom,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  const handleImportStudents = async (e) => {
+  const handleImport = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
       formData.append('file', e.target.files[0]);
       e.target.value = '';
-      await api.patch('/exam/studentList/' + examId, formData);
+      await api.patch(`/exam/studentList/${examId}`, formData);
       fetchExam();
-      toast.current.show({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Student list uploaded successfully',
-        life: 3000,
-      });
-    } catch (error) {
-      console.log(error);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to upload student list',
-        life: 3000,
-      });
+      toast.success('Student list uploaded');
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to upload student list');
     }
-  };
-
-  const handleColumnHeader = (column) => {
-    const length = 17;
-    if (column.length > length) {
-      return (
-        <div title={column} className="text-[100%] capitalize">
-          {column.substring(0, length) + '...'}
-        </div>
-      );
-    } else {
-      return (
-        <div title={column} className="text-[100%] capitalize">
-          {column}
-        </div>
-      );
-    }
-  };
-
-  const handleCell = (rowData, questionName, index) => {
-    const score = rowData.score[questionName];
-    if (!score) {
-      return <div title={questionName} className="text-[100%]"></div>;
-    }
-    return (
-      <>
-        <Tooltip target={`#cell_score_${rowData.studentId}_${index}`} />
-        <div
-          data-pr-position="right"
-          className="text-[100%]"
-          id={`cell_score_${rowData.studentId}_${index}`}
-          data-pr-tooltip={`Correct answer: ${score.correct || ''} / ${
-            score.total || ''
-          }`}
-        >
-          {score.score || '0'}
-        </div>
-      </>
-    );
   };
 
   const fetchScore = async (sid, sname) => {
     try {
-      const response = await api.get(`/student/score/${examId}/${sid}`);
-      setStudentScore(response.data.score);
-      setQuestionList(response.data.questionList);
+      const res = await api.get(`/student/score/${examId}/${sid}`);
+      setStudentScore(res.data.score);
+      setQuestionList(res.data.questionList);
       setStudentName(sname);
       setStudentId(sid);
-      setVisibleBottom(true);
-      return response.data;
-    } catch (error) {
-      console.log(error);
+      setSheetOpen(true);
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const viewDetailsButton = (rowData) => {
-    if (typeof rowData.score === 'object') {
-      return (
-        <button
-          className="w-full px-1 py-1 font-semibold text-blue-500 transition duration-200 ease-in-out scale-90 border rounded-md shadow-md border-gray/20 hover:bg-blue-500 hover:text-white"
-          onClick={() => fetchScore(rowData.studentId, rowData.studentName)}
-        >
-          View Details
-        </button>
-      );
-    } else {
-      return (
-        <button
-          className="w-full px-1 py-1 font-semibold transition duration-200 ease-in-out scale-90 border rounded-md shadow-md border-gray/20 text-gray"
-          disabled
-        >
-          View Details
-        </button>
-      );
-    }
-  };
-
-  const handleResetStudent = async () => {
-    if (!studentId) {
-      return;
-    }
+  const handleReset = async () => {
+    if (!studentId) return;
     try {
-      await api.delete('/student/' + examId + '/' + studentId);
+      await api.delete(`/student/${examId}/${studentId}`);
       fetchExam();
-      setVisibleBottom(false);
-      toast.current.show({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Student reset successfully',
-        life: 3000,
-      });
-    } catch (error) {
-      console.log(error);
-      toast.current.show({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Failed to reset student',
-        life: 3000,
-      });
+      setSheetOpen(false);
+      toast.success('Student reset');
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to reset student');
     }
   };
+
+  /* ── export ── */
+  const exportExcel = () => {
+    const formatted = (dataGrid ?? []).map((item) => {
+      const row = {
+        No: item.number,
+        noreg: item.studentId,
+        name: item.studentName,
+        totalScore: item.totalScore,
+      };
+      Object.entries(item.score || {}).forEach(([key, value]) => {
+        row[`${key} correct`] = value.correct;
+        row[`${key} total question`] = value.total;
+        row[`${key} score`] = value.score;
+      });
+      return row;
+    });
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(formatted);
+      worksheet['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 30 }];
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const buffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      import('file-saver').then((mod) => {
+        const blob = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+        });
+        mod.default.saveAs(blob, `Exam_export_${exam.examName}_${Date.now()}.xlsx`);
+      });
+    });
+  };
+
+  /* ── derived ── */
+  const rosterCount = exam.students?.length ?? 0;
+  const submittedCount = useMemo(
+    () => (dataGrid ?? []).filter((r) => r.isSubmitted).length,
+    [dataGrid]
+  );
+  const questionCols = exam.questions ?? [];
+  const status = isLive ? 'live' : exam.endTime ? 'ended' : 'draft';
 
   return (
-    <div className="relative flex items-center justify-center w-full ">
-      <HeaderExamDashboard
-        examName={exam.examName}
-        setTime={setTime}
-        time={time}
-        setToken={setToken}
-        fetchExam={fetchExam}
-        checked={checked}
-        setChecked={setChecked}
-      />
-      {!loading ? (
-        <>
-          <div className="container p-4 bg-[#FCF9FF] flex flex-col mt-[70px] w-5/6 gap-4">
-            <Toast
-              ref={toast}
-              style={{
-                marginTop: '4rem',
-                borderRadius: '1rem',
-                boxShadow: '0 0 #0000',
-                paddingInline: '5px',
-              }}
-              pt={{
-                icon: '1rem',
-              }}
+    <>
+      <Topbar
+        crumbs={[
+          { label: 'Exams', href: '/dashboard/exams' },
+          { label: exam.examName || 'Exam' },
+        ]}
+        center={isLive ? <TokenStrip token={token} live /> : null}
+      >
+        {/* settings */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="icon" className="h-9 w-9" aria-label="Exam settings">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-72 p-3">
+            <DropdownMenuLabel className="px-0 pb-2 text-[10px] font-extrabold uppercase tracking-[0.1em] text-ink-faint">
+              Student visibility
+            </DropdownMenuLabel>
+            <div className="space-y-3 text-sm">
+              <label className="flex items-center justify-between gap-3">
+                <span>Show score to student</span>
+                <Switch
+                  checked={!!checked.isShowScore}
+                  onCheckedChange={() => handleSwitch('isShowScore')}
+                />
+              </label>
+              <label className="flex items-center justify-between gap-3">
+                <span>Show correct answers</span>
+                <Switch
+                  checked={!!checked.isShowAnswer}
+                  onCheckedChange={() => handleSwitch('isShowAnswer')}
+                />
+              </label>
+              <label className="flex items-center justify-between gap-3">
+                <span>Randomize questions &amp; options</span>
+                <Switch
+                  checked={!!checked.isRandom}
+                  onCheckedChange={() => handleSwitch('isRandom')}
+                />
+              </label>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {isLive ? (
+          <Button variant="destructive" size="sm" onClick={handleStop}>
+            <Square className="h-4 w-4" /> Stop exam
+          </Button>
+        ) : (
+          <div className="flex items-center gap-1.5">
+            <Input
+              value={minute}
+              onChange={(e) => setMinute(e.target.value)}
+              inputMode="numeric"
+              className="h-9 w-16 text-center font-mono text-xs tabular-nums"
+              aria-label="Duration in minutes"
             />
-            <div className="flex flex-row justify-between gap-3 min-w-fit">
-              <div className="flex flex-row gap-3 text-lg font-bold leading-none font-Nunito text-accent1">
-                <label
-                  className="z-50 flex items-center self-end justify-center px-10 py-2 border shadow-md cursor-pointer rounded-2xl bg-whitePlus border-accent1 h-fit"
-                  htmlFor="uploadCSV"
-                >
-                  <p>Import</p>
-                  <input
-                    type="file"
-                    id="uploadCSV"
-                    accept=".csv"
-                    ref={uploadRef}
-                    onChange={handleImportStudents}
-                    className="hidden"
-                  />
-                </label>
+            <Button size="sm" onClick={handleStart}>
+              <Play className="h-4 w-4" /> Start
+            </Button>
+          </div>
+        )}
+      </Topbar>
+
+      <div className="flex-1 overflow-auto p-5">
+        {/* status line */}
+        <div className="mb-4 flex items-center gap-2">
+          <h1 className="text-[1.45rem] font-extrabold leading-tight tracking-[-0.02em] text-ink">
+            {exam.examName || 'Exam'}
+          </h1>
+          <StatusBadge status={status}>
+            {status === 'live' ? 'Live' : status === 'ended' ? 'Ended' : 'Draft'}
+          </StatusBadge>
+        </div>
+
+        {/* stats */}
+        <Stats className="mb-4">
+          <StatCard
+            label="Remaining"
+            value={isLive ? formatTime(time) : '—'}
+            hint={isLive ? 'Session in progress' : 'Set duration and start'}
+            timer={isLive}
+          />
+          <StatCard
+            label="Token"
+            value={isLive ? token || '—' : '—'}
+            hint={isLive ? 'Share at student login' : 'Issued on start'}
+          />
+          <StatCard
+            label="Submitted"
+            value={`${submittedCount}/${rosterCount}`}
+            hint={
+              rosterCount
+                ? `${Math.round((submittedCount / rosterCount) * 100)}% of roster`
+                : 'Import roster'
+            }
+          />
+        </Stats>
+
+        {/* controls */}
+        <div className="mb-3.5 flex flex-wrap items-center gap-2">
+          <Button asChild variant="ghost" size="sm">
+            <label className="cursor-pointer">
+              <Upload className="h-4 w-4" /> Import CSV
+              <input
+                ref={uploadRef}
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={handleImport}
+              />
+            </label>
+          </Button>
+          <DownloadCSVTemplate />
+          <Button variant="secondary" size="sm" onClick={exportExcel}>
+            <FileSpreadsheet className="h-4 w-4" /> Export XLSX
+          </Button>
+          <Button variant="ghost" size="sm" onClick={fetchExam}>
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </Button>
+        </div>
+
+        {/* roster */}
+        {(dataGrid ?? []).length > 0 ? (
+          <TooltipProvider delayDuration={100}>
+            <div className="overflow-hidden rounded-lg border border-line bg-surface">
+              <div className="max-h-[calc(100vh-320px)] overflow-auto">
+                <Table>
+                  <TableHeader className="sticky top-0 z-10">
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-10">#</TableHead>
+                      <TableHead>Student ID</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Total</TableHead>
+                      {questionCols.map((q, i) => (
+                        <TableHead key={i} title={q.questionName} className="text-right">
+                          <span className="block max-w-[120px] truncate">{q.questionName}</span>
+                        </TableHead>
+                      ))}
+                      <TableHead className="text-right">Details</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {dataGrid.map((row, idx) => {
+                      const st = rowStatus(row);
+                      const started = typeof row.score === 'object';
+                      return (
+                        <TableRow key={row.studentId || idx}>
+                          <TableCell className="font-mono text-xs tabular-nums">{row.number}</TableCell>
+                          <TableCell className="font-mono text-xs tabular-nums">{row.studentId}</TableCell>
+                          <TableCell className="font-medium text-ink">{row.studentName}</TableCell>
+                          <TableCell>
+                            <span
+                              className={cn(
+                                'text-xs font-semibold',
+                                st === 'Submitted' && 'text-live',
+                                st === 'In progress' && 'text-warn-ink',
+                                st === 'Not started' && 'text-ink-faint'
+                              )}
+                            >
+                              {st}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right font-mono text-xs font-bold tabular-nums">
+                            {row.totalScore !== '' ? row.totalScore : '—'}
+                          </TableCell>
+                          {questionCols.map((q, i) => {
+                            const cell = started ? row.score?.[q.questionName] : null;
+                            if (!cell) {
+                              return (
+                                <TableCell key={i} className="text-right font-mono text-xs text-ink-faint">
+                                  —
+                                </TableCell>
+                              );
+                            }
+                            return (
+                              <TableCell key={i} className="text-right">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span className="font-mono text-xs tabular-nums">
+                                      {cell.score ?? 0}
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    Correct {cell.correct ?? 0} / {cell.total ?? 0}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TableCell>
+                            );
+                          })}
+                          <TableCell className="text-right">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="h-7"
+                              disabled={!started}
+                              onClick={() => fetchScore(row.studentId, row.studentName)}
+                            >
+                              View
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </TooltipProvider>
+        ) : (
+          <div className="flex items-start gap-5 rounded-lg border border-line bg-surface p-7">
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-md border border-line bg-paper text-ink-muted">
+              <Upload className="h-[22px] w-[22px]" />
+            </div>
+            <div>
+              <h3 className="mb-1.5 text-base font-extrabold text-ink">
+                No students on this roster
+              </h3>
+              <p className="mb-3.5 max-w-[42ch] text-[13px] leading-relaxed text-ink-muted">
+                Upload a CSV with <code className="rounded border border-line bg-paper px-1 py-0.5 font-mono text-xs">No.</code>,{' '}
+                <code className="rounded border border-line bg-paper px-1 py-0.5 font-mono text-xs">Id</code>, and{' '}
+                <code className="rounded border border-line bg-paper px-1 py-0.5 font-mono text-xs">Name</code> columns. Students appear here after import.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button asChild size="sm">
+                  <label className="cursor-pointer">
+                    <Upload className="h-4 w-4" /> Import CSV
+                    <input type="file" accept=".csv" className="hidden" onChange={handleImport} />
+                  </label>
+                </Button>
                 <DownloadCSVTemplate />
               </div>
-              <div className="flex flex-row gap-3 ">
-                <div className="text-accent2 text-center items-end font-extrabold font-nunito min-w-[150px] text-xl px-4 py-2 bg-whitePlus shadow-md rounded-2xl">
-                  {hours === 0
-                    ? `00:${minutesStr}:${secondsStr}`
-                    : time != 'NaN'
-                      ? `${hoursStr}:${minutesStr}:${secondsStr}`
-                      : '00:00:00'}
-                </div>
-                <div className="flex flex-row items-center gap-2 min-w-[150px]">
-                  <div className="h-full px-4 py-2 text-xl font-bold text-center bg-whitePlus shadow-md min-w-[150px] text-accent1 rounded-2xl">
-                    {token || 'null'}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="relative overflow-hidden border-white shadow-lg rounded-2xl">
-              <Sidebar
-                visible={visibleBottom}
-                position="right"
-                onHide={() => setVisibleBottom(false)}
-                className="relative h-screen bg-white shadow-lg w-fit rounded-l-3xl"
-                pt={{
-                  content: { className: 'relative' },
-                }}
-              >
-                <ScrollPanel
-                  style={{ width: '100%', height: '100%' }}
-                  className="px-2"
-                >
-                  <div className="scale-75">
-                    <ScoreCard score={studentScore} user={{ studentName }} />
-                  </div>
-                  <div className="flex flex-col max-w-2xl gap-5 px-1 pb-3 mt-4 mb-12">
-                    {questionList.map((question, index) => (
-                      <Answer
-                        key={question.id}
-                        question={question}
-                        index={index}
-                        showOrigin={true}
-                      />
-                    ))}
-                  </div>
-                </ScrollPanel>
-                <ConfirmPopup
-                  target={confirmResetRef.current}
-                  visible={confirmResetPopup}
-                  onHide={() => setConfirmResetPopup(false)}
-                  message={`Are you sure you want to reset "${studentName}" ?`}
-                  icon="pi pi-exclamation-triangle"
-                  accept={handleResetStudent}
-                  reject={() => setConfirmResetPopup(false)}
-                  className="rounded-2xl w-[300px]"
-                  rejectClassName="rounded-xl bg-whitePlus hover:bg-blue-100 text-blue-600 border border-whitePlus hover:border-whitePlus"
-                  acceptClassName="rounded-xl bg-red-500 hover:bg-red-600 text-white border border-red-500 hover:border-red-600"
-                />
-                <div
-                  className="absolute bottom-0 left-0 z-10 flex flex-row justify-end w-full px-3 py-2 bg-whitePlus"
-                  ref={confirmResetRef}
-                >
-                  <button
-                    className="w-full py-2 text-2xl font-semibold text-red-500 transition duration-200 ease-in-out scale-90 border border-red-400 shadow-lg font-Nunito rounded-2xl hover:bg-red-500 hover:text-white"
-                    onClick={() => setConfirmResetPopup(true)}
-                  >
-                    Reset this student
-                  </button>
-                </div>
-              </Sidebar>
-              {(dataGrid ?? []).length > 0 ? (
-                <DataTable
-                  value={dataGrid ?? []}
-                  ref={dt}
-                  paginator
-                  rows={25}
-                  rowsPerPageOptions={[25, 50, 75, 100]}
-                  size="sm"
-                  removableSort
-                  scrollable
-                  rounded
-                  scrollHeight="calc(100vh - 250px)"
-                  className="p-2 shadow-md bg-whitePlus p-datatable-sm p-paginator-sm p-datatable-striped p-datatable-gridlines-both p-datatable-hoverable-rows"
-                  paginatorRight={footer}
-                  paginatorLeft={refresh}
-                >
-                  <Column field="number" header="No." sortable></Column>
-                  <Column field="studentId" header="ID" sortable></Column>
-                  <Column field="studentName" header="Name" sortable></Column>
-                  <Column
-                    field="totalScore"
-                    header="Total Score"
-                    sortable
-                  ></Column>
-                  {exam.questions?.map((question, index) => {
-                    return (
-                      <Column
-                        body={(rowData) =>
-                          handleCell(rowData, question.questionName, index)
-                        }
-                        header={handleColumnHeader(question.questionName)}
-                        key={index}
-                        sortable
-                      ></Column>
-                    );
-                  })}
-                  <Column
-                    body={viewDetailsButton}
-                    header="View details"
-                    headerClassName="text-center justify-center"
-                  ></Column>
-                </DataTable>
-              ) : (
-                <div className="flex flex-col items-center justify-center w-full max-h-full p-3 text-2xl font-Nunito text-gray">
-                  <div>No student data available</div>
-                  <div>Please import .csv file that contains student list.</div>
-                </div>
-              )}
             </div>
           </div>
-        </>
-      ) : (
-        <div className="flex flex-col items-center justify-center w-full h-screen p-3 text-2xl font-Nunito">
-          <div>Welcome to Dashboard</div>
-          <div>To choose a class, please use the sidebar on the left.</div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+
+      {/* student score sheet */}
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-xl">
+          <SheetHeader className="border-b border-line px-5 py-4 text-left">
+            <SheetTitle className="truncate">{studentName || 'Student'}</SheetTitle>
+          </SheetHeader>
+          <ScrollArea className="flex-1">
+            <div className="px-5 py-6">
+              <div className="origin-top scale-[0.85]">
+                <ScoreCard score={studentScore} user={{ studentName }} />
+              </div>
+              <div className="mt-8 flex max-w-2xl flex-col gap-5">
+                {questionList.map((question, index) => (
+                  <Answer key={question.id} question={question} index={index} showOrigin />
+                ))}
+              </div>
+            </div>
+          </ScrollArea>
+          <div className="border-t border-line p-3">
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={() => setResetOpen(true)}
+            >
+              Reset this student
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <ConfirmDialog
+        open={resetOpen}
+        onOpenChange={setResetOpen}
+        title="Reset this student?"
+        description={`"${studentName}" will be able to retake the exam. Their current answers will be cleared.`}
+        confirmLabel="Reset"
+        destructive
+        onConfirm={handleReset}
+      />
+    </>
   );
 }

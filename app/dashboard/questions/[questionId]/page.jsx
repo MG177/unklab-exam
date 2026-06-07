@@ -1,169 +1,260 @@
 'use client';
 
-import api from '@/lib/api/client';
-import { HeaderQuestionEditor } from '@/components/Header';
-import QuestionEditorItem from '@/components/dashboard/QuestionEditorItem';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
-import { Divider } from 'primereact/divider';
-import { ScrollPanel } from 'primereact/scrollpanel';
-import { Toast } from 'primereact/toast';
+import { Upload, Check, Plus, Loader2, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import api from '@/lib/api/client';
+import { Topbar } from '@/components/dashboard/shell';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import QuestionCard, { cardAnchor, isComplete } from '@/components/dashboard/QuestionCard';
+
+const INITIAL_QUESTIONS = [
+  {
+    id: 1,
+    text: '',
+    options: [
+      { id: 1, text: '' },
+      { id: 2, text: '' },
+    ],
+    image: null,
+    audio: null,
+    correctAnswer: 1,
+  },
+];
+
+function truncate(text, max = 36) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!clean) return 'Untitled question';
+  return clean.length <= max ? clean : clean.slice(0, max).trimEnd() + '…';
+}
+
+function SaveStatus({ status }) {
+  if (status === 'loading') {
+    return (
+      <span className="flex items-center gap-1.5 font-mono text-[11px] font-extrabold text-warn-ink">
+        <Loader2 className="h-3.5 w-3.5 animate-spin" /> saving…
+      </span>
+    );
+  }
+  if (status === 'failed') {
+    return (
+      <span className="flex items-center gap-1.5 font-mono text-[11px] font-extrabold text-danger">
+        <AlertCircle className="h-3.5 w-3.5" /> save failed
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-center gap-1.5 font-mono text-[11px] font-extrabold text-live">
+      <Check className="h-3.5 w-3.5" /> saved
+    </span>
+  );
+}
 
 export default function QuestionEditorPage() {
   const params = useParams();
   const questionId = params.questionId;
+
   const [questions, setQuestions] = useState([]);
+  const [questionName, setQuestionName] = useState('Question bank');
   const [saveStatus, setSaveStatus] = useState(true);
-  const [questionName, setQuestionName] = useState('Question Name');
-  const toast = useRef(null);
+  const [activeId, setActiveId] = useState(null);
 
-  const initialQuestions = [
-    {
-      id: 1,
-      text: '',
-      options: [
-        { id: 1, text: '' },
-        { id: 2, text: '' },
-      ],
-      image: null,
-      audio: null,
-      correctAnswer: 1,
-    },
-  ];
-
-  const showErrorSaving = (msg) => {
-    toast.current.show({
-      severity: 'error',
-      summary: 'Error when saving questions',
-      detail: msg,
-      life: 5000,
-    });
-  };
-
-  const showSuccessSaving = () => {
-    toast.current.show({
-      severity: 'success',
-      summary: 'Success saving questions',
-      detail: 'Questions saved',
-      life: 2000,
-    });
-  };
-
-  const saveQuestionsTimerRef = useRef(null);
+  const mainRef = useRef(null);
+  const saveTimerRef = useRef(null);
+  const importRef = useRef(null);
 
   const fetchQuestions = async () => {
     try {
-      const response = await api.get('/questions/' + questionId);
-      if (response && response.data.questions === null) {
-        setQuestions(initialQuestions);
-      } else {
-        setQuestions(response.data.questions);
-      }
-      setQuestionName(response.data.questionName);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleQuestionChange = () => {
-    setSaveStatus('loading');
-    clearTimeout(saveQuestionsTimerRef.current);
-    saveQuestionsTimerRef.current = setTimeout(
-      () => saveQuestions(false),
-      5000
-    );
-  };
-
-  const saveQuestions = async (showToast) => {
-    try {
-      const res = await api.put('/questions/update/' + questionId, {
-        questions,
-      });
-      setQuestions(res.data.questions);
-      setSaveStatus(true);
-      if (showToast) {
-        showSuccessSaving();
-      }
-    } catch (error) {
-      setSaveStatus('failed');
-      if (showToast) {
-        showErrorSaving(error.response?.data?.msg?.message);
-      }
-      console.error('Failed to save questions', error);
+      const res = await api.get('/questions/' + questionId);
+      setQuestions(res.data.questions === null ? INITIAL_QUESTIONS : res.data.questions);
+      setQuestionName(res.data.questionName || 'Question bank');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load question bank');
     }
   };
 
   useEffect(() => {
     fetchQuestions();
-
-    return () => {
-      clearTimeout(saveQuestionsTimerRef.current);
-    };
+    return () => clearTimeout(saveTimerRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionId]);
 
-  const handleAddNewQuestion = () => {
-    setQuestions((prevData) => {
-      let newQuestionId = 1;
-      while (prevData.find((question) => question.id === newQuestionId)) {
-        newQuestionId++;
+  const saveQuestions = async (showToast) => {
+    try {
+      const res = await api.put('/questions/update/' + questionId, { questions });
+      setQuestions(res.data.questions);
+      setSaveStatus(true);
+      if (showToast) toast.success('Questions saved');
+    } catch (err) {
+      console.error('Failed to save questions', err);
+      setSaveStatus('failed');
+      if (showToast) {
+        toast.error('Failed to save', {
+          description: err.response?.data?.msg?.message,
+        });
       }
+    }
+  };
 
-      const newQuestion = {
-        ...initialQuestions[0],
-        id: newQuestionId,
-      };
+  const handleQuestionChange = () => {
+    setSaveStatus('loading');
+    clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => saveQuestions(false), 5000);
+  };
 
-      return [...prevData, newQuestion];
+  const handleImport = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append('file', e.target.files[0]);
+      e.target.value = '';
+      await api.patch('/questions/import/' + questionId, formData);
+      await fetchQuestions();
+      toast.success('Questions imported');
+    } catch (err) {
+      console.log(err);
+      toast.error('Import failed', {
+        description: err.response?.data?.message,
+      });
+    }
+  };
+
+  const addQuestion = () => {
+    setQuestions((prev) => {
+      let newId = 1;
+      while (prev.find((q) => q.id === newId)) newId++;
+      return [...prev, { ...INITIAL_QUESTIONS[0], id: newId }];
     });
   };
 
-  return (
-    <div className="relative overflow-hidden">
-      <HeaderQuestionEditor
-        saveStatus={saveStatus}
-        questionName={questionName}
-        saveQuestions={saveQuestions}
-        toast={toast}
-        questionId={questionId}
-        fetchQuestions={fetchQuestions}
-      />
+  // scroll-spy: highlight the rail item for the most visible card
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+    const cards = main.querySelectorAll('[data-q-card]');
+    if (!cards.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveId(Number(visible.target.dataset.qCard));
+      },
+      { root: main, rootMargin: '-12% 0px -72% 0px', threshold: [0, 0.25, 0.5] }
+    );
+    cards.forEach((c) => io.observe(c));
+    return () => io.disconnect();
+  }, [questions]);
 
-      <ScrollPanel style={{ width: '100%', height: '100vh' }}>
-        <div className="flex flex-col items-center justify-center w-full gap-5 my-24">
-          <Toast
-            ref={toast}
-            style={{
-              marginTop: '4rem',
-              borderRadius: '1rem',
-              boxShadow: '0 0 #0000',
-            }}
-            pt={{
-              icon: '1rem',
-            }}
-          />
-          {questions.map((question, index) => (
-            <div key={question.id}>
-              <QuestionEditorItem
+  const scrollToCard = (id) => {
+    const main = mainRef.current;
+    const el = document.getElementById(cardAnchor(id));
+    if (!main || !el) return;
+    const top =
+      el.getBoundingClientRect().top -
+      main.getBoundingClientRect().top +
+      main.scrollTop -
+      8;
+    main.scrollTo({ top, behavior: 'smooth' });
+    setActiveId(id);
+  };
+
+  const completeCount = useMemo(
+    () => questions.filter(isComplete).length,
+    [questions]
+  );
+
+  return (
+    <>
+      <Topbar
+        crumbs={[
+          { label: 'Banks', href: '/dashboard/questions' },
+          { label: questionName },
+        ]}
+        center={<SaveStatus status={saveStatus} />}
+      >
+        <Button asChild variant="ghost" size="sm">
+          <label className="cursor-pointer">
+            <Upload className="h-4 w-4" /> Import CSV
+            <input
+              ref={importRef}
+              type="file"
+              accept=".csv"
+              className="hidden"
+              onChange={handleImport}
+            />
+          </label>
+        </Button>
+        <Button size="sm" onClick={() => saveQuestions(true)}>
+          <Check className="h-4 w-4" /> Save now
+        </Button>
+      </Topbar>
+
+      <div className="flex min-h-0 flex-1">
+        {/* index rail */}
+        <aside className="flex w-[188px] shrink-0 flex-col border-r border-line bg-surface">
+          <div className="border-b border-line p-3 text-[10px] font-extrabold uppercase tracking-[0.1em] text-ink-faint">
+            {questions.length} questions · {completeCount} ready
+          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {questions.map((q, i) => {
+              const active = activeId === q.id;
+              const ready = isComplete(q);
+              return (
+                <button
+                  key={q.id}
+                  onClick={() => scrollToCard(q.id)}
+                  className={cn(
+                    'flex w-full items-center gap-2 border-b border-line px-3 py-2 text-left text-xs font-bold transition-colors',
+                    active
+                      ? 'bg-brand-tint font-extrabold text-brand-ink'
+                      : 'text-ink-muted hover:bg-paper'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'h-[7px] w-[7px] shrink-0 rounded-full',
+                      ready
+                        ? 'bg-live'
+                        : 'bg-line-strong shadow-[inset_0_0_0_1px_rgba(138,147,156,0.3)]'
+                    )}
+                  />
+                  <span className="w-5 shrink-0 font-mono text-[10px] text-ink-faint">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate">{truncate(q.text)}</span>
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={addQuestion}
+            className="m-2.5 flex shrink-0 items-center justify-center gap-1.5 rounded-md border border-dashed border-line-strong p-2 text-[11px] font-extrabold text-ink-muted hover:bg-paper"
+          >
+            <Plus className="h-3.5 w-3.5" /> Add question
+          </button>
+        </aside>
+
+        {/* cards */}
+        <div ref={mainRef} className="min-h-0 flex-1 overflow-auto bg-paper p-[18px]">
+          <div className="flex max-w-[640px] flex-col gap-4">
+            {questions.map((question, index) => (
+              <QuestionCard
+                key={question.id}
                 question={question}
+                index={index}
                 questions={questions}
                 setQuestions={setQuestions}
-                index={index}
                 handleQuestionChange={handleQuestionChange}
-                saveStatus={saveStatus}
-                initialQuestions={initialQuestions}
+                initialQuestions={INITIAL_QUESTIONS}
               />
-              <Divider style={{ margin: '0px' }} />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </ScrollPanel>
-      <button
-        className="fixed z-20 flex items-center justify-center p-4 text-white rounded-full bottom-7 right-7 bg-accent1"
-        onClick={handleAddNewQuestion}
-      >
-        <i className="pi pi-plus"></i>
-      </button>
-    </div>
+      </div>
+    </>
   );
 }

@@ -5,12 +5,30 @@ import {
   Montserrat,
   Nunito,
   Roboto,
+  Plus_Jakarta_Sans,
+  IBM_Plex_Mono,
 } from 'next/font/google';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './globals.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { Toaster } from '@/components/ui/sonner';
+
+// ── Design system fonts ──
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+});
 
 const inter = Inter({
   subsets: ['latin'],
@@ -60,10 +78,11 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${dmSans.variable} ${josefinSans.variable} ${montserrat.variable} ${nunito.variable} ${roboto.variable}`}
+      className={`${jakarta.variable} ${plexMono.variable} ${inter.variable} ${dmSans.variable} ${josefinSans.variable} ${montserrat.variable} ${nunito.variable} ${roboto.variable}`}
     >
-      <body>
+      <body className="font-sans">
         <AuthProvider>{children}</AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

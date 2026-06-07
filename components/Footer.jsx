@@ -56,7 +56,7 @@ export default function Footer({ questions, number, setNumber, fetchQuestion }) 
   const handleSubmitQuestion = async () => {
     try {
       await api.patch('student/submit');
-      if (user.isShowScore) {
+      if (user?.isShowScore) {
         router.push('/score');
       } else {
         await logout();
@@ -70,7 +70,7 @@ export default function Footer({ questions, number, setNumber, fetchQuestion }) 
     <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-6 lg:px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
       <div className="font-Nunito w-[30%]">
         <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
-          {user.examName || 'Exam name'}
+          {user?.examName || 'Exam name'}
         </p>
         <p className="text-lg text-black font-normal w-full leading-none">
           {`Question ${number + 1} of ${questions.length}`}
@@ -137,7 +137,7 @@ export function FooterCountdown({ setTime, time, setVisibleBottom }) {
     <div className="fixed flex flex-row bottom-0 items-center justify-between w-full h-24 px-6 lg:px-10 bg-white rounded-t-3xl shadow-[0px_5px_25px_0px_rgba(0,0,0,0.25)] z-50 select-none">
       <div className="font-Nunito w-[30%]">
         <p className="text-accent1 font-semibold text-xl capitalize truncate w-full">
-          {user.examName || 'Exam name'}
+          {user?.examName || 'Exam name'}
         </p>
         <p className="text-lg text-black font-normal w-full leading-none whitespace-nowrap">
           {`Completed all questions`}
@@ -147,7 +147,7 @@ export function FooterCountdown({ setTime, time, setVisibleBottom }) {
         {time > 0 ? (
           <TimerBig setTimeRemaining={setTime} timeRemaining={time} />
         ) : (
-          user.isShowAnswer && (
+          user?.isShowAnswer && (
             <button
               className="flex items-center justify-center text-xl bg-whitePlus rounded-3xl py-2 px-4 border border-gray/20 transition-all duration-200 ease-out font-bold z-30 shadow-md font-Nunito whitespace-nowrap leading-none"
               onClick={() => setVisibleBottom(true)}

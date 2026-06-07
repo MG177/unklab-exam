@@ -9,7 +9,7 @@ them exactly, do not introduce new colors, fonts, radii, or shadows.
 - **Source of truth for values:** the prototype at `temp/admin-dashboard-mockups/styles.css`
   (token names below match its `:root`).
 
-Design language: **fun but clean** — warm paper, purple brand accent, navy ink, bold headings,
+Design language: **fun but clean** — cool paper, clinical blue brand accent, navy ink, bold headings,
 pill controls, Lucide icons. Light mode only.
 
 ---
@@ -23,23 +23,23 @@ pill controls, Lucide icons. Light mode only.
 | `--ink` | `#1a2332` | Primary text · dark sidebar background |
 | `--ink-muted` | `#5c6570` | Secondary text, body copy |
 | `--ink-faint` | `#8a939c` | Tertiary text, labels, placeholders, meta |
-| `--paper` | `#faf9f7` | App canvas (warm off-white) · table header · hover fills |
+| `--paper` | `#f6f8fb` | App canvas (cool off-white) · table header · hover fills |
 | `--surface` | `#ffffff` | Cards, panels, inputs, light sidebar |
-| `--line` | `#e4e0d8` | Default borders & dividers |
-| `--line-strong` | `#cfc9be` | Hover borders, dashed strokes, radio rings |
-| `--brand` | `#b55ffe` | Brand purple — primary actions, active accents, focus ring |
-| `--brand-ink` | `#5a2d8a` | Brand text on tint backgrounds |
-| `--brand-tint` | `#f6f0fc` | Brand-tinted surfaces (active nav, selected option) |
+| `--line` | `#e2e7ee` | Default borders & dividers |
+| `--line-strong` | `#c4cdd9` | Hover borders, dashed strokes, radio rings |
+| `--brand` | `#1b81c4` | Brand blue (clinical / medical) — primary actions, active accents, focus ring |
+| `--brand-ink` | `#0d4b75` | Brand text on tint backgrounds |
+| `--brand-tint` | `#e7f2fb` | Brand-tinted surfaces (active nav, selected option) |
 | `--live` | `#0d7a5c` | Live / active / verified / success |
 | `--live-tint` | `#e8f5f0` | Live status background |
-| `--danger` | `#ff6593` | Destructive actions, countdown timer |
-| `--danger-ink` | `#9f2d52` | Danger text on tint |
+| `--danger` | `#d23438` | Destructive actions, countdown timer (clinical alert red — **only when < 1 min**) |
+| `--danger-ink` | `#9b1f23` | Danger text on tint |
 | `--warn-tint` | `#fdf6e8` | Warning / "needs review" background |
 | `--warn-ink` | `#8a5a12` | Warning text, pending save status |
 
-Primary-button hover = `#a44fe8`. Status→color mapping: **live/verified → green**,
-**scheduled → brand purple**, **review → amber**, **draft/ended → neutral paper**,
-**danger/timer → pink**. Use `color-mix(in srgb, var(--brand) N%, transparent)` for subtle
+Primary-button hover = `#166aa3`. Status→color mapping: **live/verified → green**,
+**scheduled → brand blue**, **review → amber**, **draft/ended → neutral paper**,
+**danger → red**, **timer → `--ink` (red only when < 1 min)**. Use `color-mix(in srgb, var(--brand) N%, transparent)` for subtle
 brand-on-active borders.
 
 ### Typography
@@ -54,7 +54,7 @@ brand-on-active borders.
 | Section / table label | `9–11px`, 800, uppercase, `0.1em` tracking, `--ink-faint` | Field labels, table headers, stat labels, eyebrows |
 | Body | `14px`, 500, `--ink` | Default copy |
 | Muted / meta | `12px`, `--ink-muted` / `--ink-faint` | Descriptions, captions |
-| Mono | `12–13px`, 600, tabular-nums | **Tokens, timers, IDs, scores, counts, dates** |
+| Mono | `12–13px`, 600, tabular-nums | **Tokens, timers, IDs, scores, counts, dates** · *timers: `--ink` normal, `--danger` only when < 1 min* |
 
 **Rule:** anything numeric or code-like (exam tokens, timers, student IDs, scores, durations,
 counts) renders in **IBM Plex Mono** with `font-variant-numeric: tabular-nums`.
@@ -115,7 +115,7 @@ styled box proxy. Icon-only buttons need `aria-label`; sidebar toggle manages `a
   `.val.timer` → danger. **Progress line (`.progress-line`)** — 3px track + green fill.
 - **Empty state (`.empty`)**, **toast (`.toast`)** — both surface; toast gets `--shadow-frame`.
 - **Data table (`.card-table` + `table.data`)** — paper header (uppercase labels), `.row-title` +
-  `.row-sub` two-line cells, `.num` mono cells, `tr.is-live` highlight row, hover `#f5f3ef`.
+  `.row-sub` two-line cells, `.num` mono cells, `tr.is-live` highlight row, hover `#eef2f7`.
 
 ### App shell
 

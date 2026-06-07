@@ -16,18 +16,18 @@
       --ink: #1a2332;
       --ink-muted: #5c6570;
       --ink-faint: #8a939c;
-      --paper: #faf9f7;
+      --paper: #f6f8fb;
       --surface: #ffffff;
-      --line: #e4e0d8;
-      --line-strong: #cfc9be;
-      --brand: #b55ffe;
-      --brand-hover: #a44fe8;
-      --brand-ink: #5a2d8a;
-      --brand-tint: #f6f0fc;
+      --line: #e2e7ee;
+      --line-strong: #c4cdd9;
+      --brand: #1b81c4;
+      --brand-hover: #166aa3;
+      --brand-ink: #0d4b75;
+      --brand-tint: #e7f2fb;
       --live: #0d7a5c;
       --live-tint: #e8f5f0;
-      --danger: #ff6593;
-      --danger-ink: #9f2d52;
+      --danger: #d23438;
+      --danger-ink: #9b1f23;
       --warn-tint: #fdf6e8;
       --warn-ink: #8a5a12;
       --sidebar-w: 236px;
@@ -294,7 +294,7 @@
       text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); border-bottom: 1px solid var(--line); }
     table.data td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
     table.data tr:last-child td { border-bottom: none; }
-    table.data tbody tr:hover td { background: #f5f3ef; }
+    table.data tbody tr:hover td { background: #eef2f7; }
     table.data .row-title { font-weight: 700; color: var(--ink); }
     table.data .row-sub { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
     table.data .num { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
@@ -383,8 +383,8 @@
       <div>
         <div class="ds-eyebrow">Universitas Klabat · KEP Placement · Design System v1.0</div>
         <h1>Tokens &amp; patterns for the <em>admin</em> dashboard.</h1>
-        <p class="ds-lede">One visual system for the KEP admin shell — <strong>warm paper</strong> surfaces,
-          a <strong>brand purple</strong> accent, <strong>navy ink</strong> text, bold headings, and pill controls.
+        <p class="ds-lede">One visual system for the KEP admin shell — <strong>cool paper</strong> surfaces,
+          a <strong>clinical blue</strong> accent, <strong>navy ink</strong> text, bold headings, and pill controls.
           Extracted 1:1 from the admin-shell prototype in
           <code>temp/admin-dashboard-mockups/</code>. This file is the canonical reference for porting UI into
           <code>kep-unklab-exam/</code> — match these tokens, do not improvise new ones.</p>
@@ -408,16 +408,16 @@
         <h2 class="ds-sec-title">Foundations</h2>
         <span class="ds-sec-kicker">paper · ink · brand</span>
       </div>
-      <p class="ds-sec-intro">The palette is warm and quiet so the brand purple and status colors carry meaning.
+      <p class="ds-sec-intro">The palette is cool and quiet so the brand blue and status colors carry meaning.
         Cards sit on <span class="inline-code">--surface</span> white above a <span class="inline-code">--paper</span>
-        canvas; structure comes from borders, not shadows. Purple is reserved for primary actions, the active state,
+        canvas; structure comes from borders, not shadows. The clinical blue is reserved for primary actions, the active state,
         and focus rings.</p>
 
       <div class="ds-panel-flat">
         <div class="ds-panel-head"><span class="ds-label-mono">semantic · light</span></div>
         <div class="ds-semantic">
-          <div class="ds-swatch-card"><div class="chip bordered" style="background:#faf9f7"></div>
-            <div class="meta-row"><span class="nm">paper / canvas</span><span class="var">--paper · #faf9f7</span></div></div>
+          <div class="ds-swatch-card"><div class="chip bordered" style="background:#f6f8fb"></div>
+            <div class="meta-row"><span class="nm">paper / canvas</span><span class="var">--paper · #f6f8fb</span></div></div>
           <div class="ds-swatch-card"><div class="chip bordered" style="background:#ffffff"></div>
             <div class="meta-row"><span class="nm">surface / card</span><span class="var">--surface · #ffffff</span></div></div>
           <div class="ds-swatch-card"><div class="chip" style="background:#1a2332"></div>
@@ -426,12 +426,12 @@
             <div class="meta-row"><span class="nm">ink muted</span><span class="var">--ink-muted · #5c6570</span></div></div>
           <div class="ds-swatch-card"><div class="chip" style="background:#8a939c"></div>
             <div class="meta-row"><span class="nm">ink faint</span><span class="var">--ink-faint · #8a939c</span></div></div>
-          <div class="ds-swatch-card"><div class="chip" style="background:#e4e0d8;box-shadow:inset 0 0 0 1px #cfc9be"></div>
-            <div class="meta-row"><span class="nm">line / border</span><span class="var">--line · #e4e0d8</span></div></div>
-          <div class="ds-swatch-card"><div class="chip" style="background:#b55ffe"></div>
-            <div class="meta-row"><span class="nm">brand</span><span class="var">--brand · #b55ffe</span></div></div>
-          <div class="ds-swatch-card"><div class="chip" style="background:#f6f0fc;box-shadow:inset 0 0 0 1px #e4e0d8"></div>
-            <div class="meta-row"><span class="nm">brand tint</span><span class="var">--brand-tint · #f6f0fc</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#e2e7ee;box-shadow:inset 0 0 0 1px #c4cdd9"></div>
+            <div class="meta-row"><span class="nm">line / border</span><span class="var">--line · #e2e7ee</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#1b81c4"></div>
+            <div class="meta-row"><span class="nm">brand</span><span class="var">--brand · #1b81c4</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#e7f2fb;box-shadow:inset 0 0 0 1px #e2e7ee"></div>
+            <div class="meta-row"><span class="nm">brand tint</span><span class="var">--brand-tint · #e7f2fb</span></div></div>
         </div>
       </div>
 
@@ -440,12 +440,12 @@
         <div class="ds-semantic">
           <div class="ds-swatch-card"><div class="chip" style="background:#0d7a5c"></div>
             <div class="meta-row"><span class="nm">live / verified</span><span class="var">--live · #0d7a5c</span></div></div>
-          <div class="ds-swatch-card"><div class="chip" style="background:#b55ffe"></div>
-            <div class="meta-row"><span class="nm">scheduled</span><span class="var">--brand · #b55ffe</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#1b81c4"></div>
+            <div class="meta-row"><span class="nm">scheduled</span><span class="var">--brand · #1b81c4</span></div></div>
           <div class="ds-swatch-card"><div class="chip" style="background:#8a5a12"></div>
             <div class="meta-row"><span class="nm">needs review</span><span class="var">--warn-ink · #8a5a12</span></div></div>
-          <div class="ds-swatch-card"><div class="chip" style="background:#ff6593"></div>
-            <div class="meta-row"><span class="nm">danger / timer</span><span class="var">--danger · #ff6593</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#d23438"></div>
+            <div class="meta-row"><span class="nm">danger / timer</span><span class="var">--danger · #d23438</span></div></div>
         </div>
       </div>
     </section>
@@ -458,28 +458,28 @@
         <span class="ds-sec-kicker">ink · brand · status tints</span>
       </div>
       <p class="ds-sec-intro">The system uses a small set of fixed tokens rather than full numeric scales. Below are the
-        working ramps as actually used: the warm neutral ink ramp, the brand purple set, and the status tint/solid pairs.</p>
+        working ramps as actually used: the cool neutral ink ramp, the brand blue set, and the status tint/solid pairs.</p>
 
       <div class="ds-ramp">
-        <div class="ramp-name"><span class="nm">Neutral · ink</span><span class="nm-mono">warm grays</span></div>
-        <div class="cell" style="background:#faf9f7"><span class="tk on-light">paper</span><span class="hx on-light">#faf9f7</span></div>
+        <div class="ramp-name"><span class="nm">Neutral · ink</span><span class="nm-mono">cool grays</span></div>
+        <div class="cell" style="background:#f6f8fb"><span class="tk on-light">paper</span><span class="hx on-light">#f6f8fb</span></div>
         <div class="cell" style="background:#ffffff"><span class="tk on-light">surface</span><span class="hx on-light">#ffffff</span></div>
-        <div class="cell" style="background:#e4e0d8"><span class="tk on-light">line</span><span class="hx on-light">#e4e0d8</span></div>
-        <div class="cell" style="background:#cfc9be"><span class="tk on-light">line-strong</span><span class="hx on-light">#cfc9be</span></div>
+        <div class="cell" style="background:#e2e7ee"><span class="tk on-light">line</span><span class="hx on-light">#e2e7ee</span></div>
+        <div class="cell" style="background:#c4cdd9"><span class="tk on-light">line-strong</span><span class="hx on-light">#c4cdd9</span></div>
         <div class="cell" style="background:#8a939c"><span class="tk on-dark">ink-faint</span><span class="hx on-dark">#8a939c</span></div>
         <div class="cell" style="background:#5c6570"><span class="tk on-dark">ink-muted</span><span class="hx on-dark">#5c6570</span></div>
         <div class="cell" style="background:#1a2332"><span class="tk on-dark">ink</span><span class="hx on-dark">#1a2332</span></div>
       </div>
 
       <div class="ds-ramp">
-        <div class="ramp-name"><span class="nm">Brand · purple</span><span class="nm-mono">primary · active</span></div>
-        <div class="cell" style="background:#f6f0fc"><span class="tk on-light">tint</span><span class="hx on-light">#f6f0fc</span></div>
-        <div class="cell" style="background:#e9d8fb"><span class="tk on-light">tint+</span><span class="hx on-light">mix</span></div>
-        <div class="cell" style="background:#b55ffe"><span class="tk on-dark">brand</span><span class="hx on-dark">#b55ffe</span></div>
-        <div class="cell" style="background:#a44fe8"><span class="tk on-dark">hover</span><span class="hx on-dark">#a44fe8</span></div>
-        <div class="cell" style="background:#5a2d8a"><span class="tk on-dark">brand-ink</span><span class="hx on-dark">#5a2d8a</span></div>
-        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
-        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+        <div class="ramp-name"><span class="nm">Brand · blue</span><span class="nm-mono">primary · active</span></div>
+        <div class="cell" style="background:#e7f2fb"><span class="tk on-light">tint</span><span class="hx on-light">#e7f2fb</span></div>
+        <div class="cell" style="background:#cce4f6"><span class="tk on-light">tint+</span><span class="hx on-light">mix</span></div>
+        <div class="cell" style="background:#1b81c4"><span class="tk on-dark">brand</span><span class="hx on-dark">#1b81c4</span></div>
+        <div class="cell" style="background:#166aa3"><span class="tk on-dark">hover</span><span class="hx on-dark">#166aa3</span></div>
+        <div class="cell" style="background:#0d4b75"><span class="tk on-dark">brand-ink</span><span class="hx on-dark">#0d4b75</span></div>
+        <div class="cell" style="background:#f6f8fb"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+        <div class="cell" style="background:#f6f8fb"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
       </div>
 
       <div class="ds-ramp">
@@ -488,9 +488,9 @@
         <div class="cell" style="background:#0d7a5c"><span class="tk on-dark">live</span><span class="hx on-dark">#0d7a5c</span></div>
         <div class="cell" style="background:#fdf6e8"><span class="tk on-light">warn-tint</span><span class="hx on-light">#fdf6e8</span></div>
         <div class="cell" style="background:#8a5a12"><span class="tk on-dark">warn-ink</span><span class="hx on-dark">#8a5a12</span></div>
-        <div class="cell" style="background:#ff6593"><span class="tk on-dark">danger</span><span class="hx on-dark">#ff6593</span></div>
-        <div class="cell" style="background:#9f2d52"><span class="tk on-dark">danger-ink</span><span class="hx on-dark">#9f2d52</span></div>
-        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+        <div class="cell" style="background:#d23438"><span class="tk on-dark">danger</span><span class="hx on-dark">#d23438</span></div>
+        <div class="cell" style="background:#9b1f23"><span class="tk on-dark">danger-ink</span><span class="hx on-dark">#9b1f23</span></div>
+        <div class="cell" style="background:#f6f8fb"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
       </div>
     </section>
 
@@ -532,9 +532,9 @@
           <div class="specs">1.6rem · 600 mono<br>stat cards</div>
         </div>
         <div class="ds-type-row">
-          <div class="label"><span class="nm">Timer</span><span class="nm-mono">mono · --danger</span></div>
-          <div style="font-family:var(--mono);font-size:1.6rem;font-weight:600;color:#ff6593">01:42:08</div>
-          <div class="specs">1.6rem · 600 mono<br>countdown</div>
+          <div class="label"><span class="nm">Timer</span><span class="nm-mono">mono · --ink (–danger < 1 min)</span></div>
+          <div style="font-family:var(--mono);font-size:1.6rem;font-weight:600;color:#1a2332">01:42:08</div>
+          <div class="specs">1.6rem · 600 mono<br>--ink normal, --danger when < 1 min</div>
         </div>
         <div class="ds-type-row">
           <div class="label"><span class="nm">Token / ID / score</span><span class="nm-mono">mono · tabular</span></div>
@@ -692,12 +692,12 @@
           <div class="ds-demo-title"><span class="nm">Stat cards</span><span class="nm-mono">.stats · .stat-card</span></div>
           <div class="ds-stage" style="padding:0;background:none;border:none">
             <div class="stats" style="width:100%">
-              <div class="stat-card"><label>Remaining</label><div class="val timer">01:42:08</div><div class="hint">Ends 15:30 WITA</div></div>
+              <div class="stat-card"><label>Remaining</label><div class="val timer" style="color:var(--ink)">01:42:08</div><div class="hint">Ends 15:30 WITA · turns red when < 1 min</div></div>
               <div class="stat-card"><label>Token</label><div class="val">600367</div><div class="hint">Share at login</div></div>
               <div class="stat-card"><label>Submitted</label><div class="val">38/142</div><div class="hint">27% of roster</div></div>
             </div>
           </div>
-          <div class="ds-code-muted">mono value · timer variant → danger</div>
+          <div class="ds-code-muted">mono value · timer: --ink normal, --danger when < 1 min remaining</div>
         </div>
 
         <div class="ds-demo" style="grid-column:span 2">

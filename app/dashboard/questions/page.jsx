@@ -1,162 +1,237 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, NewCard, EditCard } from '@/components/dashboard/Card';
+import { Plus, Search, MoreHorizontal, Pencil, Trash2, ExternalLink } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '@/lib/api/client';
+import { Topbar, PageHeader, StatusBadge } from '@/components/dashboard/shell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { RenameDialog, ConfirmDialog } from '@/components/dashboard/dialogs';
+
+function formatDate(d) {
+  if (!d) return 'No date';
+  return new Date(d).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
 
 export default function DashboardQuestionsPage() {
   const router = useRouter();
-  const [questionList, setQuestionList] = useState([]);
-  const [isCreateNew, setIsCreateNew] = useState(false);
-  const [isEdit, setIsEdit] = useState(true);
+  const [banks, setBanks] = useState([]);
+  const [query, setQuery] = useState('');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [renameTarget, setRenameTarget] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
-  const fetchQuestionList = async () => {
-    const response = await api.get('/questions');
-    setQuestionList(response.data);
-  };
-
-  const handleCreateNew = () => {
-    setIsCreateNew(true);
-  };
-
-  const handleEdit = () => {
-    setIsEdit((prev) => !prev);
-  };
-
-  const handleNewQuestion = async (data) => {
+  const fetchBanks = async () => {
     try {
-      await api.post('/questions', { questionName: data });
-      alert('Question Created');
-      setIsCreateNew(false);
-      fetchQuestionList();
-    } catch (error) {
-      alert('Failed to create question. Please try again');
+      const res = await api.get('/questions');
+      setBanks(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to load question banks');
     }
   };
 
-  const handleEditName = async (id, data) => {
+  useEffect(() => {
+    fetchBanks();
+  }, []);
+
+  const visible = useMemo(
+    () =>
+      banks.filter(
+        (b) =>
+          !query || b.questionName?.toLowerCase().includes(query.toLowerCase())
+      ),
+    [banks, query]
+  );
+
+  const handleCreate = async (value) => {
     try {
-      await api.patch('/questions/name/' + id, { questionName: data });
-      alert('Question Edited');
-      setIsEdit(false);
-      fetchQuestionList();
-    } catch (error) {
-      console.log(error);
-      alert('Failed to edit question. Please try again');
+      await api.post('/questions', { questionName: value });
+      toast.success('Question bank created');
+      setCreateOpen(false);
+      fetchBanks();
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to create question bank');
+    }
+  };
+
+  const handleRename = async (id, value) => {
+    try {
+      await api.patch('/questions/name/' + id, { questionName: value });
+      toast.success('Bank renamed');
+      setRenameTarget(null);
+      fetchBanks();
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to rename bank');
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await api.delete(`/questions/${id}`);
-      alert('Question Deleted');
-      fetchQuestionList();
-    } catch (error) {
-      console.log(error);
-      alert('Failed to delete question. Please try again');
+      toast.success('Bank deleted');
+      fetchBanks();
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to delete bank');
     }
   };
 
-  useEffect(() => {
-    fetchQuestionList();
-    setIsEdit(false);
-    setIsCreateNew(false);
-  }, []);
-
   return (
-    <div className="flex flex-col items-center w-full h-full gap-8 py-10">
-      <div
-        id="header"
-        className="flex flex-col items-center justify-center w-5/6 "
-      >
-        <div className="relative w-full overflow-hidden h-[200px] rounded-3xl shadow-lg">
-          <div
-            className="absolute inset-0 w-full h-full bg-left-bottom bg-no-repeat bg-cover"
-            style={{ backgroundImage: `url(/image/mask_bg.svg)` }}
-          ></div>
-          <img
-            src="/image/illustration1.svg"
-            alt="illustration1"
-            className="absolute z-10 h-full scale-110 right-3"
-          />
-          <div className="relative z-10 w-3/5 h-full p-5 font-Nunito">
-            <div className="flex flex-col justify-between h-full">
-              <h1 className="text-5xl font-bold text-white">
-                Click Button below to create new question group
-              </h1>
-              <div className="flex items-center">
-                {isEdit ? (
-                  <button
-                    className={`px-4 py-2 font-semibold bg-white  shadow-md w-fit rounded-xl flex items-center gap-2 text-accent2 `}
-                    onClick={() => handleEdit()}
-                  >
-                    <i className="pi pi-times" />
-                    Exit edit mode
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      className="px-4 py-2 font-semibold text-black bg-white shadow-md w-fit rounded-xl disabled:brightness-90"
-                      onClick={() => handleCreateNew()}
-                      disabled={isEdit}
-                      title="You can't create new question in editing mode"
-                    >
-                      + Create New Question
-                    </button>
-                    <button
-                      className={`px-4 py-2 font-semibold ml-3 bg-white text-black shadow-md w-fit rounded-xl `}
-                      onClick={() => handleEdit()}
-                    >
-                      Edit
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
+    <>
+      <Topbar crumbs={[{ label: 'Question banks' }]}>
+        <Button size="sm" onClick={() => setCreateOpen(true)}>
+          <Plus className="h-4 w-4" /> Create bank
+        </Button>
+      </Topbar>
+
+      <div className="flex-1 overflow-auto p-5">
+        <PageHeader
+          title="Question banks"
+          subtitle="Build and verify question sets for exams."
+        />
+
+        <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
+          <div className="relative max-w-xs flex-1">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-ink-faint" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search banks…"
+              className="h-9 rounded-md pl-8 text-[13px]"
+            />
           </div>
         </div>
-      </div>
-      {questionList.length === 0 && isCreateNew === false ? (
-        <div className="flex flex-col items-center justify-center w-full h-full gap-8 py-10 font-Nunito text-xl font-bold text-gray">
-          No Question Found
-        </div>
-      ) : (
-        <div className="grid w-5/6 grid-cols-3 gap-4 text-base">
-          {isEdit ? (
-            questionList.map((question) => (
-              <EditCard
-                key={question._id}
-                id={question._id}
-                title={question.questionName}
-                date={question.createdAt}
-                handleEditName={handleEditName}
-                handleDelete={handleDelete}
-              />
-            ))
-          ) : (
-            <>
-              {isCreateNew && (
-                <NewCard
-                  setIsCreateNew={setIsCreateNew}
-                  handleNew={handleNewQuestion}
-                />
+
+        <div className="overflow-hidden rounded-lg border border-line bg-surface">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Bank</TableHead>
+                <TableHead className="text-right">Questions</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-10" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {visible.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={4} className="py-10 text-center text-sm text-ink-faint">
+                    No question banks yet.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visible.map((bank) => (
+                  <TableRow
+                    key={bank._id}
+                    onClick={() => router.push(`/dashboard/questions/${bank._id}`)}
+                    className="cursor-pointer"
+                  >
+                    <TableCell>
+                      <div className="font-bold text-ink">
+                        {bank.questionName || 'Untitled'}
+                      </div>
+                      <div className="mt-0.5 text-[11px] text-ink-faint">
+                        Updated {formatDate(bank.updatedAt || bank.createdAt)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs tabular-nums">
+                      {bank.questions?.length ?? 0}
+                    </TableCell>
+                    <TableCell>
+                      {bank.isVerified ? (
+                        <StatusBadge status="verified">Verified</StatusBadge>
+                      ) : (
+                        <StatusBadge status="review">Needs review</StatusBadge>
+                      )}
+                    </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            aria-label="Actions"
+                            className="grid h-7 w-7 place-items-center rounded-md border border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => router.push(`/dashboard/questions/${bank._id}`)}
+                          >
+                            <ExternalLink className="h-4 w-4" /> Open editor
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setRenameTarget(bank)}>
+                            <Pencil className="h-4 w-4" /> Rename
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-danger focus:text-danger"
+                            onClick={() => setDeleteTarget(bank)}
+                          >
+                            <Trash2 className="h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
-              {questionList.map((question) => (
-                <Card
-                  key={question._id}
-                  onClickFunction={() =>
-                    router.push(`/dashboard/questions/${question._id}`)
-                  }
-                  title={question.questionName}
-                  date={question.createdAt}
-                  isVerified={question.isVerified}
-                />
-              ))}
-            </>
-          )}
+            </TableBody>
+          </Table>
         </div>
-      )}
-    </div>
+      </div>
+
+      <RenameDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        title="Create question bank"
+        label="Bank name"
+        defaultValue=""
+        onSubmit={handleCreate}
+      />
+
+      <RenameDialog
+        open={!!renameTarget}
+        onOpenChange={(o) => !o && setRenameTarget(null)}
+        title="Rename bank"
+        label="Bank name"
+        defaultValue={renameTarget?.questionName}
+        onSubmit={(value) => handleRename(renameTarget._id, value)}
+      />
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(o) => !o && setDeleteTarget(null)}
+        title="Delete question bank?"
+        description={`"${deleteTarget?.questionName}" and all its questions will be permanently removed.`}
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => handleDelete(deleteTarget._id)}
+      />
+    </>
   );
 }

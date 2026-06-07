@@ -1,135 +1,265 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, EditCard } from '@/components/dashboard/Card';
-import { ExamModalCreator } from '@/components/dashboard/ExamModal';
+import { Plus, Search, MoreHorizontal, Pencil, Trash2, ExternalLink } from 'lucide-react';
+import { toast } from 'sonner';
 import api from '@/lib/api/client';
+import { Topbar, PageHeader, StatusBadge } from '@/components/dashboard/shell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import ExamCreateDialog from '@/components/dashboard/ExamCreateDialog';
+import { RenameDialog, ConfirmDialog } from '@/components/dashboard/dialogs';
+
+function formatDate(d) {
+  if (!d) return 'No date';
+  return new Date(d).toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+function examStatus(exam) {
+  const now = Date.now();
+  if (exam.endTime && new Date(exam.endTime).getTime() > now) return 'live';
+  if (exam.endTime) return 'ended';
+  return 'draft';
+}
+
+const STATUS_LABEL = { live: 'Live', ended: 'Ended', draft: 'Draft' };
 
 export default function DashboardExamsPage() {
   const router = useRouter();
-  const modalRef = useRef(null);
-  const [exam, setExam] = useState([]);
-  const [isEdit, setIsEdit] = useState(true);
-
-  const handleEdit = () => {
-    setIsEdit((prev) => !prev);
-  };
+  const [exams, setExams] = useState([]);
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('all');
+  const [createOpen, setCreateOpen] = useState(false);
+  const [renameTarget, setRenameTarget] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const fetchExamList = async () => {
-    const response = await api.get('/exam');
-    setExam(response.data);
+    try {
+      const res = await api.get('/exam');
+      setExams(Array.isArray(res.data) ? res.data : res.data?.data ?? []);
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to load exams');
+    }
   };
 
   useEffect(() => {
     fetchExamList();
-    setIsEdit(false);
   }, []);
 
-  const handleOpenModal = () => {
-    if (modalRef.current) {
-      modalRef.current.showModal();
-    }
-  };
+  const withStatus = useMemo(
+    () => exams.map((e) => ({ ...e, _status: examStatus(e) })),
+    [exams]
+  );
 
-  const handleEditName = async (id, data) => {
+  const counts = useMemo(() => {
+    const c = { all: withStatus.length, live: 0, draft: 0, ended: 0 };
+    withStatus.forEach((e) => (c[e._status] += 1));
+    return c;
+  }, [withStatus]);
+
+  const visible = useMemo(() => {
+    return withStatus.filter((e) => {
+      if (filter !== 'all' && e._status !== filter) return false;
+      if (query && !e.examName?.toLowerCase().includes(query.toLowerCase()))
+        return false;
+      return true;
+    });
+  }, [withStatus, filter, query]);
+
+  const handleRename = async (id, value) => {
     try {
-      await api.patch('/exam/name/' + id, { examName: data });
-      alert('Question Edited');
-      setIsEdit(false);
+      await api.patch('/exam/name/' + id, { examName: value });
+      toast.success('Exam renamed');
+      setRenameTarget(null);
       fetchExamList();
-    } catch (error) {
-      console.log(error);
-      alert('Failed to edit exam. Please try again');
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to rename exam');
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await api.delete(`/exam/${id}`);
-      alert('Question Deleted');
+      toast.success('Exam deleted');
       fetchExamList();
-    } catch (error) {
-      console.log(error);
-      alert('Failed to delete exam. Please try again');
+    } catch (err) {
+      console.log(err);
+      toast.error('Failed to delete exam');
     }
   };
 
+  const FILTERS = [
+    { key: 'all', label: `All (${counts.all})` },
+    { key: 'live', label: `Live (${counts.live})` },
+    { key: 'draft', label: `Draft (${counts.draft})` },
+    { key: 'ended', label: `Ended (${counts.ended})` },
+  ];
+
   return (
-    <div className="flex flex-col items-center w-full h-full gap-8 py-10">
-      <div
-        id="header"
-        className="flex flex-col items-center justify-center w-5/6 "
-      >
-        <div className="relative w-full overflow-hidden h-[200px] rounded-3xl shadow-lg">
-          <div
-            className="absolute inset-0 w-full h-full bg-left-bottom bg-no-repeat bg-cover"
-            style={{ backgroundImage: `url(/image/mask_bg.svg)` }}
-          ></div>
-          <img
-            src="/image/illustration1.svg"
-            alt="illustration1"
-            className="absolute z-10 h-full scale-110 right-3"
-          />
-          <div className="relative z-10 w-3/5 h-full p-5 font-Nunito">
-            <div className="flex flex-col justify-between h-full">
-              <h1 className="text-5xl font-bold text-white">
-                Click Button below to create new exam
-              </h1>
-              <div className="flex items-center">
-                {isEdit ? (
-                  <button
-                    className={`px-4 py-2 font-semibold bg-white  shadow-md w-fit rounded-xl flex items-center gap-2 text-accent2 `}
-                    onClick={() => handleEdit()}
-                  >
-                    <i className="pi pi-times" />
-                    Exit edit mode
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      className="px-4 py-2 font-semibold text-black bg-white shadow-md w-fit rounded-xl"
-                      onClick={() => handleOpenModal()}
-                    >
-                      + Create New Exam
-                    </button>
-                    <button
-                      className={`px-4 py-2 font-semibold ml-3 bg-white text-black shadow-md w-fit rounded-xl `}
-                      onClick={() => handleEdit()}
-                    >
-                      Edit
-                    </button>
-                  </>
+    <>
+      <Topbar crumbs={[{ label: 'Exams' }]}>
+        <Button size="sm" onClick={() => setCreateOpen(true)}>
+          <Plus className="h-4 w-4" /> Create exam
+        </Button>
+      </Topbar>
+
+      <div className="flex-1 overflow-auto p-5">
+        <PageHeader
+          title="Exams"
+          subtitle="Schedule sessions, import rosters, run placement tests."
+        />
+
+        {/* toolbar */}
+        <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
+          <div className="relative max-w-xs flex-1">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-ink-faint" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search exams…"
+              className="h-9 rounded-md pl-8 text-[13px]"
+            />
+          </div>
+          <div className="flex gap-1">
+            {FILTERS.map((f) => (
+              <button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                className={cn(
+                  'rounded-pill border px-3 py-1.5 text-[11px] font-bold transition-colors',
+                  filter === f.key
+                    ? 'border-ink bg-ink text-surface'
+                    : 'border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink'
                 )}
-              </div>
-              <ExamModalCreator modalRef={modalRef} />
-            </div>
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
         </div>
+
+        {/* table */}
+        <div className="overflow-hidden rounded-lg border border-line bg-surface">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Exam</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Students</TableHead>
+                <TableHead className="w-10" />
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {visible.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={4} className="py-10 text-center text-sm text-ink-faint">
+                    No exams found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visible.map((exam) => (
+                  <TableRow
+                    key={exam._id}
+                    onClick={() => router.push(`/dashboard/exams/${exam._id}`)}
+                    className={cn(
+                      'cursor-pointer',
+                      exam._status === 'live' && 'bg-live-tint hover:bg-live-tint/70'
+                    )}
+                  >
+                    <TableCell>
+                      <div className="font-bold text-ink">{exam.examName || 'Untitled'}</div>
+                      <div className="mt-0.5 text-[11px] text-ink-faint">
+                        {formatDate(exam.createdAt)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={exam._status}>
+                        {STATUS_LABEL[exam._status]}
+                      </StatusBadge>
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs tabular-nums">
+                      {exam.students?.length ?? 0}
+                    </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            aria-label="Actions"
+                            className="grid h-7 w-7 place-items-center rounded-md border border-line bg-surface text-ink-muted hover:border-line-strong hover:text-ink"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => router.push(`/dashboard/exams/${exam._id}`)}
+                          >
+                            <ExternalLink className="h-4 w-4" /> Open
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setRenameTarget(exam)}>
+                            <Pencil className="h-4 w-4" /> Rename
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-danger focus:text-danger"
+                            onClick={() => setDeleteTarget(exam)}
+                          >
+                            <Trash2 className="h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-      <div className="grid w-5/6 grid-cols-3 gap-4 text-base">
-        {isEdit
-          ? exam.map((item) => (
-              <EditCard
-                key={item._id}
-                id={item._id}
-                title={item.examName}
-                date={item.createdAt}
-                handleEditName={handleEditName}
-                handleDelete={handleDelete}
-              />
-            ))
-          : exam.map((item) => (
-              <Card
-                key={item._id}
-                onClickFunction={() =>
-                  router.push(`/dashboard/exams/${item._id}`)
-                }
-                title={item.examName}
-                date={item.createdAt}
-              />
-            ))}
-      </div>
-    </div>
+
+      <ExamCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
+
+      <RenameDialog
+        open={!!renameTarget}
+        onOpenChange={(o) => !o && setRenameTarget(null)}
+        title="Rename exam"
+        label="Exam name"
+        defaultValue={renameTarget?.examName}
+        onSubmit={(value) => handleRename(renameTarget._id, value)}
+      />
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(o) => !o && setDeleteTarget(null)}
+        title="Delete exam?"
+        description={`"${deleteTarget?.examName}" and its session data will be permanently removed.`}
+        confirmLabel="Delete"
+        destructive
+        onConfirm={() => handleDelete(deleteTarget._id)}
+      />
+    </>
   );
 }
