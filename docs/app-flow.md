@@ -1,7 +1,7 @@
 # KEP Unklab Exam — End-to-End App Flow & Local Run Guide
 
 > Single-repo Next.js app (`kep-unklab-exam`). The UI and API share one process:
-> `app/api/**` Route Handlers call `lib/services/*` against MongoDB.
+> `src/app/api/**` Route Handlers call `src/lib/services/*` against MongoDB.
 > The legacy NestJS API repo is retired (see `docs/README.md`).
 
 ---
@@ -20,7 +20,7 @@ MONGO_URI=mongodb://localhost:27017/kep-unklab-exam
 JWT_SECRET=<random-secret>
 ```
 
-- API base URL: same-origin `/api` (`lib/api/client.js`, `withCredentials: true`).
+- API base URL: same-origin `/api` (`src/lib/api/client.js`, `withCredentials: true`).
 - Auth cookie: `kep_token` (httpOnly JWT).
 - Empty DB = no admin. Bootstrap via `POST /api/auth/register` (needs existing admin) or manual user insert — see §6.
 
@@ -29,7 +29,7 @@ JWT_SECRET=<random-secret>
 ## 2. Architecture
 
 ```
-Browser → middleware.js (JWT + role) → app/api/**/route.js → lib/services/* → MongoDB
+Browser → src/middleware.js (JWT + role) → src/app/api/**/route.js → src/lib/services/* → MongoDB
 ```
 
 - **Admin JWT payload:** `{ username, id, role: ['admin'] }`.
@@ -40,13 +40,13 @@ Browser → middleware.js (JWT + role) → app/api/**/route.js → lib/services/
 
 See [data-model/data-overview.md](./data-model/data-overview.md). Summary:
 
-| Collection  | Role                                                |
-| ----------- | --------------------------------------------------- |
-| `users`     | Admin accounts                                      |
-| `questions` | Question banks (embedded `questions[]` items)       |
-| `exams`     | Exam config + embedded roster + question-group refs |
-| `students`  | Per-student submission (`questionList`, `score`)    |
-| `files`     | Image/audio for questions                           |
+| Collection  | Role                                                      |
+| ----------- | --------------------------------------------------------- |
+| `users`     | Admin accounts                                            |
+| `questions` | Question banks (embedded `questions[]` items)             |
+| `exams`     | Exam config + embedded participants + question-group refs |
+| `students`  | Per-student submission (`questionList`, `score`)          |
+| `files`     | Image/audio for questions                                 |
 
 `exams.questions` holds `{ _id, questionName, quantity, questionLength }` per bank.
 On `POST /api/student/start`, the server samples `quantity` items per group into `students.questionList`.
@@ -69,7 +69,7 @@ Base URL: `http://localhost:3000/api`. Admin/student calls send the `kep_token` 
 2. Create exam
    POST /api/exam/:examName       [{_id, questionName, quantity, questionLength}]
 
-3. Student roster
+3. Participant list
    PATCH /api/exam/studentList/:id  multipart CSV/XLSX
 
 4. Start exam
@@ -83,7 +83,7 @@ Base URL: `http://localhost:3000/api`. Admin/student calls send the `kep_token` 
 
 6. Login
    POST /api/auth/login/student  {studentId, token}
-   → cookie; gated by exam.endTime and roster
+   → cookie; gated by exam.endTime and participants
 
 7. Start paper
    POST /api/student/start
@@ -115,7 +115,7 @@ Base URL: `http://localhost:3000/api`. Admin/student calls send the `kep_token` 
 
 ### Scoring
 
-- Per group: `score = round(correct / total * 100)` (`lib/services/student.service.js`).
+- Per group: `score = round(correct / total * 100)` (`src/lib/services/student.service.js`).
 - Overall: `extractScore()` sums correct/total across groups.
 - Computed lazily on `GET /student/score`, not on each answer.
 
@@ -123,18 +123,18 @@ Base URL: `http://localhost:3000/api`. Admin/student calls send the `kep_token` 
 
 ## 4. Frontend routes → API map
 
-| Route                               | File                                            | Key API calls                                   |
-| ----------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| `/`                                 | `app/page.jsx`                                  | login student/admin, `POST /student/start`      |
-| `/started`                          | `app/started/page.jsx`                          | client T&C only                                 |
-| `/exam`                             | `app/exam/page.jsx`                             | `GET student/questions`, answer/bookmark/submit |
-| `/score`                            | `app/score/page.jsx`                            | `GET exam/time`, `GET /student/score`           |
-| `/dashboard/exams`                  | `app/dashboard/exams/page.jsx`                  | exam CRUD                                       |
-| `/dashboard/exams/[examId]`         | `app/dashboard/exams/[examId]/page.jsx`         | roster, start/stop, scores                      |
-| `/dashboard/questions`              | `app/dashboard/questions/page.jsx`              | question banks                                  |
-| `/dashboard/questions/[questionId]` | `app/dashboard/questions/[questionId]/page.jsx` | editor, import                                  |
+| Route                               | File                                                | Key API calls                                   |
+| ----------------------------------- | --------------------------------------------------- | ----------------------------------------------- |
+| `/`                                 | `src/app/page.jsx`                                  | login student/admin, `POST /student/start`      |
+| `/started`                          | `src/app/started/page.jsx`                          | client T&C only                                 |
+| `/exam`                             | `src/app/exam/page.jsx`                             | `GET student/questions`, answer/bookmark/submit |
+| `/score`                            | `src/app/score/page.jsx`                            | `GET exam/time`, `GET /student/score`           |
+| `/dashboard/exams`                  | `src/app/dashboard/exams/page.jsx`                  | exam CRUD                                       |
+| `/dashboard/exams/[examId]`         | `src/app/dashboard/exams/[examId]/page.jsx`         | participants, start/stop, scores                |
+| `/dashboard/questions`              | `src/app/dashboard/questions/page.jsx`              | question banks                                  |
+| `/dashboard/questions/[questionId]` | `src/app/dashboard/questions/[questionId]/page.jsx` | editor, import                                  |
 
-Auth state: `contexts/AuthContext.jsx` + cookie. Question index: `sessionStorage.number`.
+Auth state: `src/contexts/AuthContext.jsx` + httpOnly cookie `kep_token`. Question index: `sessionStorage.number`.
 
 ---
 
@@ -145,7 +145,7 @@ Auth state: `contexts/AuthContext.jsx` + cookie. Question index: `sessionStorage
 3. **`$sample`:** per-student draw is random even when `isRandom=false`; `isRandom` also shuffles order and options.
 4. **Answer index:** PATCH uses 0-based array index, not display `id`.
 5. **Time gates:** login blocked before start / after end; answers blocked after end; submit has 2-minute grace.
-6. **Rate limit:** in-memory on login routes — weak across Vercel instances (`lib/rate-limit.js`).
+6. **Rate limit:** in-memory on login routes — weak across Vercel instances (`src/lib/rate-limit.js`).
 
 ---
 

@@ -1,5 +1,9 @@
+'use client';
+
 import React from 'react';
+import { Download } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import { Button } from '@/components/ui/button';
 
 export default function DownloadTemplateButton() {
   const handleDownload = () => {
@@ -7,12 +11,11 @@ export default function DownloadTemplateButton() {
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
     saveAs(blob, 'student_template.csv');
   };
+
   return (
-    <button
-      onClick={handleDownload}
-      className="cursor-pointer flex items-center justify-center py-2 px-5 rounded-2xl bg-whitePlus border border-accent1 shadow-md z-50 h-fit self-end"
-    >
+    <Button variant="secondary" size="sm" onClick={handleDownload}>
+      <Download className="h-4 w-4" />
       Download CSV Template
-    </button>
+    </Button>
   );
 }

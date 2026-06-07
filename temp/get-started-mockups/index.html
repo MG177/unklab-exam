@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get Started — KEP exam onboarding mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Nunito:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --page-bg: #eef2f7;
+      --ink: #1a2332;
+      --ink-muted: #5c6570;
+      --ink-faint: #8a939c;
+      --paper: #f6f8fb;
+      --surface: #ffffff;
+      --line: #e2e7ee;
+      --line-strong: #c4cdd9;
+      --brand: #1b81c4;
+      --brand-hover: #166aa3;
+      --brand-ink: #0d4b75;
+      --brand-tint: #e7f2fb;
+      --accent2: #d23438;
+      --live: #0d7a5c;
+      --live-tint: #e8f5f0;
+      --warn-tint: #fdf6e8;
+      --warn-ink: #8a5a12;
+      --radius: 12px;
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+      --font-ui: "Plus Jakarta Sans", "Nunito", system-ui, sans-serif;
+      --font-display: "Nunito", "Plus Jakarta Sans", system-ui, sans-serif;
+      --font-mono: "IBM Plex Mono", "SF Mono", monospace;
+      --shadow-xl: 0 10px 25px rgba(26, 35, 50, 0.12);
+      --shadow-frame: 0 2px 6px rgba(26, 35, 50, 0.05), 0 14px 36px rgba(26, 35, 50, 0.08);
+      --bg-gradient: linear-gradient(135deg, #1b81c4 0%, #166aa3 55%, #0d4b75 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: var(--page-bg);
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 14px;
+      font-weight: 500;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .lede {
+      color: var(--ink-muted);
+      font-size: 14px;
+      max-width: 72ch;
+      margin-bottom: 20px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .compare-table th {
+      background: var(--paper);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      font-weight: 800;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cost-low {
+      color: var(--live);
+      font-weight: 700;
+    }
+
+    .cost-med {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .cost-high {
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    .layout-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .layout-tabs button {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+
+    .layout-tabs button:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .layout-tabs button.active {
+      background: var(--brand-tint);
+      border-color: var(--brand);
+      color: var(--brand-ink);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: var(--radius-pill);
+      background: var(--live);
+      color: #fff;
+    }
+
+    .tag.baseline {
+      background: var(--ink-faint);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .option-head {
+      margin-bottom: 14px;
+    }
+
+    .option-head h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .option-head p {
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .pros-cons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pros-cons>div {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .pros-cons h3 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .pros-cons ul {
+      padding-left: 18px;
+      color: var(--ink-muted);
+    }
+
+    .pros-cons li {
+      margin-bottom: 4px;
+    }
+
+    .mock-app {
+      margin-bottom: 12px;
+    }
+
+    .mock-app-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .mock-viewport {
+      background: var(--bg-gradient);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-lg);
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mock-viewport::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 78% 12%, rgba(231, 242, 251, 0.35), transparent),
+        radial-gradient(ellipse 50% 45% at 18% 88%, rgba(22, 106, 163, 0.25), transparent);
+      pointer-events: none;
+    }
+
+    .mobile-note {
+      background: var(--warn-tint);
+      border: 1px solid #e8d4a8;
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--warn-ink);
+    }
+
+    /* ── Shared mock components ── */
+    .gs-card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .gs-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: var(--ink);
+      text-align: center;
+    }
+
+    .gs-title .bang {
+      color: var(--accent2);
+    }
+
+    .gs-terms-scroll {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 14px 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+    }
+
+    .gs-terms-scroll h4 {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+      margin: 12px 0 6px;
+    }
+
+    .gs-terms-scroll h4:first-child {
+      margin-top: 0;
+    }
+
+    .gs-terms-scroll ul {
+      padding-left: 18px;
+      margin-bottom: 4px;
+    }
+
+    .gs-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .gs-check input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .gs-check-box {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--line-strong);
+      border-radius: 4px;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .gs-check input:checked+.gs-check-box {
+      background: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .gs-check input:checked+.gs-check-box::after {
+      content: "✓";
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .gs-check-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .btn-start {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.04em;
+      padding: 14px 48px;
+      border: none;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: background 0.12s, opacity 0.12s;
+    }
+
+    .btn-start.on {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn-start.on:hover {
+      background: var(--brand-hover);
+    }
+
+    .btn-start.off {
+      background: #e0e0e0;
+      color: var(--ink);
+      cursor: not-allowed;
+    }
+
+    .btn-start.full {
+      width: 100%;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    /* ── BASELINE ── */
+    .gs-baseline {
+      width: min(100%, 580px);
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .gs-baseline .gs-title {
+      font-size: 2rem;
+    }
+
+    .gs-baseline-illus {
+      width: 100%;
+      max-width: 480px;
+      min-height: 220px;
+      background: linear-gradient(180deg, var(--brand-tint) 0%, var(--paper) 100%);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-faint);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .gs-baseline .btn-start {
+      padding-left: 180px;
+      padding-right: 180px;
+    }
+
+    /* ── OPTION 1: Incremental ── */
+    .gs-inc {
+      width: min(100%, 520px);
+      padding: 28px 32px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-frame);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .gs-inc .gs-title {
+      font-size: 1.45rem;
+      text-align: left;
+    }
+
+    .gs-inc .eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--brand);
+      margin-bottom: 4px;
+    }
+
+    .gs-inc-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 4px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ── OPTION 2: Split panel (recommended) ── */
+    .gs-split {
+      width: min(100%, 720px);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-frame);
+    }
+
+    .gs-split-left {
+      background: var(--brand);
+      color: #fff;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .gs-split-left .logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .gs-split-left .logo span {
+      opacity: 0.85;
+    }
+
+    .gs-split-left h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .gs-split-left .meta {
+      font-size: 12px;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    .gs-split-left .student-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gs-split-right {
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 400px;
+    }
+
+    .gs-split-right .gs-terms-scroll {
+      flex: 1;
+      max-height: none;
+      min-height: 200px;
+    }
+
+    .gs-split-sticky {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ── OPTION 3: Briefing cards ── */
+    .gs-brief {
+      width: min(100%, 640px);
+      padding: 28px 32px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-frame);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .gs-brief .gs-title {
+      font-size: 1.45rem;
+      text-align: left;
+    }
+
+    .gs-brief-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .gs-brief-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      background: var(--paper);
+      text-align: center;
+    }
+
+    .gs-brief-card .icon {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 8px;
+      border-radius: var(--radius-pill);
+      background: var(--brand-tint);
+      color: var(--brand);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .gs-brief-card h4 {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .gs-brief-card p {
+      font-size: 11px;
+      color: var(--ink-muted);
+      line-height: 1.4;
+    }
+
+    .gs-brief .gs-terms-scroll {
+      max-height: 140px;
+    }
+
+    /* ── OPTION 4: Wizard ── */
+    .gs-wizard {
+      width: min(100%, 560px);
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-frame);
+    }
+
+    .gs-wizard-steps {
+      display: flex;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .gs-wizard-step {
+      flex: 1;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-faint);
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+
+    .gs-wizard-step:last-child {
+      border-right: none;
+    }
+
+    .gs-wizard-step.done {
+      color: var(--live);
+    }
+
+    .gs-wizard-step.active {
+      color: var(--brand-ink);
+      background: var(--brand-tint);
+    }
+
+    .gs-wizard-step .num {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    .gs-wizard-body {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 360px;
+    }
+
+    .gs-wizard-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .gs-wizard-body .sub {
+      color: var(--ink-muted);
+      font-size: 13px;
+      margin-top: -10px;
+    }
+
+    .gs-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .gs-checklist .gs-check {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+
+    .gs-wizard-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      color: var(--ink-muted);
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    .btn-primary-sm {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    .progress-read {
+      height: 4px;
+      background: var(--line);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .progress-read .fill {
+      height: 100%;
+      width: 72%;
+      background: var(--brand);
+      border-radius: var(--radius-pill);
+    }
+
+    .read-hint {
+      font-size: 11px;
+      color: var(--ink-faint);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Interactive toggles in mock */
+    .mock-interactive .btn-start.off[data-enabled="true"],
+    .mock-interactive .btn-start.on {
+      background: var(--brand);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    @media (max-width: 680px) {
+      .gs-split {
+        grid-template-columns: 1fr;
+      }
+
+      .gs-split-left {
+        padding: 20px;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .gs-split-left h2 {
+        font-size: 1.15rem;
+        width: 100%;
+      }
+
+      .gs-brief-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gs-baseline .btn-start {
+        padding-left: 48px;
+        padding-right: 48px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1>Get Started — exam onboarding mockups</h1>
+    <p class="lede">
+      Redesign options for <code>/started</code> (terms acceptance before the exam). Each option keeps the same flow:
+      read rules → agree → START → <code>/exam</code>. Compare structure and mental model, not pixel polish.
+    </p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Best for</th>
+          <th>Build cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Baseline</strong></td>
+          <td>Current ship — centered card + T&amp;C image</td>
+          <td class="cost-low">—</td>
+        </tr>
+        <tr>
+          <td><strong>1 · Incremental</strong></td>
+          <td>Quick refresh; design-system typography &amp; scrollable text</td>
+          <td class="cost-low">Low</td>
+        </tr>
+        <tr>
+          <td><strong>2 · Split panel</strong></td>
+          <td>Clear hierarchy; terms readable without giant SVG</td>
+          <td class="cost-med">Medium</td>
+        </tr>
+        <tr>
+          <td><strong>3 · Briefing cards</strong></td>
+          <td>Surface duration / rules / integrity before legal text</td>
+          <td class="cost-med">Medium</td>
+        </tr>
+        <tr>
+          <td><strong>4 · Wizard</strong></td>
+          <td>High-stakes exams; scroll-gated + multi-ack checklist</td>
+          <td class="cost-high">High</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="layout-tabs" role="tablist">
+      <button type="button" data-panel="baseline">Baseline</button>
+      <button type="button" data-panel="opt1">1 · Incremental</button>
+      <button type="button" class="active" data-panel="opt2">2 · Split panel <span
+          class="tag">recommended</span></button>
+      <button type="button" data-panel="opt3">3 · Briefing cards</button>
+      <button type="button" data-panel="opt4">4 · Wizard</button>
+    </div>
+
+    <!-- BASELINE -->
+    <div id="baseline" class="panel">
+      <div class="option-head">
+        <h2>Baseline — current production</h2>
+        <p>Centered white card on gradient background; welcome headline, large T&amp;C SVG, checkbox, wide START pill.
+        </p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Simple, one-screen mental model</li>
+            <li>Already built and familiar to students</li>
+            <li>Matches login page visual language</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>T&amp;C as raster/SVG image — not selectable, not accessible</li>
+            <li>Heavy shadow + legacy fonts (Nunito/Montserrat mix)</li>
+            <li>START button fixed width breaks on narrow screens</li>
+            <li>Checkbox styling diverges from design system</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">Preview — /started today</div>
+        <div class="mock-viewport">
+          <div class="gs-card gs-baseline">
+            <div class="gs-title">Welcome to the Exam Test<span class="bang">!</span></div>
+            <div class="gs-baseline-illus">terms and conditions.svg (large graphic)</div>
+            <label class="gs-check">
+              <input type="checkbox" />
+              <span class="gs-check-box" style="border-radius:50%"></span>
+              <span class="gs-check-label">I agree to the Software Exam Test terms and conditions.</span>
+            </label>
+            <button type="button" class="btn-start off">START</button>
+          </div>
+        </div>
+      </div>
+      <p class="mobile-note">On mobile, the T&amp;C image scales awkwardly and the START button uses
+        <code>px-[211px]</code> — likely overflows or shrinks unevenly.</p>
+    </div>
+
+    <!-- OPTION 1 -->
+    <div id="opt1" class="panel">
+      <div class="option-head">
+        <h2>1 · Incremental — design-system card</h2>
+        <p>Same single-column layout; swap image for scrollable text, align tokens, full-width CTA.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Smallest diff from baseline — fast to ship</li>
+            <li>Accessible, selectable terms text</li>
+            <li>Matches admin design system (borders, Plus Jakarta, brand checkbox)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Still feels like “legal wall” before fun exam UI</li>
+            <li>No room for exam metadata (duration, question count)</li>
+            <li>Less distinctive than login refresh opportunity</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app mock-interactive">
+        <div class="mock-app-label">Preview — refreshed single card</div>
+        <div class="mock-viewport">
+          <div class="gs-card gs-inc">
+            <div>
+              <div class="eyebrow">Before you begin</div>
+              <div class="gs-title">Welcome to the KEP Exam</div>
+            </div>
+            <div>
+              <div class="section-label">Terms &amp; conditions</div>
+              <div class="gs-terms-scroll">
+                <h4>Exam integrity</h4>
+                <ul>
+                  <li>Do not switch tabs, copy content, or use external aids during the exam.</li>
+                  <li>Your session is monitored; violations may void your attempt.</li>
+                </ul>
+                <h4>Time limit</h4>
+                <ul>
+                  <li>The timer starts when you press START and cannot be paused.</li>
+                  <li>Submit before time expires — unanswered items score zero.</li>
+                </ul>
+                <h4>Technical</h4>
+                <ul>
+                  <li>Use a stable connection; autosave runs after each answer.</li>
+                  <li>Contact the proctor if you lose connection.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="gs-inc-footer">
+              <label class="gs-check">
+                <input type="checkbox" onchange="toggleStart(this)" />
+                <span class="gs-check-box"></span>
+                <span class="gs-check-label">I agree to the Software Exam Test terms and conditions.</span>
+              </label>
+              <button type="button" class="btn-start off full" id="start-opt1">START</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mobile-note">Card width caps at ~520px; START is full-width. Terms scroll inside the card — no
+        horizontal overflow.</p>
+    </div>
+
+    <!-- OPTION 2 RECOMMENDED -->
+    <div id="opt2" class="panel active">
+      <div class="option-head">
+        <h2>2 · Split panel — brand rail + terms pane</h2>
+        <p>Left column anchors context (KEP / Unklab, student ID); right column is scrollable legal copy with sticky
+          agree + CTA.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Best readability — terms get dedicated space</li>
+            <li>Reinforces “you’re logged in as …” before high-stakes start</li>
+            <li>Sticky footer keeps agree + START visible while scrolling</li>
+            <li>Distinct from login card without a full wizard</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Two-column layout needs a mobile stack (brand bar on top)</li>
+            <li>Slightly more CSS than Option 1</li>
+            <li>Left rail content must stay short on small heights</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app mock-interactive">
+        <div class="mock-app-label">Preview — split onboarding card</div>
+        <div class="mock-viewport">
+          <div class="gs-card gs-split">
+            <div class="gs-split-left">
+              <div>
+                <div class="logo"><span>Unklab</span> KEP</div>
+              </div>
+              <div>
+                <h2>Ready when you are.</h2>
+                <p class="meta" style="margin-top:10px">Review the exam rules on the right, then confirm to begin.</p>
+              </div>
+              <div class="student-pill">S2201847</div>
+            </div>
+            <div class="gs-split-right">
+              <div class="section-label">Software Exam Test — terms &amp; conditions</div>
+              <div class="gs-terms-scroll">
+                <h4>1. Purpose</h4>
+                <p>This placement exam assesses English proficiency for course placement at Universitas Klabat.</p>
+                <h4>2. Conduct</h4>
+                <ul>
+                  <li>Work independently. No dictionaries, translators, or AI tools.</li>
+                  <li>Do not photograph, copy, or share exam content.</li>
+                  <li>Remain on this browser tab for the duration of the test.</li>
+                </ul>
+                <h4>3. Timing</h4>
+                <ul>
+                  <li>Duration: <strong style="font-family:var(--font-mono)">90 min</strong> · <strong
+                      style="font-family:var(--font-mono)">60</strong> questions</li>
+                  <li>Timer turns red under 1 minute remaining.</li>
+                </ul>
+                <h4>4. Submission</h4>
+                <p>Click Submit on the final question or when time ends. Scores are reviewed by administrators.</p>
+              </div>
+              <div class="gs-split-sticky">
+                <label class="gs-check">
+                  <input type="checkbox" onchange="toggleStart(this, 'start-opt2')" />
+                  <span class="gs-check-box"></span>
+                  <span class="gs-check-label">I have read and agree to the terms and conditions.</span>
+                </label>
+                <button type="button" class="btn-start off full" id="start-opt2">START EXAM</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mobile-note">Below ~680px the brand rail collapses to a horizontal strip above terms; sticky footer
+        behavior preserved.</p>
+    </div>
+
+    <!-- OPTION 3 -->
+    <div id="opt3" class="panel">
+      <div class="option-head">
+        <h2>3 · Briefing cards — rules at a glance</h2>
+        <p>Three icon cards summarize duration, conduct, and integrity; expandable terms below; then agree + start.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Students see critical facts before reading legal prose</li>
+            <li>Reduces anxiety — “what am I getting into?” answered upfront</li>
+            <li>Good bridge between playful exam UI and formal consent</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>More vertical content — may push CTA below fold on short laptops</li>
+            <li>Icon/card row needs careful mobile stacking</li>
+            <li>Duplicate info if terms repeat the cards verbatim</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app mock-interactive">
+        <div class="mock-app-label">Preview — briefing + terms</div>
+        <div class="mock-viewport">
+          <div class="gs-card gs-brief">
+            <div class="gs-title">Welcome to the Exam Test<span class="bang">!</span></div>
+            <div class="gs-brief-grid">
+              <div class="gs-brief-card">
+                <div class="icon">⏱</div>
+                <h4>90 minutes</h4>
+                <p>60 questions · timer cannot be paused</p>
+              </div>
+              <div class="gs-brief-card">
+                <div class="icon">📋</div>
+                <h4>Your work only</h4>
+                <p>No tabs, tools, or help from others</p>
+              </div>
+              <div class="gs-brief-card">
+                <div class="icon">🔒</div>
+                <h4>Monitored session</h4>
+                <p>Answers autosave · violations may void attempt</p>
+              </div>
+            </div>
+            <div>
+              <div class="section-label">Full terms &amp; conditions</div>
+              <div class="gs-terms-scroll">
+                <p>By starting this exam you confirm that you are the registered student, that you will complete the
+                  assessment without unauthorized assistance, and that you understand scores determine English course
+                  placement…</p>
+                <h4>Data &amp; privacy</h4>
+                <p>Responses are stored securely for academic use only, in accordance with university policy.</p>
+              </div>
+            </div>
+            <label class="gs-check">
+              <input type="checkbox" onchange="toggleStart(this, 'start-opt3')" />
+              <span class="gs-check-box"></span>
+              <span class="gs-check-label">I agree to the Software Exam Test terms and conditions.</span>
+            </label>
+            <button type="button" class="btn-start off full" id="start-opt3">START</button>
+          </div>
+        </div>
+      </div>
+      <p class="mobile-note">Cards stack to a single column; consider collapsing terms into a “Read full terms”
+        disclosure on very small screens.</p>
+    </div>
+
+    <!-- OPTION 4 -->
+    <div id="opt4" class="panel">
+      <div class="option-head">
+        <h2>4 · Wizard — scroll-gated multi-step consent</h2>
+        <p>Step 2 shows terms with read progress; Step 3 requires explicit acknowledgments before START unlocks.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Strongest compliance story for high-stakes placement</li>
+            <li>Scroll-to-bottom gate reduces “I didn’t read it” disputes</li>
+            <li>Room for future steps (device check, audio test)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Highest build cost — step state, scroll detection, routing edge cases</li>
+            <li>Extra clicks add friction right before an already stressful exam</li>
+            <li>Overkill if terms are short and proctors handle issues live</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">Preview — step 2 of 3 (terms + read progress)</div>
+        <div class="mock-viewport">
+          <div class="gs-card gs-wizard">
+            <div class="gs-wizard-steps">
+              <div class="gs-wizard-step done"><span class="num">1</span> Welcome</div>
+              <div class="gs-wizard-step active"><span class="num">2</span> Read terms</div>
+              <div class="gs-wizard-step"><span class="num">3</span> Confirm</div>
+            </div>
+            <div class="gs-wizard-body">
+              <h2>Exam terms &amp; conditions</h2>
+              <p class="sub">Scroll to the end to continue — this ensures you've seen the full agreement.</p>
+              <div class="progress-read">
+                <div class="fill"></div>
+              </div>
+              <div class="read-hint"><span>Reading progress</span><span>72%</span></div>
+              <div class="gs-terms-scroll" style="max-height:160px">
+                <h4>Integrity</h4>
+                <ul>
+                  <li>Independent work only.</li>
+                  <li>No external resources.</li>
+                </ul>
+                <h4>Session</h4>
+                <ul>
+                  <li>Single browser tab.</li>
+                  <li>No back navigation after start.</li>
+                </ul>
+                <h4>Grading</h4>
+                <p>Automated scoring with admin review for speaking/writing sections where applicable.</p>
+                <h4>Appeals</h4>
+                <p>Contact the English department within 48 hours of results publication.</p>
+              </div>
+              <div class="gs-wizard-nav">
+                <button type="button" class="btn-ghost">Back</button>
+                <button type="button" class="btn-primary-sm">Continue →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-app-label" style="margin-top:16px">Step 3 — explicit acknowledgments</div>
+        <div class="mock-viewport" style="min-height:380px;padding:24px">
+          <div class="gs-card gs-wizard" style="width:min(100%,560px)">
+            <div class="gs-wizard-steps">
+              <div class="gs-wizard-step done"><span class="num">1</span> Welcome</div>
+              <div class="gs-wizard-step done"><span class="num">2</span> Read terms</div>
+              <div class="gs-wizard-step active"><span class="num">3</span> Confirm</div>
+            </div>
+            <div class="gs-wizard-body">
+              <h2>Confirm before you start</h2>
+              <p class="sub">Check each statement to unlock the exam.</p>
+              <div class="gs-checklist">
+                <label class="gs-check">
+                  <input type="checkbox" checked />
+                  <span class="gs-check-box"></span>
+                  <span class="gs-check-label">I will complete this exam without unauthorized help.</span>
+                </label>
+                <label class="gs-check">
+                  <input type="checkbox" checked />
+                  <span class="gs-check-box"></span>
+                  <span class="gs-check-label">I understand the timer cannot be paused once started.</span>
+                </label>
+                <label class="gs-check">
+                  <input type="checkbox" />
+                  <span class="gs-check-box"></span>
+                  <span class="gs-check-label">I agree to the full Software Exam Test terms and conditions.</span>
+                </label>
+              </div>
+              <div class="gs-wizard-nav">
+                <button type="button" class="btn-ghost">Back</button>
+                <button type="button" class="btn-start off" style="padding:10px 28px;font-size:14px">START EXAM</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mobile-note">Wizard steps become a compact progress bar on mobile; step 3 checkboxes are large touch
+        targets.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll(".layout-tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".layout-tabs button").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.panel).classList.add("active");
+      });
+    });
+
+    function toggleStart(checkbox, btnId) {
+      const id = btnId || "start-opt1";
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      if (checkbox.checked) {
+        btn.classList.remove("off");
+        btn.classList.add("on");
+      } else {
+        btn.classList.remove("on");
+        btn.classList.add("off");
+      }
+    }
+  </script>
+</body>
+
+</html>

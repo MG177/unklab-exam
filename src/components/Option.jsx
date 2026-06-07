@@ -1,42 +1,46 @@
+'use client';
+
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 export default function Option({
   active,
   option,
   handleAnswer,
   answerId,
-  textSize,
-  size,
+  fontScale,
 }) {
   return (
-    <div
+    <button
+      type="button"
       onClick={() => handleAnswer(answerId)}
-      className={`w-full gap-4 flex rounded-3xl items-center p-5 shadow-md border-[1px] border-gray/20 text-black transition ease-out duration-50 hover:scale-[1.007] ${
-        active ? 'bg-accent1 shadow-accent1 ' : 'bg-whitePlus cursor-pointer'
-      }`}
-    >
-      {active ? (
-        <div className="flex justify-center items-center w-fit h-fit rounded-full bg-white p-2">
-          <i
-            className="pi pi-check text-accent1"
-            style={{ fontWeight: '900' }}
-          />
-        </div>
-      ) : (
-        <div className="w-1 h-1 p-3.5 bg-white rounded-full border border-gray"></div>
+      className={cn(
+        'flex w-full items-center gap-3 rounded-lg border px-4 py-3.5 text-left transition-colors duration-150',
+        active
+          ? 'cursor-default border-brand bg-brand-tint text-brand-ink'
+          : 'cursor-pointer border-line bg-surface text-ink hover:border-line-strong'
       )}
-      <p
-        style={{ userSelect: 'none' }}
+    >
+      <span
+        className={cn(
+          'h-4 w-4 shrink-0 self-center rounded-full border-2',
+          active
+            ? 'border-brand bg-brand shadow-[inset_0_0_0_3px_#fff]'
+            : 'border-line-strong'
+        )}
+        aria-hidden
+      />
+      <span
         onCopy={(event) => {
           event.preventDefault();
         }}
-        className={`${
-          active
-            ? 'text-white tr  ansition ease-out duration-50 cursor-default'
-            : ''
-        } ${textSize[size]} md:${textSize[size + 1]} xl:${textSize[size + 2]} `}
+        className="min-w-0 flex-1 leading-snug [&_br]:hidden"
+        style={{
+          userSelect: 'none',
+          fontSize: `${fontScale.bodyRem}rem`,
+        }}
         dangerouslySetInnerHTML={{ __html: option.replace(/\n/g, '<br>') }}
-      ></p>
-    </div>
+      />
+    </button>
   );
 }

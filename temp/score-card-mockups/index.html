@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScoreCard — KEP exam results mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Nunito:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --page-bg: #fcf9ff;
+      --ink: #37474f;
+      --ink-muted: #5c6570;
+      --ink-faint: #8a939c;
+      --paper: #f6f8fb;
+      --surface: #ffffff;
+      --line: #e2e7ee;
+      --brand: #1b81c4;
+      --brand-ink: #0d4b75;
+      --brand-tint: #e7f2fb;
+      --accent2: #d23438;
+      --live: #0d7a5c;
+      --live-tint: #e8f5f0;
+      --radius: 12px;
+      --radius-lg: 24px;
+      --font-ui: "Nunito", "Plus Jakarta Sans", system-ui, sans-serif;
+      --font-mono: "IBM Plex Mono", "SF Mono", monospace;
+      --shadow-lg: 0 10px 25px rgba(26, 35, 50, 0.12);
+      --shadow-frame: 0 2px 6px rgba(26, 35, 50, 0.05), 0 14px 36px rgba(26, 35, 50, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-ui);
+      background: #eef2f7;
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .lede {
+      color: var(--ink-muted);
+      font-size: 14px;
+      max-width: 72ch;
+      margin-bottom: 20px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .compare-table th {
+      background: var(--paper);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      font-weight: 800;
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .cost-low {
+      color: var(--live);
+      font-weight: 700;
+    }
+
+    .cost-med {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .cost-high {
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    .layout-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .layout-tabs button {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+
+    .layout-tabs button:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .layout-tabs button.active {
+      background: var(--brand-tint);
+      border-color: var(--brand);
+      color: var(--brand-ink);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 1px 7px;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 999px;
+      background: var(--live);
+      color: #fff;
+    }
+
+    .tag.baseline {
+      background: var(--ink-faint);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .option-head {
+      margin-bottom: 14px;
+    }
+
+    .option-head h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .option-head p {
+      font-size: 14px;
+      color: var(--ink-muted);
+    }
+
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .pros-cons {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pros-cons>div {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .pros-cons h3 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .pros-cons ul {
+      padding-left: 18px;
+      color: var(--ink-muted);
+    }
+
+    .pros-cons li {
+      margin-bottom: 4px;
+    }
+
+    .mock-app {
+      margin-bottom: 12px;
+    }
+
+    .mock-app-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 8px;
+    }
+
+    .mock-viewport {
+      background: var(--page-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Fake exam shell chrome */
+    .mock-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mock-header .brand span {
+      color: var(--brand);
+    }
+
+    .mock-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .mock-footer .pill {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-weight: 700;
+    }
+
+    .mobile-note {
+      background: #fdf6e8;
+      border: 1px solid #e8d4a8;
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #8a5a12;
+    }
+
+    /* ── BASELINE (current ScoreCard) ── */
+    .sc-baseline-outer {
+      background: rgba(27, 129, 196, 0.7);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-lg);
+      transform: scale(1.05);
+    }
+
+    .sc-baseline-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      background: #fafafa;
+      border-radius: var(--radius-lg);
+      padding: 16px 24px;
+      width: 400px;
+      height: 200px;
+    }
+
+    .sc-baseline-ring {
+      flex-shrink: 0;
+      width: 140px;
+      height: 140px;
+      border: 14px solid var(--accent2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+
+    .sc-baseline-side {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .sc-baseline-pill {
+      background: #fafafa;
+      border: 1px solid rgba(152, 160, 164, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 8px 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sc-baseline-answers {
+      background: #fafafa;
+      border: 1px solid rgba(152, 160, 164, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sc-baseline-answers .num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .sc-baseline-answers .lbl {
+      font-size: 1.1rem;
+    }
+
+    /* ── OPTION 1: Incremental token refresh ── */
+    .sc-opt1-wrap {
+      background: var(--brand-tint);
+      border: 1px solid color-mix(in srgb, var(--brand) 25%, transparent);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .sc-opt1-inner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .sc-opt1-ring {
+      width: 120px;
+      height: 120px;
+      border: 4px solid var(--brand);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--brand-tint);
+    }
+
+    .sc-opt1-score {
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+
+    .sc-opt1-score span {
+      color: var(--ink-faint);
+      font-size: 1rem;
+    }
+
+    .sc-opt1-side {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sc-opt1-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sc-opt1-stat {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+
+    .sc-opt1-stat .lbl {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 2px;
+    }
+
+    .sc-opt1-stat .val {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── OPTION 2: Stat card (recommended) ── */
+    .sc-opt2 {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .sc-opt2-eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-faint);
+      margin-bottom: 6px;
+    }
+
+    .sc-opt2-name {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--ink-muted);
+    }
+
+    .sc-opt2-hero {
+      font-family: var(--font-mono);
+      font-size: 3.25rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      color: var(--brand);
+      margin-bottom: 4px;
+    }
+
+    .sc-opt2-hero-sub {
+      font-size: 13px;
+      color: var(--ink-faint);
+      margin-bottom: 20px;
+    }
+
+    .sc-opt2-bar-wrap {
+      margin-bottom: 16px;
+    }
+
+    .sc-opt2-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+
+    .sc-opt2-bar-label .mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sc-opt2-bar {
+      height: 6px;
+      background: var(--paper);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .sc-opt2-bar-fill {
+      height: 100%;
+      width: 67%;
+      background: var(--live);
+      border-radius: 999px;
+    }
+
+    .sc-opt2-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .sc-opt2-stat {
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .sc-opt2-stat .lbl {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+    }
+
+    .sc-opt2-stat .val {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-top: 2px;
+    }
+
+    /* ── OPTION 3: Vertical hero + ring ── */
+    .sc-opt3 {
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .sc-opt3-ring-wrap {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px;
+    }
+
+    .sc-opt3-ring-wrap svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .sc-opt3-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sc-opt3-ring-center .score {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .sc-opt3-ring-center .of {
+      font-size: 12px;
+      color: var(--ink-faint);
+      font-weight: 600;
+    }
+
+    .sc-opt3-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+    }
+
+    .sc-opt3-name {
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .sc-opt3-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .sc-opt3-sub strong {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      color: var(--live);
+    }
+
+    /* ── OPTION 4: Certificate / placement ── */
+    .sc-opt4 {
+      max-width: 480px;
+      width: 100%;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-frame);
+    }
+
+    .sc-opt4-top {
+      background: linear-gradient(135deg, var(--brand) 0%, #0d4b75 100%);
+      color: #fff;
+      padding: 20px 24px 28px;
+      text-align: center;
+      position: relative;
+    }
+
+    .sc-opt4-top::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: var(--surface);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .sc-opt4-top .eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.85;
+      margin-bottom: 8px;
+    }
+
+    .sc-opt4-top .score {
+      font-family: var(--font-mono);
+      font-size: 3.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .sc-opt4-body {
+      padding: 20px 24px 24px;
+    }
+
+    .sc-opt4-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .sc-opt4-id {
+      font-size: 12px;
+      color: var(--ink-faint);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .sc-opt4-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 auto 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .sc-opt4-badge span {
+      background: var(--live-tint);
+      color: var(--live);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--live) 30%, transparent);
+    }
+
+    .sc-opt4-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .sc-opt4-cell {
+      background: var(--paper);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .sc-opt4-cell .lbl {
+      font-size: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+      margin-bottom: 4px;
+    }
+
+    .sc-opt4-cell .val {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 520px) {
+      .sc-baseline-inner {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+      }
+
+      .sc-baseline-outer {
+        transform: none;
+      }
+
+      .sc-opt1-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .sc-opt4-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1>ScoreCard — exam results mockups</h1>
+    <p class="lede">
+      Redesign options for the post-exam score reveal on <code>ExamPostView</code>.
+      Sample data: <strong>mg</strong> · <strong>67/100</strong> · <strong>2/3</strong> correct.
+      Student shell uses lavender canvas <code>#FCF9FF</code>; numbers should use IBM Plex Mono per design system.
+    </p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Best for</th>
+          <th>Build cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Baseline</strong></td>
+          <td>Ship today — nested cards, red ring, heavy shadows</td>
+          <td class="cost-low">—</td>
+        </tr>
+        <tr>
+          <td><strong>1 · Token refresh</strong></td>
+          <td>Same layout, align tokens (borders, mono, no scale hack)</td>
+          <td class="cost-low">Low</td>
+        </tr>
+        <tr>
+          <td><strong>2 · Stat card</strong></td>
+          <td>Design-system stat pattern — clearest scan path</td>
+          <td class="cost-med">Medium</td>
+        </tr>
+        <tr>
+          <td><strong>3 · Ring hero</strong></td>
+          <td>Mobile-first vertical stack, SVG progress ring</td>
+          <td class="cost-med">Medium</td>
+        </tr>
+        <tr>
+          <td><strong>4 · Result certificate</strong></td>
+          <td>Placement tier + multi-stat footer for admin parity</td>
+          <td class="cost-high">Higher</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="layout-tabs" role="tablist">
+      <button type="button" data-panel="baseline">Baseline <span class="tag baseline">current</span></button>
+      <button type="button" data-panel="opt1">1 · Token refresh</button>
+      <button type="button" class="active" data-panel="opt2">2 · Stat card <span class="tag">recommended</span></button>
+      <button type="button" data-panel="opt3">3 · Ring hero</button>
+      <button type="button" data-panel="opt4">4 · Certificate</button>
+    </div>
+
+    <!-- BASELINE -->
+    <div id="baseline" class="panel">
+      <div class="option-head">
+        <h2>Baseline — current ScoreCard</h2>
+        <p>Nested lavender-tint wrapper, white 400×200 inner card, thick red accent ring, separate shadow pills for name
+          and correct count.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Distinct visual identity students may already recognize</li>
+            <li>Score and name are visually separated</li>
+            <li>Works in admin exam detail too (reused component)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Triple nesting + <code>md:scale-125</code> fights responsive layout</li>
+            <li>Red ring implies danger, not achievement</li>
+            <li>Shadows everywhere vs design-system “borders over shadows”</li>
+            <li>Scores not in mono / tabular nums</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">ExamPostView viewport</div>
+        <div class="mock-viewport">
+          <div class="mock-header"><span class="brand"><span>Unklab</span> KEP</span><span
+              style="color:var(--brand)">mg</span></div>
+          <div class="sc-baseline-outer">
+            <div class="sc-baseline-inner">
+              <div class="sc-baseline-ring">67/100</div>
+              <div class="sc-baseline-side">
+                <div class="sc-baseline-pill">mg</div>
+                <div class="sc-baseline-answers">
+                  <div class="num">2/3</div>
+                  <span class="lbl">Right answers</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-footer"><span class="pill">← Review answers</span><span>00:00:00</span></div>
+        </div>
+      </div>
+      <p class="mobile-note">On narrow screens, <code>md:scale-125</code> is off but the fixed 400px width still
+        overflows; ring + side stack awkwardly.</p>
+    </div>
+
+    <!-- OPTION 1 -->
+    <div id="opt1" class="panel">
+      <div class="option-head">
+        <h2>1 · Incremental token refresh</h2>
+        <p>Keep horizontal ring + side stats; swap shadows for borders, brand ring, mono scores, brand-tint outer frame.
+        </p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Smallest diff — familiar layout for returning students</li>
+            <li>Fixes red-ring / shadow / scale issues</li>
+            <li>Reuses existing flex structure in ScoreCard.jsx</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Still two visual “zones” (ring vs pills)</li>
+            <li>Ring doesn’t show progress visually</li>
+            <li>Less distinctive than a full rethink</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">ExamPostView viewport</div>
+        <div class="mock-viewport">
+          <div class="mock-header"><span class="brand"><span>Unklab</span> KEP</span><span
+              style="color:var(--brand)">mg</span></div>
+          <div class="sc-opt1-wrap">
+            <div class="sc-opt1-inner">
+              <div class="sc-opt1-ring">
+                <div class="sc-opt1-score">67<span>/100</span></div>
+              </div>
+              <div class="sc-opt1-side">
+                <div class="sc-opt1-name">mg</div>
+                <div class="sc-opt1-stat">
+                  <div class="lbl">Right answers</div>
+                  <div class="val">2/3</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-footer"><span class="pill">← Review answers</span><span>00:00:00</span></div>
+        </div>
+      </div>
+      <p class="mobile-note">Stack ring above stats below ~480px; drop fixed widths so card is fluid.</p>
+    </div>
+
+    <!-- OPTION 2 -->
+    <div id="opt2" class="panel active">
+      <div class="option-head">
+        <h2>2 · Stat card (recommended)</h2>
+        <p>Single bordered card: eyebrow + name, hero mono score, progress bar for %, two stat cells for correct/total
+          and points.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Matches admin design-system <code>.stat-card</code> pattern</li>
+            <li>One focal hierarchy: score → bar → details</li>
+            <li>No scale hack; responsive by default</li>
+            <li>Progress bar communicates 67% at a glance</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Bigger visual departure from current card</li>
+            <li>Less “playful” than the ring treatment</li>
+            <li>Needs placement tier elsewhere if you add that later</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">ExamPostView viewport</div>
+        <div class="mock-viewport">
+          <div class="mock-header"><span class="brand"><span>Unklab</span> KEP</span><span
+              style="color:var(--brand)">mg</span></div>
+          <div class="sc-opt2">
+            <div class="sc-opt2-eyebrow">Your result</div>
+            <div class="sc-opt2-name">mg</div>
+            <div class="sc-opt2-hero">67</div>
+            <div class="sc-opt2-hero-sub">out of 100 points</div>
+            <div class="sc-opt2-bar-wrap">
+              <div class="sc-opt2-bar-label">
+                <span>Score</span>
+                <span class="mono">67%</span>
+              </div>
+              <div class="sc-opt2-bar">
+                <div class="sc-opt2-bar-fill"></div>
+              </div>
+            </div>
+            <div class="sc-opt2-stats">
+              <div class="sc-opt2-stat">
+                <div class="lbl">Correct</div>
+                <div class="val">2/3</div>
+              </div>
+              <div class="sc-opt2-stat">
+                <div class="lbl">Accuracy</div>
+                <div class="val">67%</div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-footer"><span class="pill">← Review answers</span><span>00:00:00</span></div>
+        </div>
+      </div>
+      <p class="mobile-note">Card is full-width with side padding on phones; stat grid stays 2-column until very narrow.
+      </p>
+    </div>
+
+    <!-- OPTION 3 -->
+    <div id="opt3" class="panel">
+      <div class="option-head">
+        <h2>3 · Vertical ring hero</h2>
+        <p>SVG circular progress (67%) as hero, compact name + correct count card below — optimized for thumb reach and
+          small screens.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Ring now shows actual progress, not decoration</li>
+            <li>Natural vertical flow on mobile</li>
+            <li>Feels celebratory without certificate weight</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>SVG ring needs a11y label + reduced-motion fallback</li>
+            <li>Less horizontal density on wide desktop</li>
+            <li>Admin embed may need max-width wrapper</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">ExamPostView viewport</div>
+        <div class="mock-viewport">
+          <div class="mock-header"><span class="brand"><span>Unklab</span> KEP</span><span
+              style="color:var(--brand)">mg</span></div>
+          <div class="sc-opt3">
+            <div class="sc-opt3-ring-wrap">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#e2e7ee" stroke-width="8" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="#1b81c4" stroke-width="8" stroke-dasharray="264"
+                  stroke-dashoffset="87" stroke-linecap="round" />
+              </svg>
+              <div class="sc-opt3-ring-center">
+                <div class="score">67</div>
+                <div class="of">/ 100</div>
+              </div>
+            </div>
+            <div class="sc-opt3-card">
+              <div class="sc-opt3-name">mg</div>
+              <div class="sc-opt3-sub"><strong>2/3</strong> questions answered correctly</div>
+            </div>
+          </div>
+          <div class="mock-footer"><span class="pill">← Review answers</span><span>00:00:00</span></div>
+        </div>
+      </div>
+      <p class="mobile-note">Best default for phones; on desktop consider max-width 360px centered so it doesn’t float
+        lost in the viewport.</p>
+    </div>
+
+    <!-- OPTION 4 -->
+    <div id="opt4" class="panel">
+      <div class="option-head">
+        <h2>4 · Result certificate (ambitious)</h2>
+        <p>Branded header band, placement badge (e.g. Intermediate), three-column stat footer — closer to a formal
+          placement document.</p>
+      </div>
+      <div class="pros-cons">
+        <div>
+          <h3>Pros</h3>
+          <ul>
+            <li>Room for placement level, exam name, date</li>
+            <li>Shareable / screenshot-friendly result</li>
+            <li>Aligns with KEP as a placement instrument</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Cons</h3>
+          <ul>
+            <li>Requires placement tier logic + copy</li>
+            <li>Heavier than needed if scores are provisional</li>
+            <li>Admin detail view may need a compact variant</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mock-app">
+        <div class="mock-app-label">ExamPostView viewport</div>
+        <div class="mock-viewport">
+          <div class="mock-header"><span class="brand"><span>Unklab</span> KEP</span><span
+              style="color:var(--brand)">mg</span></div>
+          <div class="sc-opt4">
+            <div class="sc-opt4-top">
+              <div class="eyebrow">KEP Placement Exam · Spring 2026</div>
+              <div class="score">67</div>
+            </div>
+            <div class="sc-opt4-body">
+              <div class="sc-opt4-name">mg</div>
+              <div class="sc-opt4-id">Student ID · NIM12345</div>
+              <div class="sc-opt4-badge"><span>Intermediate · B1</span></div>
+              <div class="sc-opt4-grid">
+                <div class="sc-opt4-cell">
+                  <div class="lbl">Points</div>
+                  <div class="val">67/100</div>
+                </div>
+                <div class="sc-opt4-cell">
+                  <div class="lbl">Correct</div>
+                  <div class="val">2/3</div>
+                </div>
+                <div class="sc-opt4-cell">
+                  <div class="lbl">Accuracy</div>
+                  <div class="val">67%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-footer"><span class="pill">← Review answers</span><span>00:00:00</span></div>
+        </div>
+      </div>
+      <p class="mobile-note">Stat grid collapses to single column; badge and header copy should shorten on small
+        screens.</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll(".layout-tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".layout-tabs button").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.panel).classList.add("active");
+      });
+    });
+  </script>
+</body>
+
+</html>

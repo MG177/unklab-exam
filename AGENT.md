@@ -6,9 +6,9 @@ Next.js full-stack app for the Unklab KEP English placement exam — student UI,
 
 - **Framework:** Next.js 15 (App Router), React 18
 - **Styling:** Tailwind CSS 3, PrimeReact 9
-- **Data:** MongoDB via Mongoose (`lib/models/`, `lib/services/`)
-- **Auth:** JWT in httpOnly cookie `kep_token` (`middleware.js`, `lib/auth/`)
-- **HTTP client:** axios → same-origin `/api` (`lib/api/client.js`)
+- **Data:** MongoDB via Mongoose (`src/lib/models/`, `src/lib/services/`)
+- **Auth:** JWT in httpOnly cookie `kep_token` (`src/middleware.js`, `src/lib/auth/`)
+- **HTTP client:** axios → same-origin `/api` (`src/lib/api/client.js`)
 
 ## Design system (REQUIRED for all UI work)
 
@@ -49,19 +49,19 @@ npm run dev                  # localhost:3000
 ## App structure
 
 ```
-app/              # Pages + app/api/** Route Handlers
-components/       # UI (student exam, admin dashboard)
-contexts/         # AuthContext
-lib/
-  api/client.js   # Axios → /api
-  auth/           # JWT, cookies, sign-in
-  services/       # Business logic (exam, questions, student)
-  models/         # Mongoose schemas
+src/
+  app/            # Pages + app/api/** Route Handlers
+  components/     # UI (student exam, admin dashboard)
+  contexts/       # AuthContext
+  lib/
+    api/client.js # Axios → /api
+    auth/         # JWT, cookies, sign-in
+    services/     # Business logic (exam, questions, student)
+    models/       # Mongoose schemas
+  middleware.js   # Route protection by role
 docs/             # Technical documentation (canonical)
-middleware.js     # Route protection by role
+public/           # Static assets (/image, /media)
 ```
-
-Legacy CRA code under `src/` is deprecated — use `app/` and `components/`.
 
 ## Deploy
 

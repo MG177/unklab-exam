@@ -1,20 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import '../styles/audio.css';
-import Media from './Media';
-import Option from '../components/Option';
-import { useOutletContext, useNavigate } from 'react-router-dom';
-import api from '../config';
+'use client';
 
-export default function Questions({ questions, number, textSize, size }) {
-  // const [questions, answer, setAnswer, number] = useOutletContext();
-  const navigate = useNavigate();
+import React, { useEffect, useState, useContext } from 'react';
+import '@/styles/audio.css';
+import Media from './Media';
+import Option from './Option';
+import { useRouter } from 'next/navigation';
+import api from '@/lib/api/client';
+import AuthContext from '@/contexts/AuthContext';
+import { useExamSessionOptional } from '@/contexts/ExamSessionContext';
+import { redirectAfterExamEnd } from '@/lib/auth/finishExam';
+
+export default function Questions({
+  questions,
+  number,
+  fontScale,
+  onQuestionUpdate,
+}) {
+  const router = useRouter();
+  const { user } = useContext(AuthContext);
+  const examSession = useExamSessionOptional();
   const question = questions[number];
   const [answer, setAnswer] = useState(question.answer);
-  // console.log(`question ${question.id}: ` + question);
 
   useEffect(() => {
     setAnswer(question.answer);
-  }, [number]);
+  }, [number, question.answer]);
 
   const hasContent = () => {
     if (question.image) {
@@ -26,16 +36,28 @@ export default function Questions({ questions, number, textSize, size }) {
     }
   };
 
-  const handleAnswer = async (index) => {
+  const handleAnswer = async (optionId) => {
+    if (answer === optionId) return;
+
+    const previousAnswer = answer;
+    setAnswer(optionId);
+    onQuestionUpdate?.(number, { answer: optionId });
+
     try {
-      const res = await api.patch('student/answer', {
+      await api.patch('student/answer', {
         index: number,
-        answer: index,
+        answer: optionId,
       });
-      setAnswer(index);
     } catch (error) {
-      if (error.response.status === 403) {
-        navigate('/score');
+      setAnswer(previousAnswer);
+      onQuestionUpdate?.(number, { answer: previousAnswer });
+      if (error.response?.status === 403) {
+        if (examSession) {
+          examSession.enterPostExam();
+        } else {
+          redirectAfterExamEnd(user, router);
+        }
+        return;
       }
       console.log(error);
       alert('Error, please check your internet connection');
@@ -46,41 +68,38 @@ export default function Questions({ questions, number, textSize, size }) {
     return answer === index;
   };
 
-  console.log('question', question);
   return (
-    <div className="flex flex-col w-fit min-w-[550px] max-w-[600px] gap-4 font-Nunito">
-      <div className="flex flex-col w-full min-h-fit rounded-3xl p-5 gap-1 bg-whitePlus shadow-md border-[1px] border-gray/20 cursor-default select-none mb-2">
+    <div className="flex w-fit min-w-[550px] max-w-[600px] flex-col gap-3 font-sans">
+      <div className="mb-1 flex w-full cursor-default select-none flex-col gap-2 rounded-lg border border-line bg-surface p-5">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider text-ink-faint">
+          Question {number + 1} of {questions.length}
+        </p>
         <h1
-          className={`font-bold ${textSize[size + 2]} md:${textSize[size + 3]
-            } text-accent1`}
+          className="font-extrabold text-ink"
+          style={{ fontSize: `${fontScale.titleRem}rem` }}
         >
           Question #{number + 1}
         </h1>
 
         {hasContent() && <Media id={hasContent()} />}
         <p
-          className={`leading-normal ${textSize[size]} md:${textSize[size + 1]
-            } xl:${textSize[size + 2]} text-black`}
-          dangerouslySetInnerHTML={
-            {
-              __html: question.text.replace(/\n/g, '<br>'),
-            } || 'null'
-          }
-        ></p>
+          className="leading-relaxed text-ink-muted"
+          style={{ fontSize: `${fontScale.bodyRem}rem` }}
+          dangerouslySetInnerHTML={{
+            __html: question.text.replace(/\n/g, '<br>'),
+          }}
+        />
       </div>
-      {/* <div className="flex flex-col mb-10"> */}
       {question.options.map((option) => (
         <Option
-          key={option.id} // Use option.id as the key
-          answerId={option.id} // Pass option.id to handleAnswer
-          option={option.text} // Use option.text as the option
-          active={handleActive(option.id)} // Pass option.text to handleActive
+          key={option.id}
+          answerId={option.id}
+          option={option.text}
+          active={handleActive(option.id)}
           handleAnswer={handleAnswer}
-          textSize={textSize}
-          size={size}
+          fontScale={fontScale}
         />
       ))}
-      {/* </div> */}
     </div>
   );
 }

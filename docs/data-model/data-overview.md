@@ -1,17 +1,17 @@
 # Data Model
 
-> Source of truth: `lib/models/*.js`. This doc is kept in sync with those
+> Source of truth: `src/lib/models/*.js`. This doc is kept in sync with those
 > Mongoose schemas. All collections use `{ timestamps: true }` (Mongoose adds
 > `createdAt` / `updatedAt`).
 
 The system has four primary collections plus a `files` collection. Note the
-shape differs from a classic relational model: the **exam roster is embedded**
+shape differs from a classic relational model: the **exam participants are embedded**
 on the `Exam` document, while each student's **submission is a separate
 `students` document** keyed by `(studentId, examId)`.
 
 ---
 
-## `users` — admin accounts (`lib/models/User.js`)
+## `users` — admin accounts (`src/lib/models/User.js`)
 
 | Field      | Type     | Notes                           |
 | ---------- | -------- | ------------------------------- |
@@ -27,14 +27,14 @@ or a one-off MongoDB insert / seed script. Further admins use `POST /api/auth/re
 
 ---
 
-## `exams` — exam sessions + roster (`lib/models/Exam.js`)
+## `exams` — exam sessions + participants (`src/lib/models/Exam.js`)
 
 | Field          | Type              | Notes                                                          |
 | -------------- | ----------------- | -------------------------------------------------------------- |
 | `examName`     | string            | required                                                       |
 | `token`        | string            | **unique** index; 6-digit login token, (re)issued by `start()` |
 | `questions`    | QuestionInfoDto[] | required; question-group config (see below)                    |
-| `students`     | StudentList[]     | embedded roster (default `null`)                               |
+| `students`     | StudentList[]     | embedded participants (default `null`)                         |
 | `isRandom`     | boolean           | default `false` — shuffle question/option order                |
 | `isShowScore`  | boolean           | default `true` — student may view their score                  |
 | `isShowAnswer` | boolean           | default `false` — student may review answers                   |
@@ -44,13 +44,13 @@ or a one-off MongoDB insert / seed script. Further admins use `POST /api/auth/re
 `QuestionInfoDto` (per question group): `{ _id, questionName, quantity, questionLength }`
 — `_id` references a `questions` document; `quantity` is how many to sample.
 
-`StudentList` (roster entry): `{ number, studentId, studentName }`.
+`StudentList` (participant entry): `{ number, studentId, studentName }`.
 
 Indexes: `token` (unique), `createdAt: -1`.
 
 ---
 
-## `questions` — question banks (`lib/models/Question.js`)
+## `questions` — question banks (`src/lib/models/Question.js`)
 
 | Field          | Type       | Notes                                                    |
 | -------------- | ---------- | -------------------------------------------------------- |
@@ -65,7 +65,7 @@ Index: `createdAt: -1`.
 
 ---
 
-## `students` — per-student submissions (`lib/models/Students.js`)
+## `students` — per-student submissions (`src/lib/models/Students.js`)
 
 One document per `(studentId, examId)`, created when the student calls `POST /api/student/start`.
 
@@ -85,20 +85,20 @@ its source bank. Each entry also carries the student's chosen `answer`.
 
 `ScoreDto` (one per question group): `{ questionName, total, correct, score }`
 where `score` is a rounded percentage. The overall score is computed by
-`extractScore()` in `lib/services/student.service.js`.
+`extractScore()` in `src/lib/services/student.service.js`.
 
 Indexes: `{ studentId: 1, examId: 1 }` (hot path: answer save / question fetch),
 `{ examId: 1 }` (score table).
 
 ---
 
-## `files` — uploaded media (`lib/models/Files.js` or inline in file service)
+## `files` — uploaded media (`src/lib/models/Files.js` or inline in file service)
 
-| Field    | Type   | Notes               |
-| -------- | ------ | ------------------- |
-| `name`   | string | required            |
-| `base64` | string | optional            |
-| `path`   | string | required            |
-| `type`   | string | required, MIME type |
+| Field    | Type   | Notes                                                       |
+| -------- | ------ | ----------------------------------------------------------- |
+| `name`   | string | required                                                    |
+| `base64` | string | optional                                                    |
+| `path`   | string | optional (legacy disk uploads; new uploads use base64 only) |
+| `type`   | string | required, MIME type                                         |
 
 Used for question image/audio assets uploaded via `POST /api/file`.

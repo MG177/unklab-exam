@@ -18,24 +18,24 @@ pill controls, Lucide icons. Light mode only.
 
 ### Color
 
-| Token | Value | Role |
-|---|---|---|
-| `--ink` | `#1a2332` | Primary text · dark sidebar background |
-| `--ink-muted` | `#5c6570` | Secondary text, body copy |
-| `--ink-faint` | `#8a939c` | Tertiary text, labels, placeholders, meta |
-| `--paper` | `#f6f8fb` | App canvas (cool off-white) · table header · hover fills |
-| `--surface` | `#ffffff` | Cards, panels, inputs, light sidebar |
-| `--line` | `#e2e7ee` | Default borders & dividers |
-| `--line-strong` | `#c4cdd9` | Hover borders, dashed strokes, radio rings |
-| `--brand` | `#1b81c4` | Brand blue (clinical / medical) — primary actions, active accents, focus ring |
-| `--brand-ink` | `#0d4b75` | Brand text on tint backgrounds |
-| `--brand-tint` | `#e7f2fb` | Brand-tinted surfaces (active nav, selected option) |
-| `--live` | `#0d7a5c` | Live / active / verified / success |
-| `--live-tint` | `#e8f5f0` | Live status background |
-| `--danger` | `#d23438` | Destructive actions, countdown timer (clinical alert red — **only when < 1 min**) |
-| `--danger-ink` | `#9b1f23` | Danger text on tint |
-| `--warn-tint` | `#fdf6e8` | Warning / "needs review" background |
-| `--warn-ink` | `#8a5a12` | Warning text, pending save status |
+| Token           | Value     | Role                                                                              |
+| --------------- | --------- | --------------------------------------------------------------------------------- |
+| `--ink`         | `#1a2332` | Primary text · dark sidebar background                                            |
+| `--ink-muted`   | `#5c6570` | Secondary text, body copy                                                         |
+| `--ink-faint`   | `#8a939c` | Tertiary text, labels, placeholders, meta                                         |
+| `--paper`       | `#f6f8fb` | App canvas (cool off-white) · table header · hover fills                          |
+| `--surface`     | `#ffffff` | Cards, panels, inputs, light sidebar                                              |
+| `--line`        | `#e2e7ee` | Default borders & dividers                                                        |
+| `--line-strong` | `#c4cdd9` | Hover borders, dashed strokes, radio rings                                        |
+| `--brand`       | `#1b81c4` | Brand blue (clinical / medical) — primary actions, active accents, focus ring     |
+| `--brand-ink`   | `#0d4b75` | Brand text on tint backgrounds                                                    |
+| `--brand-tint`  | `#e7f2fb` | Brand-tinted surfaces (active nav, selected option)                               |
+| `--live`        | `#0d7a5c` | Live / active / verified / success                                                |
+| `--live-tint`   | `#e8f5f0` | Live status background                                                            |
+| `--danger`      | `#d23438` | Destructive actions, countdown timer (clinical alert red — **only when < 1 min**) |
+| `--danger-ink`  | `#9b1f23` | Danger text on tint                                                               |
+| `--warn-tint`   | `#fdf6e8` | Warning / "needs review" background                                               |
+| `--warn-ink`    | `#8a5a12` | Warning text, pending save status                                                 |
 
 Primary-button hover = `#166aa3`. Status→color mapping: **live/verified → green**,
 **scheduled → brand blue**, **review → amber**, **draft/ended → neutral paper**,
@@ -48,33 +48,33 @@ brand-on-active borders.
 - **Mono font:** `"IBM Plex Mono"`, SF Mono fallback. Weights **500 / 600**.
 - **Base:** body `14px`, weight `500`, line-height `1.55`, antialiased.
 
-| Style | Spec | Used for |
-|---|---|---|
-| Page title (`h1`) | `1.45rem`, 800, `-0.02em` | Page headers |
-| Section / table label | `9–11px`, 800, uppercase, `0.1em` tracking, `--ink-faint` | Field labels, table headers, stat labels, eyebrows |
-| Body | `14px`, 500, `--ink` | Default copy |
-| Muted / meta | `12px`, `--ink-muted` / `--ink-faint` | Descriptions, captions |
-| Mono | `12–13px`, 600, tabular-nums | **Tokens, timers, IDs, scores, counts, dates** · *timers: `--ink` normal, `--danger` only when < 1 min* |
+| Style                 | Spec                                                      | Used for                                                                                                |
+| --------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Page title (`h1`)     | `1.45rem`, 800, `-0.02em`                                 | Page headers                                                                                            |
+| Section / table label | `9–11px`, 800, uppercase, `0.1em` tracking, `--ink-faint` | Field labels, table headers, stat labels, eyebrows                                                      |
+| Body                  | `14px`, 500, `--ink`                                      | Default copy                                                                                            |
+| Muted / meta          | `12px`, `--ink-muted` / `--ink-faint`                     | Descriptions, captions                                                                                  |
+| Mono                  | `12–13px`, 600, tabular-nums                              | **Tokens, timers, IDs, scores, counts, dates** · _timers: `--ink` normal, `--danger` only when < 1 min_ |
 
 **Rule:** anything numeric or code-like (exam tokens, timers, student IDs, scores, durations,
 counts) renders in **IBM Plex Mono** with `font-variant-numeric: tabular-nums`.
 
 ### Shape & radius
 
-| Token | Value | Applies to |
-|---|---|---|
-| `--radius` | `12px` | Cards, frames, tables, panels, stat cards |
-| `--radius-pill` | `999px` | Buttons, chips, badges, token strip, progress bars |
-| `--radius-input` | `10px` | Inputs, icon buttons, avatars, nav links |
-| inline | `4–6px` | Inline `<code>`, checkboxes |
+| Token            | Value   | Applies to                                         |
+| ---------------- | ------- | -------------------------------------------------- |
+| `--radius`       | `12px`  | Cards, frames, tables, panels, stat cards          |
+| `--radius-pill`  | `999px` | Buttons, chips, badges, token strip, progress bars |
+| `--radius-input` | `10px`  | Inputs, icon buttons, avatars, nav links           |
+| inline           | `4–6px` | Inline `<code>`, checkboxes                        |
 
 ### Layout
 
-| Token | Value |
-|---|---|
-| `--sidebar-w` | `236px` |
-| `--sidebar-collapsed` | `64px` |
-| `--topbar-h` | `56px` |
+| Token                 | Value   |
+| --------------------- | ------- |
+| `--sidebar-w`         | `236px` |
+| `--sidebar-collapsed` | `64px`  |
+| `--topbar-h`          | `56px`  |
 
 Page padding `20px`; card padding `14–18px`; gaps `6 / 8 / 10 / 12 / 16px`. Editor column max `640px`.
 
@@ -135,12 +135,13 @@ styled box proxy. Icon-only buttons need `aria-label`; sidebar toggle manages `a
 
 ---
 
-## 3. Porting into Next.js
+## 3. Implementation in Next.js
 
-1. **Tokens first** — put the `:root` custom properties in global CSS (or map to Tailwind theme
-   tokens). Load Plus Jakarta Sans (500–800) + IBM Plex Mono (500/600) via `next/font`.
+1. **Tokens** — `:root` custom properties live in `src/app/globals.css` (mapped to Tailwind theme
+   in `tailwind.config.js`). Fonts: Plus Jakarta Sans + IBM Plex Mono via `next/font` in `src/app/layout.jsx`.
 2. **Icons** — `lucide-react` at the sizes above.
-3. **Components** — build under `components/dashboard/`, reusing the class recipes 1:1.
+3. **Components** — admin UI under `src/components/dashboard/`; student exam UI under `src/components/`.
+   Reuse the class recipes 1:1.
 4. **Keep semantics** — status→color, mono-for-numbers, borders-over-shadows, brand only for
    primary/active/focus.
 5. **A11y** — preserve the hidden-input checkbox, focus rings, and `aria-*` on toggles/icon buttons.

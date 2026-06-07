@@ -40,7 +40,7 @@ input[type='range']::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #b55ffe;
+  background: #1b81c4;
   cursor: pointer;
   border: none;
   margin-top: -9px; /* formula to center the thumb vertically */
@@ -50,7 +50,7 @@ input[type='range']::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #b55ffe;
+  background: #1b81c4;
   cursor: pointer;
   border: none;
   margin-top: -9px; /* formula to center the thumb vertically */
@@ -60,7 +60,7 @@ input[type='range']::-ms-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #b55ffe;
+  background: #1b81c4;
   cursor: pointer;
   border: none;
   margin-top: -9px; /* formula to center the thumb vertically */

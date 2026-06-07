@@ -7,10 +7,9 @@ const rgb = (name) => `rgb(var(${name}) / <alpha-value>)`;
 module.exports = {
   darkMode: ['class'],
   content: [
-    './app/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './contexts/**/*.{js,jsx}',
-    './legacy/**/*.{js,jsx}',
+    './src/app/**/*.{js,jsx}',
+    './src/components/**/*.{js,jsx}',
+    './src/contexts/**/*.{js,jsx}',
   ],
   theme: {
     extend: {
@@ -33,9 +32,9 @@ module.exports = {
         black: '#37474F',
         white: '#FAFAFA',
         whitePlus: '#FFFFFF',
-        accent1: '#B55FFE',
-        accent2: '#FF6593',
-        taccent1: '#DCB5FF',
+        accent1: '#1b81c4',
+        accent2: '#d23438',
+        taccent1: '#e7f2fb',
         grayPlus: '#D9D9D9',
         gray: '#98A0A4',
 

@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   createContext,
   useContext,
@@ -5,8 +7,7 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import api from '../config';
-import { useNavigate } from 'react-router-dom';
+import api from '@/lib/api/client';
 
 const AuthContext = createContext();
 
@@ -15,27 +16,36 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const navigate = useNavigate();
-  const storedAccessToken = sessionStorage.getItem('access_token');
-  const initialUser = storedAccessToken
-    ? storedAccessToken.replace(/"/g, '')
-    : null;
-  const [user, setUser] = useState({ access_token: initialUser });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [connectionLost, setConnectionLost] = useState(false);
 
-  // Keep the default Authorization header in sync with the current token so a
-  // page refresh (token re-hydrated from sessionStorage) stays authenticated.
   useEffect(() => {
-    const token = user?.access_token || initialUser;
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-    }
-  }, [user, initialUser]);
+    let cancelled = false;
 
-  // Register ONE response interceptor and eject it on cleanup. Previously this
-  // ran in the render body, leaking a new interceptor on every render.
+    async function hydrate() {
+      try {
+        const response = await api.post('/auth/verify');
+        if (!cancelled) {
+          setUser(response.data);
+        }
+      } catch {
+        if (!cancelled) {
+          setUser(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    hydrate();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     const interceptorId = api.interceptors.response.use(
       (response) => {
@@ -44,21 +54,22 @@ export function AuthProvider({ children }) {
       },
       (error) => {
         if (error.response) {
-          // 401 -> session invalid/expired: send back to login.
           if (error.response.status === 401) {
-            navigate('/');
+            setUser(null);
           }
         } else {
-          // No response object => network / connection failure.
           setConnectionLost(true);
         }
         return Promise.reject(error);
       }
     );
     return () => api.interceptors.response.eject(interceptorId);
-  }, [navigate]);
+  }, []);
 
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const value = useMemo(
+    () => ({ user, setUser, loading }),
+    [user, loading]
+  );
 
   return (
     <AuthContext.Provider value={value}>

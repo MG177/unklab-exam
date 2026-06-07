@@ -1,18 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
-import api from '../config';
-import AuthContext from '../contexts/AuthContext';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import api from '@/lib/api/client';
+import { LoadingIndicator } from '@/components/dashboard/LoadingIndicator';
 
 const MAX_PLAYS = 3;
+const fileCache = new Map();
 
 export default function Media({ id, dashboard }) {
   const [file, setFile] = useState(null);
-  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playCount, setPlayCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(null);
   const audioRef = React.createRef();
-  console.log('Media id = ', id);
 
   const handlePlay = () => {
     if (playCount < MAX_PLAYS) {
@@ -35,15 +38,51 @@ export default function Media({ id, dashboard }) {
   };
 
   useEffect(() => {
+    let cancelled = false;
+
+    const cached = fileCache.get(id);
+    if (cached) {
+      setFile(cached);
+      setLoading(false);
+      setError(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(false);
+    setFile(null);
+
     api
       .get(`/file/${id}`)
-      .then((response) => setFile(response.data))
-      .catch((error) => console.log(error));
+      .then((response) => {
+        if (cancelled) return;
+        fileCache.set(id, response.data);
+        setFile(response.data);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.log(err);
+        setError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
-  if (!file) {
-    return <p>Loading...</p>;
+  if (loading) {
+    return <LoadingIndicator label="Loading…" size="sm" className="py-4" />;
   }
+
+  if (error || !file) {
+    return (
+      <p className="py-4 text-center text-xs text-ink-faint">Could not load file</p>
+    );
+  }
+
   const { name, base64, type } = file;
 
   if (type.startsWith('image/')) {

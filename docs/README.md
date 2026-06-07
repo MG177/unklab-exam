@@ -14,15 +14,15 @@ Obsidian vault under `Projects/lumendev-kep-unklab-exam/`.
 | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [Data flow audit](./data-flow.md)                      | Full pipeline: question bank → exam → start → student answers → scoring (architecture + sequence diagrams). |
 | [End-to-end app flow & local run guide](./app-flow.md) | How to run locally, the full exam lifecycle (admin + student), API routes, scoring math, and known gotchas. |
-| [Data model overview](./data-model/data-overview.md)   | MongoDB collections — verify against `lib/models/*.js`.                                                     |
+| [Data model overview](./data-model/data-overview.md)   | MongoDB collections — verify against `src/lib/models/*.js`.                                                     |
 | [Design system](./design-system.md)                    | **Canonical UI tokens + component recipes** for the admin dashboard. Visual spec: [`design-system.html`](./design-system.html). Follow for all frontend work. |
 | [Vercel deployment](./VERCEL_DEPLOY.md)                | Preview/production deploy on Vercel.                                                                        |
 
 ## Quick reference
 
 - **Stack:** Next.js 15 (App Router), React 18, MongoDB via Mongoose 9, JWT (`jose`), bcrypt, CSV/XLSX import.
-- **Models:** `lib/models/` — `User`, `Exam`, `Question`, `Students`, `Files`.
-- **API:** Route Handlers under `app/api/**` → `lib/services/*` → MongoDB (same-origin `/api`, not a separate backend).
+- **Models:** `src/lib/models/` — `User`, `Exam`, `Question`, `Students`, `Files`.
+- **API:** Route Handlers under `src/app/api/**` → `src/lib/services/*` → MongoDB (same-origin `/api`, not a separate backend).
 - **Auth:** httpOnly cookie `kep_token` (JWT); middleware + `requireAuth` on routes.
 - **Env:** `MONGO_URI`, `JWT_SECRET` (see `.env.example`).
 - **Dev:** `npm run dev` (port 3000).

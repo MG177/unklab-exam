@@ -1,166 +1,139 @@
-// import { isValidDateValue } from "@testing-library/user-event/dist/utils";
-import React, { useState, useEffect, useContext } from 'react';
-import AuthContext from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import api from '../config';
+'use client';
 
-export default function TimerSmall() {
-  const { user } = useContext(AuthContext);
-  const [timeRemaining, setTimeRemaining] = useState(0);
-  const navigate = useNavigate();
-  const [time, setTime] = useState(2);
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import AuthContext from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import api from '@/lib/api/client';
+import { redirectAfterExamEnd } from '@/lib/auth/finishExam';
+import { useExamSessionOptional } from '@/contexts/ExamSessionContext';
+import { cn } from '@/lib/utils';
 
-  const fetchTime = async () => {
-    try {
-      const response = await api.get(`exam/time/${user.examId}`);
-      return response.data;  // Return the fetched time
-    } catch (error) {
-      if (error.response.status === 403) {
-        navigate('/score');
-      }
-      console.log(error);
-      return null;  // Return null in case of an error
-    }
-  };
-
-  useEffect(() => {
-    const fetchTimeAndSetTimeRemaining = async () => {
-      const fetchedTime = await fetchTime();
-      if (fetchedTime !== null) {
-        setTime(fetchedTime);
-        setTimeRemaining(fetchedTime);
-      }
-    };
-
-    fetchTimeAndSetTimeRemaining();
-
-    const intervalId = setInterval(fetchTimeAndSetTimeRemaining, 30000); // Send request every 30 seconds
-
-    return () => clearInterval(intervalId); // Clear interval when component unmounts
-  }, [navigate, user.examId]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 1) {
-          navigate('/score');
-          clearInterval(intervalId);
-          return 0;  // Time out, set remaining time to 0
-        } else {
-          return prevTimeRemaining - 1;
-        }
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [navigate, setTimeRemaining]);
-
-
+function formatCountdown(timeRemaining) {
+  if (timeRemaining <= 0) return 'Time out';
 
   const hours = Math.floor(timeRemaining / 3600);
   const minutes = Math.floor((timeRemaining % 3600) / 60);
   const seconds = Math.floor(timeRemaining % 60);
 
-  const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
-  const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-  const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
+  const hoursStr = String(hours).padStart(2, '0');
+  const minutesStr = String(minutes).padStart(2, '0');
+  const secondsStr = String(seconds).padStart(2, '0');
+
+  if (hours > 0) {
+    return `${hoursStr}:${minutesStr}:${secondsStr}`;
+  }
+
+  return `${minutesStr}:${secondsStr}`;
+}
+
+function TimerDisplay({ timeRemaining }) {
+  const isUrgent =
+    timeRemaining !== null &&
+    timeRemaining !== undefined &&
+    timeRemaining > 0 &&
+    timeRemaining < 60;
+
+  if (timeRemaining === null || timeRemaining === undefined) {
+    return (
+      <div className="inline-flex items-center rounded-pill border border-line bg-paper px-4 py-2 font-plexMono text-base font-semibold tabular-nums text-ink">
+        Loading…
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-lg text-accent2 font-bold font-Roboto  ">
-      <p className="hidden text-2xl lg:block">
-        {timeRemaining <= 0
-          ? 'Time Out'
-          : hours !== 0
-            ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${minutes === 1 ? '' : 's'
-            }`
-            : `${minutes !== 0
-              ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
-              : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
-            }`}
-      </p>
-      <p className="text-xl lg:hidden">
-        {timeRemaining <= 0
-          ? 'Time Out'
-          : `${hoursStr} : ${minutesStr} : ${secondsStr}
-          `}
-      </p>
+    <div
+      className={cn(
+        'inline-flex items-center rounded-pill border px-4 py-2 font-plexMono text-base font-semibold tabular-nums',
+        isUrgent
+          ? 'border-danger/30 bg-red-50 text-danger'
+          : 'border-line bg-paper text-ink'
+      )}
+    >
+      {formatCountdown(timeRemaining)}
     </div>
   );
 }
 
-export function TimerBig({ timeRemaining, setTimeRemaining }) {
+export default function TimerSmall() {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
-  const [time, setTime] = useState(2);
+  const examSession = useExamSessionOptional();
+  const [timeRemaining, setTimeRemaining] = useState(null);
+  const router = useRouter();
 
-  const fetchTime = async () => {
-    try {
-      const response = await api.get(`exam/time/${user.examId}`);
-      setTime(response.data);
-    } catch (error) {
-      console.log(error);
+  const handleExamEnd = useCallback(() => {
+    if (examSession) {
+      examSession.enterPostExam();
+      return;
     }
-  };
+    redirectAfterExamEnd(user, router);
+  }, [examSession, user, router]);
 
   useEffect(() => {
-    fetchTime();
+    if (examSession) return undefined;
 
-    const intervalId = setInterval(() => {
-      fetchTime();
-    }, 30000); // Send request every 30 seconds
+    if (!user?.examId) return undefined;
 
-    return () => clearInterval(intervalId); // Clear interval when component unmounts
-  }, []);
+    let cancelled = false;
 
-  useEffect(() => {
-    setTimeRemaining(time);
-  }, [time]);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTimeRemaining((prevTimeRemaining) => {
-        if (prevTimeRemaining <= 1) {
-          clearInterval(intervalId);
-          // navigate('/score');
-        } else {
-          return prevTimeRemaining - 1;
+    const fetchTime = async () => {
+      try {
+        const response = await api.get(`exam/time/${user.examId}`);
+        return response.data;
+      } catch (error) {
+        if (error.response?.status === 403) {
+          handleExamEnd();
         }
+        console.log(error);
+        return null;
+      }
+    };
+
+    const syncTime = async () => {
+      const fetchedTime = await fetchTime();
+      if (cancelled || fetchedTime === null) return;
+
+      setTimeRemaining(fetchedTime);
+      if (fetchedTime <= 0) {
+        handleExamEnd();
+      }
+    };
+
+    syncTime();
+    const intervalId = setInterval(syncTime, 30000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(intervalId);
+    };
+  }, [examSession, handleExamEnd, user?.examId]);
+
+  const countdownActive =
+    !examSession && timeRemaining !== null && timeRemaining > 0;
+
+  useEffect(() => {
+    if (!countdownActive) return undefined;
+
+    const intervalId = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev === null || prev <= 1) {
+          handleExamEnd();
+          return 0;
+        }
+        return prev - 1;
       });
     }, 1000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [navigate]);
+    return () => clearInterval(intervalId);
+  }, [countdownActive, handleExamEnd]);
 
-  const hours = Math.floor(timeRemaining / 3600);
-  const minutes = Math.floor((timeRemaining % 3600) / 60);
-  const seconds = Math.floor(timeRemaining % 60);
+  if (examSession) {
+    return <TimerDisplay timeRemaining={examSession.timeRemaining} />;
+  }
 
-  const hoursStr = hours.toString().length === 1 ? `0${hours}` : hours;
-  const minutesStr = minutes.toString().length === 1 ? `0${minutes}` : minutes;
-  const secondsStr = seconds.toString().length === 1 ? `0${seconds}` : seconds;
-  // console.log('timeRemaining = ', timeRemaining);
-  return (
-    <div className="flex flex-row justify-center items-center max-h-fit max-w-fit bg-white px-4 py-2 rounded-[24px] shadow-lg text-accent2 font-bold font-Roboto  ">
-      <p className="hidden text-2xl lg:block">
-        {!timeRemaining
-          ? 'Time Out'
-          : hours !== 0
-            ? `${hoursStr} Hour${hours === 1 ? '' : 's'} ${minutesStr} Minute${minutes === 1 ? '' : 's'
-            }`
-            : `${minutes !== 0
-              ? `${minutesStr} Minute${minutes === 1 ? '' : 's'}`
-              : `${secondsStr} Second${seconds === 1 ? '' : 's'}`
-            }`}
-      </p>
-      <p className="text-xl lg:hidden">
-        {!timeRemaining
-          ? 'Time Out'
-          : `${hoursStr} : ${minutesStr} : ${secondsStr}
-          `}
-      </p>
-    </div>
-  );
+  return <TimerDisplay timeRemaining={timeRemaining} />;
+}
+
+export function TimerBig({ timeRemaining }) {
+  return <TimerDisplay timeRemaining={timeRemaining} />;
 }

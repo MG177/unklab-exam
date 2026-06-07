@@ -2,8 +2,8 @@
 
 End-to-end audit of how data moves through the KEP Unklab Exam application: from
 creating question banks, through exam setup and start, to students answering and
-submitting. This document describes the **Next.js full-stack app only** (`app/` +
-`lib/` + MongoDB). The legacy NestJS API repo is retired.
+submitting. This document describes the **Next.js full-stack app only** (`src/app/` +
+`src/lib/` + MongoDB). The legacy NestJS API repo is retired.
 
 **See also:** [Data model](./data-model/data-overview.md) · [App flow & local run](./app-flow.md)
 
@@ -22,10 +22,10 @@ Handlers delegate to service modules that read and write MongoDB via Mongoose.
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  Next.js 15                                                      │
-│  middleware.js          → JWT + role gate on pages/routes        │
-│  app/api/**/route.js    → requireAuth, parse request            │
-│  lib/services/*         → business logic                         │
-│  lib/models/*           → Mongoose schemas                       │
+│  src/middleware.js      → JWT + role gate on pages/routes        │
+│  src/app/api/**/route.js → requireAuth, parse request            │
+│  src/lib/services/*     → business logic                         │
+│  src/lib/models/*       → Mongoose schemas                       │
 │  httpOnly cookie        → kep_token (JWT, 24h)                   │
 └───────────────────────────┬─────────────────────────────────────┘
                             │ Mongoose
@@ -36,14 +36,14 @@ Handlers delegate to service modules that read and write MongoDB via Mongoose.
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-| Layer      | Path                         | Role                                 |
-| ---------- | ---------------------------- | ------------------------------------ |
-| UI pages   | `app/`                       | Login, exam, score, admin dashboard  |
-| API routes | `app/api/**/route.js`        | HTTP boundary                        |
-| Services   | `lib/services/*.js`          | Exam, questions, student, file logic |
-| Models     | `lib/models/*.js`            | Schema definitions                   |
-| Client     | `lib/api/client.js`          | Axios instance (`baseURL: '/api'`)   |
-| Auth       | `lib/auth/`, `middleware.js` | JWT sign/verify, cookie, role checks |
+| Layer      | Path                                 | Role                                 |
+| ---------- | ------------------------------------ | ------------------------------------ |
+| UI pages   | `src/app/`                           | Login, exam, score, admin dashboard  |
+| API routes | `src/app/api/**/route.js`            | HTTP boundary                        |
+| Services   | `src/lib/services/*.js`              | Exam, questions, student, file logic |
+| Models     | `src/lib/models/*.js`                | Schema definitions                   |
+| Client     | `src/lib/api/client.js`              | Axios instance (`baseURL: '/api'`)   |
+| Auth       | `src/lib/auth/`, `src/middleware.js` | JWT sign/verify, cookie, role checks |
 
 There is **no separate backend service** and no proxy to an external API.
 
@@ -56,20 +56,20 @@ separate `answers` collection** — answers live on each student's `questionList
 
 ### Collections
 
-| Collection  | Document                | Key fields                                                                      |
-| ----------- | ----------------------- | ------------------------------------------------------------------------------- |
-| `questions` | Question **bank**       | `questionName`, `isVerified`, `questions[]`                                     |
-| `exams`     | Exam session + roster   | `examName`, `token`, `questions[]`, `students[]`, flags, `startTime`, `endTime` |
-| `students`  | Per-student **attempt** | `(studentId, examId)`, `questionList[]`, `score[]`, `isSubmitted`               |
-| `users`     | Admin account           | `username`, `password` (bcrypt), `role`                                         |
-| `files`     | Media metadata          | `name`, `base64`, `path`, `type`                                                |
+| Collection  | Document                    | Key fields                                                                      |
+| ----------- | --------------------------- | ------------------------------------------------------------------------------- |
+| `questions` | Question **bank**           | `questionName`, `isVerified`, `questions[]`                                     |
+| `exams`     | Exam session + participants | `examName`, `token`, `questions[]`, `students[]`, flags, `startTime`, `endTime` |
+| `students`  | Per-student **attempt**     | `(studentId, examId)`, `questionList[]`, `score[]`, `isSubmitted`               |
+| `users`     | Admin account               | `username`, `password` (bcrypt), `role`                                         |
+| `files`     | Media metadata              | `name`, `base64`, `path`, `type`                                                |
 
 ### Relationships
 
 ```mermaid
 erDiagram
     QUESTIONS ||--o{ EXAM_QUESTIONS : "referenced by _id"
-    EXAMS ||--o{ EXAM_STUDENTS : "embedded roster"
+    EXAMS ||--o{ EXAM_STUDENTS : "embedded participants"
     EXAMS ||--o{ EXAM_QUESTIONS : "embedded config"
     EXAMS ||--o{ STUDENTS : "examId"
     STUDENTS ||--|{ STUDENT_QUESTIONLIST : "embedded answers"
@@ -213,7 +213,7 @@ questions: { _id, questionName, isVerified: true, questions: [ …N items… ] }
 ];
 ```
 
-### Service (`lib/services/exam.service.js` → `create`)
+### Service (`src/lib/services/exam.service.js` → `create`)
 
 1. Random **6-digit `token`**.
 2. Insert `exams` document:
@@ -237,17 +237,17 @@ Students **cannot log in** yet (`endTime` is null).
 
 ---
 
-## 5. Phase C — Roster and configuration (Admin)
+## 5. Phase C — Participants and configuration (Admin)
 
 On `/dashboard/exams/[examId]`:
 
-| Action        | API                               | Data written                              |
-| ------------- | --------------------------------- | ----------------------------------------- |
-| Upload roster | `PATCH /api/exam/studentList/:id` | `exam.students[]`                         |
-| Toggle flags  | `PATCH /api/exam/switch/:id`      | `isRandom`, `isShowScore`, `isShowAnswer` |
-| Rename        | `PATCH /api/exam/name/:id`        | `examName`                                |
+| Action              | API                               | Data written                              |
+| ------------------- | --------------------------------- | ----------------------------------------- |
+| Upload participants | `PATCH /api/exam/studentList/:id` | `exam.students[]`                         |
+| Toggle flags        | `PATCH /api/exam/switch/:id`      | `isRandom`, `isShowScore`, `isShowAnswer` |
+| Rename              | `PATCH /api/exam/name/:id`        | `examName`                                |
 
-### Roster parsing
+### Participant list parsing
 
 Spreadsheet rows: `number | studentId | studentName`. If `studentId` contains
 `"ID / nim"`, only the part before `/` is kept.
@@ -258,7 +258,7 @@ exam.students = [
 ];
 ```
 
-Roster is **embedded on the exam document** (not a separate collection).
+Participants are **embedded on the exam document** (not a separate collection).
 
 ---
 
@@ -277,7 +277,7 @@ Roster is **embedded on the exam document** (not a separate collection).
 3. Token: admin-supplied or new 6-digit (retry on duplicate)
 4. Returns `{ token, time: secondsRemaining }`
 
-### Login gate (`lib/auth/signIn.js` → `signInStudent`)
+### Login gate (`src/lib/auth/signIn.js` → `signInStudent`)
 
 ```javascript
 if (!exam.endTime || endTime < now) → 403  // not started or expired
@@ -289,7 +289,7 @@ if studentId not in exam.students → 401
 
 ## 7. Phase E — Student login and session
 
-### UI (`app/page.jsx`)
+### UI (`src/app/page.jsx`)
 
 1. Student ID + exam token.
 2. `sessionStorage.clear()` on login.
@@ -298,7 +298,7 @@ if studentId not in exam.students → 401
 
 ```
 POST /api/auth/login/student  { studentId, token }
-  → validates exam + roster + time window
+  → validates exam + participants + time window
   → signJwt → Set-Cookie: kep_token
   → returns { studentName, examId, examName, isRandom, isShowScore, isShowAnswer }
 
@@ -331,7 +331,7 @@ ran at `/student/start`.
 
 ## 8. Phase F — Question sampling
 
-Triggered by `POST /api/student/start` → `lib/services/student.service.js` → `startStudent`.
+Triggered by `POST /api/student/start` → `src/lib/services/student.service.js` → `startStudent`.
 
 ```mermaid
 flowchart TD
@@ -397,7 +397,7 @@ admin deletes the record (`DELETE /api/student/:examId/:studentId`).
 
 Answers persist **immediately** to MongoDB on each selection (no local draft queue).
 
-### Answer (`components/Question.jsx`)
+### Answer (`src/components/Question.jsx`)
 
 ```
 PATCH /api/student/answer  { index, answer }
@@ -419,7 +419,7 @@ $set: { 'questionList.{idx}.answer': newAnswer }
 PATCH /api/student/bookmark  { index, isBookmark }
 ```
 
-### Timer (`components/Timer.jsx`)
+### Timer (`src/components/Timer.jsx`)
 
 Polls `GET /api/exam/time/:examId` every 30s; local 1s countdown; on expiry → `/score`.
 
@@ -431,7 +431,7 @@ Polls `GET /api/exam/time/:examId` every 30s; local 1s countdown; on expiry → 
 
 ## 10. Phase H — Submit and scoring
 
-### Submit (`components/Footer.jsx`)
+### Submit (`src/components/Footer.jsx`)
 
 ```
 PATCH /api/student/submit
@@ -492,7 +492,7 @@ sequenceDiagram
     API->>DB: questions collection
 
     Note over Admin,DB: Exam setup
-    Admin->>UI: Create exam + roster
+    Admin->>UI: Create exam + participants
     UI->>API: POST /api/exam, PATCH studentList
     API->>DB: exams collection
 
@@ -505,7 +505,7 @@ sequenceDiagram
     Note over Student,DB: Student exam
     Student->>UI: Login
     UI->>API: POST /api/auth/login/student
-    API->>DB: validate roster + endTime
+    API->>DB: validate participants + endTime
     API-->>UI: Set-Cookie kep_token
 
     UI->>API: POST /api/student/start
@@ -535,9 +535,9 @@ sequenceDiagram
 
 | Concern          | Implementation                                                                 |
 | ---------------- | ------------------------------------------------------------------------------ |
-| Admin pages      | `middleware.js` + `requireAuth(..., { role: 'admin' })`                        |
+| Admin pages      | `src/middleware.js` + `requireAuth(..., { role: 'admin' })`                    |
 | Student pages    | `/exam`, `/started`, `/score` — student role required                          |
-| Login rate limit | In-memory, 10/min per IP (`lib/rate-limit.js`)                                 |
+| Login rate limit | In-memory, 10/min per IP (`src/lib/rate-limit.js`)                             |
 | Answer leakage   | `correctAnswer` stripped on `GET /student/questions`                           |
 | Time gates       | Login before start / after end blocked; answers after end; submit +2 min grace |
 | Token            | Unique index on `exams.token`                                                  |
@@ -572,35 +572,35 @@ sequenceDiagram
 
 ## 15. Key source files
 
-| Concern              | Path                                                                    |
-| -------------------- | ----------------------------------------------------------------------- |
-| Axios client         | `lib/api/client.js`                                                     |
-| Auth (sign-in, JWT)  | `lib/auth/signIn.js`, `lib/auth/jwt.js`, `lib/auth/requireAuth.js`      |
-| Middleware           | `middleware.js`                                                         |
-| Question logic       | `lib/services/questions.service.js`                                     |
-| Exam logic           | `lib/services/exam.service.js`                                          |
-| Student / submission | `lib/services/student.service.js`                                       |
-| Models               | `lib/models/*.js`                                                       |
-| DB connection        | `lib/db/connect.js`                                                     |
-| Student login UI     | `app/page.jsx`                                                          |
-| Exam UI              | `app/exam/page.jsx`, `components/Question.jsx`, `components/Footer.jsx` |
-| Admin exam UI        | `app/dashboard/exams/[examId]/page.jsx`                                 |
-| Route handlers       | `app/api/**/route.js`                                                   |
+| Concern              | Path                                                                                |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| Axios client         | `src/lib/api/client.js`                                                             |
+| Auth (sign-in, JWT)  | `src/lib/auth/signIn.js`, `src/lib/auth/jwt.js`, `src/lib/auth/requireAuth.js`      |
+| Middleware           | `src/middleware.js`                                                                 |
+| Question logic       | `src/lib/services/questions.service.js`                                             |
+| Exam logic           | `src/lib/services/exam.service.js`                                                  |
+| Student / submission | `src/lib/services/student.service.js`                                               |
+| Models               | `src/lib/models/*.js`                                                               |
+| DB connection        | `src/lib/db/connect.js`                                                             |
+| Student login UI     | `src/app/page.jsx`                                                                  |
+| Exam UI              | `src/app/exam/page.jsx`, `src/components/Question.jsx`, `src/components/Footer.jsx` |
+| Admin exam UI        | `src/app/dashboard/exams/[examId]/page.jsx`                                         |
+| Route handlers       | `src/app/api/**/route.js`                                                           |
 
 ---
 
 ## Summary
 
-| Step              | Collection(s)    | What happens                              |
-| ----------------- | ---------------- | ----------------------------------------- |
-| 1. Build banks    | `questions`      | Verified MCQ pools                        |
-| 2. Create exam    | `exams`          | Bank refs + sample sizes; token generated |
-| 3. Upload roster  | `exams.students` | Embedded student list                     |
-| 4. Start exam     | `exams`          | `endTime` + token activate login          |
-| 5. Student login  | —                | JWT cookie; roster + time validated       |
-| 6. Student start  | `students`       | Random sample → `questionList`            |
-| 7. Answer         | `students`       | Immediate field update per choice         |
-| 8. Submit + score | `students`       | `isSubmitted`; lazy score computation     |
+| Step                   | Collection(s)    | What happens                              |
+| ---------------------- | ---------------- | ----------------------------------------- |
+| 1. Build banks         | `questions`      | Verified MCQ pools                        |
+| 2. Create exam         | `exams`          | Bank refs + sample sizes; token generated |
+| 3. Upload participants | `exams.students` | Embedded participant list                 |
+| 4. Start exam          | `exams`          | `endTime` + token activate login          |
+| 5. Student login       | —                | JWT cookie; participants + time validated |
+| 6. Student start       | `students`       | Random sample → `questionList`            |
+| 7. Answer              | `students`       | Immediate field update per choice         |
+| 8. Submit + score      | `students`       | `isSubmitted`; lazy score computation     |
 
 The application is a single Next.js deployment talking directly to MongoDB. All
-business rules live in `lib/services/*` and are exposed through `app/api/**`.
+business rules live in `src/lib/services/*` and are exposed through `src/app/api/**`.
