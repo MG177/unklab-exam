@@ -1,15 +1,20 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx}'],
+  content: [
+    './app/**/*.{js,jsx}',
+    './components/**/*.{js,jsx}',
+    './contexts/**/*.{js,jsx}',
+    './legacy/**/*.{js,jsx}',
+  ],
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter'],
-        DM: ['DM Sans'],
-        Jose: ['Josefin Sans'],
-        montserrat: ['Montserrat'],
-        Nunito: ['Nunito'],
-        Roboto: ['Roboto'],
+        inter: ['var(--font-inter)', 'Inter', 'sans-serif'],
+        DM: ['var(--font-dm-sans)', 'DM Sans', 'sans-serif'],
+        Jose: ['var(--font-josefin)', 'Josefin Sans', 'sans-serif'],
+        montserrat: ['var(--font-montserrat)', 'Montserrat', 'sans-serif'],
+        Nunito: ['var(--font-nunito)', 'Nunito', 'sans-serif'],
+        Roboto: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
       },
       colors: {
         black: '#37474F',

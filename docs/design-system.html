@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KEP Admin — Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ───────────────────── KEP tokens (1:1 with temp/admin-dashboard-mockups/styles.css) ───────────────────── */
+    :root {
+      --ink: #1a2332;
+      --ink-muted: #5c6570;
+      --ink-faint: #8a939c;
+      --paper: #faf9f7;
+      --surface: #ffffff;
+      --line: #e4e0d8;
+      --line-strong: #cfc9be;
+      --brand: #b55ffe;
+      --brand-hover: #a44fe8;
+      --brand-ink: #5a2d8a;
+      --brand-tint: #f6f0fc;
+      --live: #0d7a5c;
+      --live-tint: #e8f5f0;
+      --danger: #ff6593;
+      --danger-ink: #9f2d52;
+      --warn-tint: #fdf6e8;
+      --warn-ink: #8a5a12;
+      --sidebar-w: 236px;
+      --sidebar-collapsed: 64px;
+      --topbar-h: 56px;
+      --radius: 12px;
+      --radius-pill: 999px;
+      --radius-input: 10px;
+      --font: "Plus Jakarta Sans", system-ui, sans-serif;
+      --mono: "IBM Plex Mono", "SF Mono", monospace;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --shadow-frame: 0 2px 6px rgba(26, 35, 50, 0.05), 0 14px 36px rgba(26, 35, 50, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 480px at 78% -8%, color-mix(in srgb, var(--brand) 9%, transparent), transparent 60%),
+        var(--paper);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    /* ───────────────────── doc chrome (ds- prefixed; KEP-themed) ───────────────────── */
+    .ds-doc { max-width: 1180px; margin: 0 auto; padding: 56px 32px 120px; }
+
+    .ds-masthead {
+      display: grid; grid-template-columns: 1.6fr 1fr; gap: 44px; align-items: end;
+      padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 64px;
+    }
+    .ds-eyebrow {
+      font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--ink-faint); display: flex; align-items: center; gap: 12px;
+    }
+    .ds-eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--brand); display: inline-block; }
+    .ds-masthead h1 {
+      font-size: clamp(2.4rem, 4.4vw, 3.4rem); line-height: 0.99; letter-spacing: -0.035em;
+      font-weight: 800; margin: 22px 0 16px; max-width: 16ch;
+    }
+    .ds-masthead h1 em { font-style: normal; color: var(--brand); }
+    .ds-lede { color: var(--ink-muted); font-size: 16px; line-height: 1.6; max-width: 56ch; }
+    .ds-lede code, .inline-code {
+      font-family: var(--mono); font-size: 0.82em; background: var(--surface); color: var(--ink);
+      padding: 1px 6px; border: 1px solid var(--line); border-radius: 6px;
+    }
+    .ds-meta { display: grid; gap: 6px; align-content: end; }
+    .ds-meta dl { display: grid; grid-template-columns: 7.5em 1fr; gap: 7px 16px; margin: 0;
+      font-family: var(--mono); font-size: 12px; }
+    .ds-meta dt { color: var(--ink-faint); }
+    .ds-meta dd { margin: 0; color: var(--ink); }
+
+    .ds-section { margin-bottom: 92px; scroll-margin-top: 24px; }
+    .ds-sec-head {
+      display: grid; grid-template-columns: 84px 1fr auto; gap: 24px; align-items: baseline;
+      padding-bottom: 16px; border-bottom: 1px solid var(--line); margin-bottom: 30px;
+    }
+    .ds-sec-num { font-family: var(--mono); font-size: 12px; color: var(--brand); letter-spacing: 0.1em; }
+    .ds-sec-title { font-size: 28px; letter-spacing: -0.025em; font-weight: 800; margin: 0; }
+    .ds-sec-kicker {
+      font-family: var(--mono); font-size: 11px; color: var(--ink-faint);
+      text-transform: uppercase; letter-spacing: 0.1em; text-align: right;
+    }
+    .ds-sec-intro { color: var(--ink-muted); font-size: 15px; line-height: 1.6; max-width: 70ch; margin: 0 0 30px; }
+
+    .ds-grid { display: grid; gap: 16px; }
+    .ds-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .ds-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .ds-panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .ds-panel-flat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .ds-panel-head { padding: 16px 20px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 10px; }
+    .ds-panel-head strong { font-size: 13px; font-weight: 800; }
+    .ds-label-mono { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em; }
+    .ds-code-muted { font-family: var(--mono); font-size: 12px; color: var(--ink-faint); line-height: 1.6; }
+
+    /* semantic color cards */
+    .ds-semantic { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; }
+    .ds-swatch-card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+    .ds-swatch-card .chip { height: 72px; }
+    .ds-swatch-card .chip.bordered { box-shadow: inset 0 0 0 1px var(--line); }
+    .ds-swatch-card .meta-row { padding: 11px 13px; display: grid; gap: 2px; border-top: 1px solid var(--line); }
+    .ds-swatch-card .nm { font-weight: 700; font-size: 13px; }
+    .ds-swatch-card .var { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+
+    /* ramp row */
+    .ds-ramp { display: grid; grid-template-columns: 150px repeat(7, 1fr); border: 1px solid var(--line);
+      border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+    .ds-ramp + .ds-ramp { margin-top: 14px; }
+    .ds-ramp .ramp-name { padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 3px;
+      border-right: 1px solid var(--line); }
+    .ds-ramp .ramp-name .nm { font-weight: 700; font-size: 13px; }
+    .ds-ramp .ramp-name .nm-mono { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); }
+    .ds-ramp .cell { aspect-ratio: 1.15 / 1; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
+    .ds-ramp .cell .tk { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.02em; opacity: 0.9; }
+    .ds-ramp .cell .hx { font-family: var(--mono); font-size: 9.5px; opacity: 0.7; }
+    .on-dark { color: #fff; }
+    .on-light { color: var(--ink); }
+
+    /* type rows */
+    .ds-type-row {
+      display: grid; grid-template-columns: 210px 1fr 180px; gap: 24px; align-items: baseline;
+      padding: 18px 0; border-bottom: 1px dashed var(--line);
+    }
+    .ds-type-row:last-child { border-bottom: none; }
+    .ds-type-row .label { display: grid; gap: 4px; }
+    .ds-type-row .label .nm { font-weight: 700; font-size: 13px; }
+    .ds-type-row .label .nm-mono { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+    .ds-type-row .specs { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: right; line-height: 1.6; }
+
+    /* token tables */
+    .ds-token-table { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .ds-token-table .th { padding: 13px 18px; border-bottom: 1px solid var(--line); }
+    .ds-token-table .th strong { font-size: 13px; font-weight: 800; }
+    .ds-token-row { display: grid; grid-template-columns: 130px 1fr 120px; align-items: center; padding: 13px 18px; border-top: 1px solid var(--line); }
+    .ds-token-row:first-of-type { border-top: none; }
+    .ds-token-row .name { font-family: var(--mono); font-size: 12px; }
+    .ds-token-row .val { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); text-align: right; }
+    .ds-bar { height: 14px; background: var(--brand); border-radius: 3px; }
+    .ds-radius-block { width: 56px; height: 36px; background: var(--paper); border: 1px solid var(--line-strong); }
+
+    /* demos */
+    .ds-demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+    .ds-demo-title { display: flex; justify-content: space-between; align-items: baseline; }
+    .ds-demo-title .nm { font-weight: 800; font-size: 13px; }
+    .ds-demo-title .nm-mono { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+    .ds-stage { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px;
+      border-radius: var(--radius-input); background: var(--paper); border: 1px dashed var(--line); }
+    .ds-stage.column { flex-direction: column; align-items: stretch; }
+
+    .ds-iconwall { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+    .ds-icon-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 8px;
+      border: 1px solid var(--line); border-radius: var(--radius-input); background: var(--surface); color: var(--ink-muted); }
+    .ds-icon-cell .ico { width: 22px; height: 22px; color: var(--ink); }
+    .ds-icon-cell .cap { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); }
+
+    /* browser mock frame (section 08) */
+    .ds-frame { border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow-frame);
+      border-radius: var(--radius); overflow: hidden; }
+    .ds-frame-bar { display: flex; align-items: center; gap: 7px; padding: 11px 14px; background: var(--paper);
+      border-bottom: 1px solid var(--line); }
+    .ds-frame-bar .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--line-strong); }
+    .ds-frame-bar .lbl { margin-left: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+    .ds-browser { display: flex; height: 560px; background: var(--paper); overflow: hidden; }
+
+    .ds-footer { padding-top: 28px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto;
+      gap: 16px; align-items: center; }
+    .ds-footer .colophon { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+
+    /* on-load stagger */
+    @media (prefers-reduced-motion: no-preference) {
+      .ds-section, .ds-masthead { animation: ds-rise 0.6s var(--ease) both; }
+      .ds-section { animation-delay: calc(var(--i, 0) * 0.05s); }
+      @keyframes ds-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    }
+
+    /* ═══════════════════ KEP component CSS (verbatim subset from styles.css) ═══════════════════ */
+    .ico { width: 17px; height: 17px; flex-shrink: 0; stroke-width: 2; }
+
+    .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: var(--radius-pill);
+      font-family: var(--font); font-size: 12px; font-weight: 700; letter-spacing: 0.01em; border: 1px solid transparent;
+      cursor: pointer; white-space: nowrap; transition: background 0.12s, border-color 0.12s; }
+    .btn .ico { width: 15px; height: 15px; }
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-primary:hover { background: var(--brand-hover); }
+    .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line-strong); }
+    .btn-secondary:hover { background: var(--paper); }
+    .btn-ghost { background: transparent; color: var(--ink-muted); border-color: var(--line); }
+    .btn-ghost:hover { border-color: var(--line-strong); color: var(--ink); }
+    .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+    .btn-icon { padding: 6px; border-radius: var(--radius-input); background: var(--surface); border: 1px solid var(--line);
+      color: var(--ink-muted); cursor: pointer; display: inline-grid; place-items: center; }
+    .btn-icon:hover { border-color: var(--line-strong); color: var(--ink); }
+
+    .chip { font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: var(--radius-pill);
+      border: 1px solid var(--line); background: var(--surface); color: var(--ink-muted); cursor: pointer; }
+    .chip.is-on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+    .fchip { font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: var(--radius-pill);
+      border: 1px solid var(--line); background: var(--surface); color: var(--ink-muted); cursor: pointer; }
+    .fchip.is-on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: var(--radius-pill); font-size: 10px;
+      font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+    .b-live { background: var(--live-tint); color: var(--live); }
+    .b-draft { background: var(--paper); color: var(--ink-faint); border: 1px solid var(--line); }
+    .b-scheduled { background: var(--brand-tint); color: var(--brand-ink); }
+    .b-review { background: var(--warn-tint); color: var(--warn-ink); }
+    .b-verified { background: var(--live-tint); color: var(--live); }
+    .b-ended { background: var(--paper); color: var(--ink-faint); }
+
+    .token-strip { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; background: var(--paper);
+      border: 1px solid var(--line); border-radius: var(--radius-pill); font-size: 11px; font-weight: 700; color: var(--ink-muted); }
+    .token-strip .code { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--ink);
+      letter-spacing: 0.06em; user-select: all; }
+    .token-strip.is-live { border-color: var(--live); background: var(--live-tint); }
+    .token-strip.is-live .code { color: var(--live); }
+
+    .search-wrap { position: relative; width: 100%; max-width: 320px; }
+    .search-wrap .ico { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--ink-faint); }
+    .search-wrap input { width: 100%; padding: 9px 10px 9px 34px; border: 1px solid var(--line); border-radius: var(--radius-input);
+      font-family: var(--font); font-size: 13px; background: var(--surface); color: var(--ink); }
+    .search-wrap input:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: var(--brand); }
+
+    .field { width: 100%; }
+    .field label { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--ink-faint); margin-bottom: 5px; }
+    .field input, .field textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--radius-input);
+      font-family: var(--font); font-size: 14px; background: var(--surface); color: var(--ink); }
+    .field input:focus, .field textarea:focus { outline: 2px solid var(--brand); outline-offset: 0; }
+
+    .opt { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line);
+      margin-bottom: 6px; font-size: 13px; background: var(--surface); border-radius: var(--radius-input); }
+    .opt.is-correct { border-color: var(--brand); background: var(--brand-tint); }
+    .radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line-strong); flex-shrink: 0; }
+    .radio.on { border-color: var(--brand); background: var(--brand); box-shadow: inset 0 0 0 2px #fff; }
+    .opt-add { border-style: dashed; color: var(--ink-faint); justify-content: center; font-weight: 700; cursor: pointer; }
+
+    .q-active-check { display: inline-flex; align-items: center; cursor: pointer; user-select: none; }
+    .q-active-check-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .q-active-check-box { width: 16px; height: 16px; display: grid; place-items: center; border: 1.5px solid var(--line-strong);
+      border-radius: 4px; background: var(--surface); color: transparent;
+      transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease); }
+    .q-active-check-box .ico { width: 11px; height: 11px; }
+    .q-active-check-input:checked + .q-active-check-box { background: var(--live); border-color: var(--live); color: #fff; }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--line); padding: 14px 16px; border-radius: var(--radius); }
+    .stat-card label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-faint); }
+    .stat-card .val { font-family: var(--mono); font-size: 1.6rem; font-weight: 600; margin-top: 6px; letter-spacing: -0.02em; color: var(--ink); }
+    .stat-card .val.timer { color: var(--danger); }
+    .stat-card .hint { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+    .progress-line { height: 3px; background: var(--line); margin-top: 5px; max-width: 72px; border-radius: var(--radius-pill); }
+    .progress-line i { display: block; height: 100%; background: var(--live); border-radius: var(--radius-pill); }
+
+    .empty { display: flex; gap: 20px; align-items: flex-start; padding: 28px; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--radius); }
+    .empty-icon { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; background: var(--paper);
+      border: 1px solid var(--line); border-radius: var(--radius-input); color: var(--ink-muted); }
+    .empty-icon .ico { width: 22px; height: 22px; }
+    .empty-body h3 { font-size: 1rem; font-weight: 800; margin-bottom: 6px; }
+    .empty-body p { color: var(--ink-muted); font-size: 13px; max-width: 42ch; margin-bottom: 14px; line-height: 1.5; }
+    .empty-body code { font-family: var(--mono); font-size: 12px; background: var(--paper); padding: 1px 5px; border: 1px solid var(--line); border-radius: 4px; }
+    .empty-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .toast { background: var(--surface); border: 1px solid var(--line); padding: 12px 14px; box-shadow: var(--shadow-frame);
+      border-radius: var(--radius); font-size: 12px; max-width: 260px; }
+    .toast strong { display: block; font-weight: 800; }
+    .toast span { color: var(--ink-muted); font-size: 11px; }
+
+    /* table */
+    .card-table { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.data th { text-align: left; padding: 10px 14px; background: var(--paper); font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); border-bottom: 1px solid var(--line); }
+    table.data td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    table.data tr:last-child td { border-bottom: none; }
+    table.data tbody tr:hover td { background: #f5f3ef; }
+    table.data .row-title { font-weight: 700; color: var(--ink); }
+    table.data .row-sub { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+    table.data .num { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+    table.data tr.is-live td { background: var(--live-tint); }
+
+    /* app shell: sidebar + topbar */
+    .sb-wrap { position: relative; flex-shrink: 0; height: 100%; }
+    .sb { width: var(--sidebar-w); display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+    .sb-light { background: var(--surface); color: var(--ink-muted); border-right: 1px solid var(--line); }
+    .sb-brand { padding: 18px 16px 14px; border-bottom: 1px solid var(--line); }
+    .sb-brand .mark { font-weight: 800; font-size: 1rem; color: var(--ink); letter-spacing: -0.02em; }
+    .sb-brand .mark em { color: var(--brand); font-style: normal; font-weight: 800; }
+    .sb-brand .sub { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
+    .sb-nav { padding: 12px 8px; flex: 1; }
+    .sb-label { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 8px 10px 4px; }
+    .sb-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-input);
+      color: var(--ink-muted); font-weight: 600; font-size: 14px; text-decoration: none; margin-bottom: 2px; border: 1px solid transparent; }
+    .sb-link:hover { background: var(--paper); color: var(--ink); border-color: var(--line); }
+    .sb-link.is-active { background: var(--brand-tint); color: var(--brand-ink); font-weight: 700;
+      border-color: color-mix(in srgb, var(--brand) 28%, transparent); }
+    .sb-link.is-active .ico { color: var(--brand); }
+    .sb-foot { padding: 12px; border-top: 1px solid var(--line); }
+    .sb-user { display: flex; align-items: center; gap: 10px; }
+    .sb-avatar { width: 32px; height: 32px; border-radius: var(--radius-input); background: var(--paper); border: 1px solid var(--line);
+      color: var(--ink); font-weight: 800; font-size: 11px; display: grid; place-items: center; flex-shrink: 0; }
+    .sb-user-info .name { font-weight: 800; font-size: 12px; color: var(--ink); }
+    .sb-user-info .role { font-size: 10px; color: var(--ink-faint); }
+
+    .app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .topbar { height: var(--topbar-h); background: var(--surface); border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; padding: 0 18px; gap: 14px; flex-shrink: 0; }
+    .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-faint); min-width: 0; }
+    .breadcrumb .sep { color: var(--line-strong); }
+    .breadcrumb strong { color: var(--ink); font-weight: 700; }
+    .topbar-spacer { flex: 1; }
+    .page-body { flex: 1; overflow: auto; padding: 18px; }
+    .ph { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .ph h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+    .ph p { color: var(--ink-muted); font-size: 12px; margin-top: 4px; }
+    .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .filter-row { display: flex; gap: 4px; }
+
+    /* editor (index rail) */
+    .editor { display: flex; flex: 1 1 auto; min-height: 0; }
+    .q-sidebar { width: 188px; background: var(--surface); border-right: 1px solid var(--line); display: flex; flex-direction: column; flex-shrink: 0; }
+    .q-sidebar-head { padding: 12px; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
+    .q-sidebar-nav { flex: 1; overflow-y: auto; }
+    .q-item { width: 100%; padding: 8px 12px; font-size: 12px; font-weight: 700; color: var(--ink-muted);
+      border: none; border-bottom: 1px solid var(--line); background: transparent; cursor: pointer; display: flex; gap: 8px;
+      align-items: center; text-align: left; font-family: var(--font); }
+    .q-item.is-on { background: var(--brand-tint); color: var(--brand-ink); font-weight: 800; }
+    .q-item.is-inactive { color: var(--ink-faint); }
+    .q-item.is-inactive .q-item-label { text-decoration: line-through; text-decoration-color: var(--line-strong); }
+    .q-item .n { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); min-width: 20px; }
+    .q-item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .q-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--line-strong);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink-faint) 30%, transparent); }
+    .q-dot.is-active { background: var(--live); box-shadow: none; }
+    .editor-main { flex: 1; padding: 18px; overflow: auto; background: var(--paper); }
+    .editor-main-inner { display: flex; flex-direction: column; gap: 16px; max-width: 520px; }
+    .q-block { background: var(--surface); border: 1px solid var(--line); padding: 18px; border-radius: var(--radius); }
+    .q-block.is-inactive { opacity: 0.72; border-style: dashed; border-color: var(--line-strong); }
+    .q-block-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .q-block h3 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
+    .media-row { display: flex; gap: 6px; margin: 10px 0; }
+    .save-status { font-size: 11px; font-weight: 800; color: var(--live); font-family: var(--mono); }
+
+    @media (max-width: 880px) {
+      .ds-masthead { grid-template-columns: 1fr; gap: 28px; }
+      .ds-grid.cols-2, .ds-grid.cols-3 { grid-template-columns: 1fr; }
+      .ds-sec-head { grid-template-columns: 1fr; gap: 6px; }
+      .ds-sec-kicker { text-align: left; }
+      .ds-type-row { grid-template-columns: 1fr; gap: 8px; }
+      .ds-type-row .specs { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+
+<body>
+  <main class="ds-doc">
+
+    <!-- ───────────── masthead ───────────── -->
+    <header class="ds-masthead">
+      <div>
+        <div class="ds-eyebrow">Universitas Klabat · KEP Placement · Design System v1.0</div>
+        <h1>Tokens &amp; patterns for the <em>admin</em> dashboard.</h1>
+        <p class="ds-lede">One visual system for the KEP admin shell — <strong>warm paper</strong> surfaces,
+          a <strong>brand purple</strong> accent, <strong>navy ink</strong> text, bold headings, and pill controls.
+          Extracted 1:1 from the admin-shell prototype in
+          <code>temp/admin-dashboard-mockups/</code>. This file is the canonical reference for porting UI into
+          <code>kep-unklab-exam/</code> — match these tokens, do not improvise new ones.</p>
+      </div>
+      <div class="ds-meta">
+        <dl>
+          <dt>Stack</dt><dd>Next.js 15 · Tailwind 3</dd>
+          <dt>UI font</dt><dd>Plus Jakarta Sans 500–800</dd>
+          <dt>Mono</dt><dd>IBM Plex Mono 500/600</dd>
+          <dt>Icons</dt><dd>Lucide · stroke 2</dd>
+          <dt>Radius</dt><dd>12px card · pill · 10px input</dd>
+          <dt>Modes</dt><dd>light only</dd>
+        </dl>
+      </div>
+    </header>
+
+    <!-- ───────────── 01 Foundations ───────────── -->
+    <section class="ds-section" id="foundations" style="--i:1">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">01 / 08</span>
+        <h2 class="ds-sec-title">Foundations</h2>
+        <span class="ds-sec-kicker">paper · ink · brand</span>
+      </div>
+      <p class="ds-sec-intro">The palette is warm and quiet so the brand purple and status colors carry meaning.
+        Cards sit on <span class="inline-code">--surface</span> white above a <span class="inline-code">--paper</span>
+        canvas; structure comes from borders, not shadows. Purple is reserved for primary actions, the active state,
+        and focus rings.</p>
+
+      <div class="ds-panel-flat">
+        <div class="ds-panel-head"><span class="ds-label-mono">semantic · light</span></div>
+        <div class="ds-semantic">
+          <div class="ds-swatch-card"><div class="chip bordered" style="background:#faf9f7"></div>
+            <div class="meta-row"><span class="nm">paper / canvas</span><span class="var">--paper · #faf9f7</span></div></div>
+          <div class="ds-swatch-card"><div class="chip bordered" style="background:#ffffff"></div>
+            <div class="meta-row"><span class="nm">surface / card</span><span class="var">--surface · #ffffff</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#1a2332"></div>
+            <div class="meta-row"><span class="nm">ink / text</span><span class="var">--ink · #1a2332</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#5c6570"></div>
+            <div class="meta-row"><span class="nm">ink muted</span><span class="var">--ink-muted · #5c6570</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#8a939c"></div>
+            <div class="meta-row"><span class="nm">ink faint</span><span class="var">--ink-faint · #8a939c</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#e4e0d8;box-shadow:inset 0 0 0 1px #cfc9be"></div>
+            <div class="meta-row"><span class="nm">line / border</span><span class="var">--line · #e4e0d8</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#b55ffe"></div>
+            <div class="meta-row"><span class="nm">brand</span><span class="var">--brand · #b55ffe</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#f6f0fc;box-shadow:inset 0 0 0 1px #e4e0d8"></div>
+            <div class="meta-row"><span class="nm">brand tint</span><span class="var">--brand-tint · #f6f0fc</span></div></div>
+        </div>
+      </div>
+
+      <div class="ds-panel-flat" style="margin-top:16px">
+        <div class="ds-panel-head"><strong>Status families</strong><span class="ds-label-mono">tint + solid + ink</span></div>
+        <div class="ds-semantic">
+          <div class="ds-swatch-card"><div class="chip" style="background:#0d7a5c"></div>
+            <div class="meta-row"><span class="nm">live / verified</span><span class="var">--live · #0d7a5c</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#b55ffe"></div>
+            <div class="meta-row"><span class="nm">scheduled</span><span class="var">--brand · #b55ffe</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#8a5a12"></div>
+            <div class="meta-row"><span class="nm">needs review</span><span class="var">--warn-ink · #8a5a12</span></div></div>
+          <div class="ds-swatch-card"><div class="chip" style="background:#ff6593"></div>
+            <div class="meta-row"><span class="nm">danger / timer</span><span class="var">--danger · #ff6593</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 02 Color scales ───────────── -->
+    <section class="ds-section" id="scales" style="--i:2">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">02 / 08</span>
+        <h2 class="ds-sec-title">Color ramps</h2>
+        <span class="ds-sec-kicker">ink · brand · status tints</span>
+      </div>
+      <p class="ds-sec-intro">The system uses a small set of fixed tokens rather than full numeric scales. Below are the
+        working ramps as actually used: the warm neutral ink ramp, the brand purple set, and the status tint/solid pairs.</p>
+
+      <div class="ds-ramp">
+        <div class="ramp-name"><span class="nm">Neutral · ink</span><span class="nm-mono">warm grays</span></div>
+        <div class="cell" style="background:#faf9f7"><span class="tk on-light">paper</span><span class="hx on-light">#faf9f7</span></div>
+        <div class="cell" style="background:#ffffff"><span class="tk on-light">surface</span><span class="hx on-light">#ffffff</span></div>
+        <div class="cell" style="background:#e4e0d8"><span class="tk on-light">line</span><span class="hx on-light">#e4e0d8</span></div>
+        <div class="cell" style="background:#cfc9be"><span class="tk on-light">line-strong</span><span class="hx on-light">#cfc9be</span></div>
+        <div class="cell" style="background:#8a939c"><span class="tk on-dark">ink-faint</span><span class="hx on-dark">#8a939c</span></div>
+        <div class="cell" style="background:#5c6570"><span class="tk on-dark">ink-muted</span><span class="hx on-dark">#5c6570</span></div>
+        <div class="cell" style="background:#1a2332"><span class="tk on-dark">ink</span><span class="hx on-dark">#1a2332</span></div>
+      </div>
+
+      <div class="ds-ramp">
+        <div class="ramp-name"><span class="nm">Brand · purple</span><span class="nm-mono">primary · active</span></div>
+        <div class="cell" style="background:#f6f0fc"><span class="tk on-light">tint</span><span class="hx on-light">#f6f0fc</span></div>
+        <div class="cell" style="background:#e9d8fb"><span class="tk on-light">tint+</span><span class="hx on-light">mix</span></div>
+        <div class="cell" style="background:#b55ffe"><span class="tk on-dark">brand</span><span class="hx on-dark">#b55ffe</span></div>
+        <div class="cell" style="background:#a44fe8"><span class="tk on-dark">hover</span><span class="hx on-dark">#a44fe8</span></div>
+        <div class="cell" style="background:#5a2d8a"><span class="tk on-dark">brand-ink</span><span class="hx on-dark">#5a2d8a</span></div>
+        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+      </div>
+
+      <div class="ds-ramp">
+        <div class="ramp-name"><span class="nm">Status</span><span class="nm-mono">tint → solid</span></div>
+        <div class="cell" style="background:#e8f5f0"><span class="tk on-light">live-tint</span><span class="hx on-light">#e8f5f0</span></div>
+        <div class="cell" style="background:#0d7a5c"><span class="tk on-dark">live</span><span class="hx on-dark">#0d7a5c</span></div>
+        <div class="cell" style="background:#fdf6e8"><span class="tk on-light">warn-tint</span><span class="hx on-light">#fdf6e8</span></div>
+        <div class="cell" style="background:#8a5a12"><span class="tk on-dark">warn-ink</span><span class="hx on-dark">#8a5a12</span></div>
+        <div class="cell" style="background:#ff6593"><span class="tk on-dark">danger</span><span class="hx on-dark">#ff6593</span></div>
+        <div class="cell" style="background:#9f2d52"><span class="tk on-dark">danger-ink</span><span class="hx on-dark">#9f2d52</span></div>
+        <div class="cell" style="background:#faf9f7"><span class="tk on-light">·</span><span class="hx on-light"></span></div>
+      </div>
+    </section>
+
+    <!-- ───────────── 03 Typography ───────────── -->
+    <section class="ds-section" id="type" style="--i:3">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">03 / 08</span>
+        <h2 class="ds-sec-title">Typography</h2>
+        <span class="ds-sec-kicker">plus jakarta · ibm plex mono</span>
+      </div>
+      <p class="ds-sec-intro">Plus Jakarta Sans carries all UI text — body sits at 14px / weight 500, headings jump to 800 with
+        tight tracking. Anything numeric or code-like (exam tokens, timers, student IDs, scores, counts) switches to
+        <span class="inline-code">IBM Plex Mono</span> with <span class="inline-code">tabular-nums</span>.</p>
+
+      <div class="ds-panel" style="padding:8px 28px">
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Page title</span><span class="nm-mono">.ph h1</span></div>
+          <div style="font-size:1.45rem;font-weight:800;letter-spacing:-0.02em;line-height:1.2">Exams</div>
+          <div class="specs">1.45rem · 800<br>tracking -0.02em</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Section / table label</span><span class="nm-mono">uppercase 800</span></div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#8a939c">Students · Status · Progress</div>
+          <div class="specs">9–11px · 800<br>tracking 0.1em</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Body</span><span class="nm-mono">base</span></div>
+          <div style="font-size:14px;font-weight:500;color:#1a2332">Schedule sessions, import rosters, run placement tests.</div>
+          <div class="specs">14px · 500<br>line-height 1.55</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Muted / meta</span><span class="nm-mono">--ink-muted</span></div>
+          <div style="font-size:12px;color:#5c6570">Draft · No students imported</div>
+          <div class="specs">12px · 500<br>--ink-muted</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Stat value</span><span class="nm-mono">mono · tabular</span></div>
+          <div style="font-family:var(--mono);font-size:1.6rem;font-weight:600;letter-spacing:-0.02em;color:#1a2332">38/142</div>
+          <div class="specs">1.6rem · 600 mono<br>stat cards</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Timer</span><span class="nm-mono">mono · --danger</span></div>
+          <div style="font-family:var(--mono);font-size:1.6rem;font-weight:600;color:#ff6593">01:42:08</div>
+          <div class="specs">1.6rem · 600 mono<br>countdown</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Token / ID / score</span><span class="nm-mono">mono · tabular</span></div>
+          <div style="font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.06em;color:#1a2332">600367 · 2021001847 · 78</div>
+          <div class="specs">12–13px · 600 mono<br>tabular-nums</div>
+        </div>
+        <div class="ds-type-row">
+          <div class="label"><span class="nm">Inline code</span><span class="nm-mono">paths · columns</span></div>
+          <div><span class="inline-code">noreg, name</span> CSV columns</div>
+          <div class="specs">~12px mono<br>bordered chip</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 04 Spacing / radius / elevation ───────────── -->
+    <section class="ds-section" id="primitives" style="--i:4">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">04 / 08</span>
+        <h2 class="ds-sec-title">Spacing · radius · elevation · motion</h2>
+        <span class="ds-sec-kicker">borders over shadows</span>
+      </div>
+      <p class="ds-sec-intro">Cards use a 12px radius; buttons, chips and badges are full pills; inputs and icon buttons use
+        10px. Elevation is reserved — only the app frame, toasts, and floating controls get
+        <span class="inline-code">--shadow-frame</span>. Everything else is defined by hairline borders.</p>
+
+      <div class="ds-grid cols-3">
+        <div class="ds-token-table">
+          <div class="th"><strong>Layout &amp; spacing</strong></div>
+          <div class="ds-token-row"><span class="name">page pad</span><span><span class="ds-bar" style="width:20px"></span></span><span class="val">20px</span></div>
+          <div class="ds-token-row"><span class="name">card pad</span><span><span class="ds-bar" style="width:16px"></span></span><span class="val">14–18px</span></div>
+          <div class="ds-token-row"><span class="name">gaps</span><span><span class="ds-bar" style="width:12px"></span></span><span class="val">6 · 8 · 10 · 16</span></div>
+          <div class="ds-token-row"><span class="name">topbar-h</span><span><span class="ds-bar" style="width:56px"></span></span><span class="val">56px</span></div>
+          <div class="ds-token-row"><span class="name">sidebar-w</span><span><span class="ds-bar" style="width:100%;max-width:120px"></span></span><span class="val">236 / 64</span></div>
+        </div>
+        <div class="ds-token-table">
+          <div class="th"><strong>Border radius</strong></div>
+          <div class="ds-token-row"><span class="name">radius-input</span><span><span class="ds-radius-block" style="border-radius:10px"></span></span><span class="val">10px</span></div>
+          <div class="ds-token-row"><span class="name">radius</span><span><span class="ds-radius-block" style="border-radius:12px"></span></span><span class="val">12px · cards</span></div>
+          <div class="ds-token-row"><span class="name">radius-pill</span><span><span class="ds-radius-block" style="border-radius:999px"></span></span><span class="val">btn · chip · badge</span></div>
+          <div class="ds-token-row"><span class="name">inline</span><span><span class="ds-radius-block" style="border-radius:4px;width:40px"></span></span><span class="val">4–6px · code</span></div>
+        </div>
+        <div class="ds-token-table">
+          <div class="th"><strong>Elevation &amp; motion</strong></div>
+          <div class="ds-token-row"><span class="name">border</span><span><span class="ds-radius-block"></span></span><span class="val">cards</span></div>
+          <div class="ds-token-row"><span class="name">shadow-frame</span><span><span class="ds-radius-block" style="box-shadow:var(--shadow-frame);border-color:transparent"></span></span><span class="val">frame · toast</span></div>
+          <div class="ds-token-row"><span class="name">--ease</span><span class="ds-code-muted">cubic-bezier(.25,.46,.45,.94)</span><span class="val"></span></div>
+          <div class="ds-token-row"><span class="name">durations</span><span class="ds-code-muted">hover · checkbox · sidebar</span><span class="val">.12 / .15 / .2s</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 05 Iconography ───────────── -->
+    <section class="ds-section" id="icons" style="--i:5">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">05 / 08</span>
+        <h2 class="ds-sec-title">Iconography</h2>
+        <span class="ds-sec-kicker">lucide · stroke 2</span>
+      </div>
+      <p class="ds-sec-intro">Icons are <a href="https://lucide.dev" style="color:var(--brand-ink)">Lucide</a> at stroke-width 2 —
+        17px by default, 15px inside buttons, 22px in empty states, 12px in toggles. In Next.js use
+        <span class="inline-code">lucide-react</span>. This is the working set used across the admin shell.</p>
+      <div class="ds-iconwall">
+        <div class="ds-icon-cell"><i data-ico="layout-dashboard"></i><span class="cap">exams</span></div>
+        <div class="ds-icon-cell"><i data-ico="book-open"></i><span class="cap">banks</span></div>
+        <div class="ds-icon-cell"><i data-ico="plus"></i><span class="cap">plus</span></div>
+        <div class="ds-icon-cell"><i data-ico="search"></i><span class="cap">search</span></div>
+        <div class="ds-icon-cell"><i data-ico="ellipsis"></i><span class="cap">actions</span></div>
+        <div class="ds-icon-cell"><i data-ico="upload"></i><span class="cap">upload</span></div>
+        <div class="ds-icon-cell"><i data-ico="download"></i><span class="cap">download</span></div>
+        <div class="ds-icon-cell"><i data-ico="play"></i><span class="cap">start</span></div>
+        <div class="ds-icon-cell"><i data-ico="square"></i><span class="cap">stop</span></div>
+        <div class="ds-icon-cell"><i data-ico="settings"></i><span class="cap">settings</span></div>
+        <div class="ds-icon-cell"><i data-ico="check"></i><span class="cap">save / ok</span></div>
+        <div class="ds-icon-cell"><i data-ico="image"></i><span class="cap">image</span></div>
+        <div class="ds-icon-cell"><i data-ico="audio-lines"></i><span class="cap">audio</span></div>
+        <div class="ds-icon-cell"><i data-ico="chevron-left"></i><span class="cap">collapse</span></div>
+        <div class="ds-icon-cell"><i data-ico="chevron-right"></i><span class="cap">expand</span></div>
+      </div>
+    </section>
+
+    <!-- ───────────── 06 Components ───────────── -->
+    <section class="ds-section" id="components" style="--i:6">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">06 / 08</span>
+        <h2 class="ds-sec-title">Components</h2>
+        <span class="ds-sec-kicker">live · rendered with real classes</span>
+      </div>
+      <p class="ds-sec-intro">Every demo below uses the actual KEP component classes — these are 1:1 with the prototype,
+        not approximations. Port them to React components under <span class="inline-code">components/dashboard/</span>.</p>
+
+      <div class="ds-grid cols-2">
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Buttons</span><span class="nm-mono">.btn · pill</span></div>
+          <div class="ds-stage">
+            <button class="btn btn-primary"><i data-ico="plus"></i> Create exam</button>
+            <button class="btn btn-secondary"><i data-ico="download"></i> Template</button>
+            <button class="btn btn-ghost">Refresh</button>
+            <button class="btn btn-danger"><i data-ico="square"></i> Stop exam</button>
+            <button class="btn btn-primary btn-sm"><i data-ico="check"></i> Save now</button>
+            <button class="btn-icon"><i data-ico="ellipsis"></i></button>
+          </div>
+          <div class="ds-code-muted">primary · secondary · ghost · danger · sm · icon — 12px/700, hover shifts bg/border</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Chips &amp; badges</span><span class="nm-mono">.fchip · .badge</span></div>
+          <div class="ds-stage">
+            <span class="fchip is-on">All (4)</span>
+            <span class="fchip">Live (1)</span>
+            <span class="fchip">Draft (1)</span>
+          </div>
+          <div class="ds-stage">
+            <span class="badge b-live">Live</span>
+            <span class="badge b-scheduled">Scheduled</span>
+            <span class="badge b-review">Needs review</span>
+            <span class="badge b-verified">Verified</span>
+            <span class="badge b-draft">Draft</span>
+            <span class="badge b-ended">Ended</span>
+          </div>
+          <div class="ds-code-muted">filter chip active → ink fill · status badges map to color families</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Token strip</span><span class="nm-mono">.token-strip</span></div>
+          <div class="ds-stage">
+            <span class="token-strip"><span>Token</span><span class="code">—</span></span>
+            <span class="token-strip is-live"><span>Token</span><span class="code">600367</span></span>
+          </div>
+          <div class="ds-code-muted">mono code, user-select all · .is-live → green tint</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Inputs</span><span class="nm-mono">.search-wrap · .field</span></div>
+          <div class="ds-stage column">
+            <div class="search-wrap"><i data-ico="search"></i><input type="search" placeholder="Search exams…"></div>
+            <div class="field"><label>Exam name</label><input value="Endtime Test — Batch A"></div>
+          </div>
+          <div class="ds-code-muted">surface bg · 10px radius · focus → 2px brand ring</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Options &amp; checkbox</span><span class="nm-mono">.opt · .q-active-check</span></div>
+          <div class="ds-stage column">
+            <div class="opt is-correct"><div class="radio on"></div> She had finished before noon.</div>
+            <div class="opt"><div class="radio"></div> She has finish before noon.</div>
+            <label class="q-active-check" style="gap:8px;color:var(--ink-muted);font-size:12px;font-weight:700">
+              <input type="checkbox" class="q-active-check-input" checked>
+              <span class="q-active-check-box"><i data-ico="check"></i></span> Active in exam
+            </label>
+          </div>
+          <div class="ds-code-muted">correct option → brand border + tint · checkbox checked → live fill</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Stat cards</span><span class="nm-mono">.stats · .stat-card</span></div>
+          <div class="ds-stage" style="padding:0;background:none;border:none">
+            <div class="stats" style="width:100%">
+              <div class="stat-card"><label>Remaining</label><div class="val timer">01:42:08</div><div class="hint">Ends 15:30 WITA</div></div>
+              <div class="stat-card"><label>Token</label><div class="val">600367</div><div class="hint">Share at login</div></div>
+              <div class="stat-card"><label>Submitted</label><div class="val">38/142</div><div class="hint">27% of roster</div></div>
+            </div>
+          </div>
+          <div class="ds-code-muted">mono value · timer variant → danger</div>
+        </div>
+
+        <div class="ds-demo" style="grid-column:span 2">
+          <div class="ds-demo-title"><span class="nm">Empty state · toast · progress</span><span class="nm-mono">.empty · .toast · .progress-line</span></div>
+          <div class="ds-stage column">
+            <div class="empty" style="width:100%">
+              <div class="empty-icon"><i data-ico="upload"></i></div>
+              <div class="empty-body">
+                <h3>No students on this roster</h3>
+                <p>Upload a CSV with <code>noreg</code> and <code>name</code> columns. Students appear here after import.</p>
+                <div class="empty-actions">
+                  <button class="btn btn-primary"><i data-ico="upload"></i> Import CSV</button>
+                  <button class="btn btn-secondary"><i data-ico="download"></i> Download template</button>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+              <div class="toast"><strong>Roster imported</strong><span>142 students added to Endtime Test</span></div>
+              <div>
+                <div class="ds-label-mono" style="margin-bottom:6px">progress 27%</div>
+                <div class="progress-line" style="max-width:160px"><i style="width:27%"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 07 App shell ───────────── -->
+    <section class="ds-section" id="shell" style="--i:7">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">07 / 08</span>
+        <h2 class="ds-sec-title">App shell</h2>
+        <span class="ds-sec-kicker">sidebar · topbar · table</span>
+      </div>
+      <p class="ds-sec-intro">The admin shell pairs a collapsible light sidebar (236 → 64px) with a 56px topbar holding a
+        breadcrumb and the primary action. The data table is the workhorse list surface — two-line title cells, mono
+        numerics, status badges, and a live-row highlight.</p>
+
+      <div class="ds-grid cols-2">
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Sidebar (light)</span><span class="nm-mono">.sb-light</span></div>
+          <div class="ds-stage" style="padding:0;background:none;border:none">
+            <div style="width:236px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden">
+              <div class="sb sb-light" style="height:auto">
+                <div class="sb-brand"><div class="mark"><em>Unklab</em> Exams</div><span class="sub">KEP · Placement</span></div>
+                <nav class="sb-nav">
+                  <div class="sb-label">Manage</div>
+                  <a class="sb-link is-active"><i data-ico="layout-dashboard"></i><span>Exams</span></a>
+                  <a class="sb-link"><i data-ico="book-open"></i><span>Question banks</span></a>
+                </nav>
+                <div class="sb-foot"><div class="sb-user"><div class="sb-avatar">MG</div>
+                  <div class="sb-user-info"><div class="name">Admin KEP</div><div class="role">Universitas Klabat</div></div></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-code-muted">active link → brand tint + brand-ink + tinted border, brand icon</div>
+        </div>
+
+        <div class="ds-demo">
+          <div class="ds-demo-title"><span class="nm">Topbar + breadcrumb</span><span class="nm-mono">.topbar</span></div>
+          <div class="ds-stage column" style="padding:0;background:none;border:none">
+            <div style="border:1px solid var(--line);border-radius:var(--radius);overflow:hidden">
+              <div class="topbar">
+                <div class="breadcrumb"><span>Exams</span><span class="sep">/</span><strong>Endtime Test</strong></div>
+                <div class="topbar-spacer"></div>
+                <span class="token-strip is-live"><span>Token</span><span class="code">600367</span></span>
+                <button class="btn btn-danger btn-sm"><i data-ico="square"></i> Stop exam</button>
+              </div>
+            </div>
+            <div style="border:1px solid var(--line);border-radius:var(--radius);overflow:hidden">
+              <div class="topbar">
+                <div class="breadcrumb"><span>Banks</span><span class="sep">/</span><strong>Test Bank XLSX</strong></div>
+                <span class="save-status">saved · 2m ago</span>
+                <div class="topbar-spacer"></div>
+                <button class="btn btn-primary btn-sm"><i data-ico="check"></i> Save now</button>
+              </div>
+            </div>
+          </div>
+          <div class="ds-code-muted">breadcrumb current page in 700 ink · editor topbar carries save status</div>
+        </div>
+      </div>
+
+      <div class="ds-demo" style="margin-top:16px">
+        <div class="ds-demo-title"><span class="nm">Data table</span><span class="nm-mono">.card-table · table.data</span></div>
+        <div class="card-table">
+          <table class="data">
+            <thead><tr><th>Exam</th><th>Status</th><th>Students</th><th>Progress</th><th></th></tr></thead>
+            <tbody>
+              <tr class="is-live">
+                <td><div class="row-title">Endtime Test — Batch A</div><div class="row-sub">Jun 5, 2026</div></td>
+                <td><span class="badge b-live">Live</span></td>
+                <td class="num">142</td>
+                <td class="num">38 <span style="color:var(--ink-faint);font-size:11px">(27%)</span><div class="progress-line"><i style="width:27%"></i></div></td>
+                <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+              </tr>
+              <tr>
+                <td><div class="row-title">NotStarted — Grammar</div><div class="row-sub">Jun 4, 2026</div></td>
+                <td><span class="badge b-scheduled">Scheduled</span></td>
+                <td class="num">89</td>
+                <td class="num">0<div class="progress-line"><i style="width:0%"></i></div></td>
+                <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+              </tr>
+              <tr>
+                <td><div class="row-title">Placement 2025 Retake</div><div class="row-sub">May 28, 2026</div></td>
+                <td><span class="badge b-ended">Ended</span></td>
+                <td class="num">210</td>
+                <td class="num">210 <span style="color:var(--ink-faint);font-size:11px">(100%)</span><div class="progress-line"><i style="width:100%"></i></div></td>
+                <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── 08 Patterns in context ───────────── -->
+    <section class="ds-section" id="patterns" style="--i:8">
+      <div class="ds-sec-head">
+        <span class="ds-sec-num">08 / 08</span>
+        <h2 class="ds-sec-title">Patterns in context</h2>
+        <span class="ds-sec-kicker">admin shell · bank editor</span>
+      </div>
+      <p class="ds-sec-intro">Two assembled screens. The <strong>exam list</strong> is the default shell: sidebar · topbar ·
+        toolbar · table. The <strong>bank editor</strong> uses the locked-in index rail — a jump-nav of question stems on
+        the left, all question cards in one scroll column on the right.</p>
+
+      <p class="ds-label-mono" style="margin:0 0 10px">Exam list · /dashboard/exams</p>
+      <div class="ds-frame">
+        <div class="ds-frame-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="lbl">kep-unklab-exam · admin</span></div>
+        <div class="ds-browser">
+          <div class="sb sb-light">
+            <div class="sb-brand"><div class="mark"><em>Unklab</em> Exams</div><span class="sub">KEP · Placement</span></div>
+            <nav class="sb-nav">
+              <div class="sb-label">Manage</div>
+              <a class="sb-link is-active"><i data-ico="layout-dashboard"></i><span>Exams</span></a>
+              <a class="sb-link"><i data-ico="book-open"></i><span>Question banks</span></a>
+            </nav>
+            <div class="sb-foot"><div class="sb-user"><div class="sb-avatar">MG</div>
+              <div class="sb-user-info"><div class="name">Admin KEP</div><div class="role">Universitas Klabat</div></div></div></div>
+          </div>
+          <div class="app-main">
+            <div class="topbar">
+              <div class="breadcrumb"><strong>Exams</strong></div>
+              <div class="topbar-spacer"></div>
+              <button class="btn btn-primary"><i data-ico="plus"></i> Create exam</button>
+            </div>
+            <div class="page-body">
+              <div class="ph"><div><h1>Exams</h1><p>Schedule sessions, import rosters, run placement tests.</p></div></div>
+              <div class="toolbar">
+                <div class="search-wrap"><i data-ico="search"></i><input type="search" placeholder="Search exams…"></div>
+                <div class="filter-row"><span class="fchip is-on">All (4)</span><span class="fchip">Live (1)</span><span class="fchip">Draft (1)</span></div>
+              </div>
+              <div class="card-table">
+                <table class="data">
+                  <thead><tr><th>Exam</th><th>Status</th><th>Students</th><th>Progress</th><th></th></tr></thead>
+                  <tbody>
+                    <tr class="is-live">
+                      <td><div class="row-title">Endtime Test — Batch A</div><div class="row-sub">Jun 5, 2026</div></td>
+                      <td><span class="badge b-live">Live</span></td><td class="num">142</td>
+                      <td class="num">38 <span style="color:var(--ink-faint);font-size:11px">(27%)</span><div class="progress-line"><i style="width:27%"></i></div></td>
+                      <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="row-title">tes</div><div class="row-sub">Jun 6, 2026</div></td>
+                      <td><span class="badge b-draft">Draft</span></td><td class="num">0</td>
+                      <td class="num">0<div class="progress-line"><i style="width:0%"></i></div></td>
+                      <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+                    </tr>
+                    <tr>
+                      <td><div class="row-title">NotStarted — Grammar</div><div class="row-sub">Jun 4, 2026</div></td>
+                      <td><span class="badge b-scheduled">Scheduled</span></td><td class="num">89</td>
+                      <td class="num">0<div class="progress-line"><i style="width:0%"></i></div></td>
+                      <td><button class="btn-icon"><i data-ico="ellipsis"></i></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="ds-label-mono" style="margin:32px 0 10px">Bank editor · index rail · /dashboard/questions/[id]</p>
+      <div class="ds-frame">
+        <div class="ds-frame-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="lbl">kep-unklab-exam · bank editor</span></div>
+        <div class="ds-browser" style="flex-direction:column">
+          <div class="topbar">
+            <div class="breadcrumb"><span>Banks</span><span class="sep">/</span><strong>Test Bank XLSX</strong></div>
+            <span class="save-status">saved · 2m ago</span>
+            <div class="topbar-spacer"></div>
+            <button class="btn btn-ghost btn-sm"><i data-ico="upload"></i> Import CSV</button>
+            <button class="btn btn-primary btn-sm"><i data-ico="check"></i> Save now</button>
+          </div>
+          <div class="editor">
+            <div class="q-sidebar">
+              <div class="q-sidebar-head">48 questions · 47 active · 1 inactive</div>
+              <div class="q-sidebar-nav">
+                <button class="q-item is-on"><span class="q-dot is-active"></span><span class="n">01</span><span class="q-item-label">Choose the correct form of the ver…</span></button>
+                <button class="q-item"><span class="q-dot is-active"></span><span class="n">02</span><span class="q-item-label">Read the passage and select the b…</span></button>
+                <button class="q-item"><span class="q-dot is-active"></span><span class="n">03</span><span class="q-item-label">Listen to the audio clip and choo…</span></button>
+                <button class="q-item is-inactive"><span class="q-dot"></span><span class="n">04</span><span class="q-item-label">Pick the word that best completes…</span></button>
+                <button class="q-item"><span class="q-dot is-active"></span><span class="n">05</span><span class="q-item-label">Select the word that best fits the…</span></button>
+                <button class="q-item"><span class="q-dot is-active"></span><span class="n">06</span><span class="q-item-label">Identify the underlined word or ph…</span></button>
+              </div>
+            </div>
+            <div class="editor-main">
+              <div class="editor-main-inner">
+                <div class="q-block">
+                  <div class="q-block-head"><h3>Question 01</h3>
+                    <label class="q-active-check"><input type="checkbox" class="q-active-check-input" checked><span class="q-active-check-box"><i data-ico="check"></i></span></label>
+                  </div>
+                  <div class="field"><label>Stem</label><textarea rows="2">Choose the correct form of the verb in past perfect tense.</textarea></div>
+                  <div class="media-row">
+                    <button class="btn btn-secondary btn-sm"><i data-ico="image"></i> Image</button>
+                    <button class="btn btn-secondary btn-sm"><i data-ico="audio-lines"></i> Audio</button>
+                  </div>
+                  <div class="field" style="margin:14px 0 6px"><label>Options</label></div>
+                  <div class="opt is-correct"><div class="radio on"></div> She had finished before noon.</div>
+                  <div class="opt"><div class="radio"></div> She has finish before noon.</div>
+                  <div class="opt opt-add">Add option</div>
+                </div>
+                <div class="q-block is-inactive">
+                  <div class="q-block-head"><h3>Question 04</h3>
+                    <label class="q-active-check"><input type="checkbox" class="q-active-check-input"><span class="q-active-check-box"><i data-ico="check"></i></span></label>
+                  </div>
+                  <div class="field"><label>Stem</label><textarea rows="2">Pick the word that best completes the sentence.</textarea></div>
+                  <div class="opt"><div class="radio"></div> quickly</div>
+                  <div class="opt"><div class="radio on"></div> quick</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="ds-footer">
+      <div class="colophon">KEP Admin Design System v1.0 · sourced from temp/admin-dashboard-mockups/</div>
+      <div class="colophon">foundations · type · components · patterns</div>
+    </footer>
+
+  </main>
+
+  <!-- inline Lucide subset → self-contained, no network needed for icons -->
+  <script>
+    (function () {
+      var P = {
+        'layout-dashboard': '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+        'book-open': '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+        'plus': '<path d="M5 12h14"/><path d="M12 5v14"/>',
+        'search': '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+        'ellipsis': '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+        'upload': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+        'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+        'square': '<rect width="18" height="18" x="3" y="3" rx="2"/>',
+        'play': '<polygon points="6 3 20 12 6 21 6 3"/>',
+        'settings': '<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',
+        'check': '<path d="M20 6 9 17l-5-5"/>',
+        'image': '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+        'audio-lines': '<path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/>',
+        'chevron-left': '<path d="m15 18-6-6 6-6"/>',
+        'chevron-right': '<path d="m9 18 6-6-6-6"/>'
+      };
+      document.querySelectorAll('[data-ico]').forEach(function (el) {
+        var name = el.getAttribute('data-ico');
+        if (!P[name]) return;
+        var svg = '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + P[name] + '</svg>';
+        el.outerHTML = svg;
+      });
+    })();
+  </script>
+</body>
+
+</html>
