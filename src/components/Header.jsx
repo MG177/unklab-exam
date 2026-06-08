@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import AuthContext from '@/contexts/AuthContext';
 import { logout } from '@/lib/auth/logout';
 import api from '@/lib/api/client';
+import { assertUploadWithinLimit } from '@/lib/upload/validateClientFile';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Toast } from 'primereact/toast';
@@ -64,8 +65,10 @@ export function HeaderQuestionEditor({
   const handleImportQuestion = async (e) => {
     e.preventDefault();
     try {
+      const file = e.target.files[0];
+      assertUploadWithinLimit(file, 'Import file');
       const formData = new FormData();
-      formData.append('file', e.target.files[0]);
+      formData.append('file', file);
       e.target.value = '';
       await api.patch('/questions/import/' + questionId, formData);
       fetchQuestions();

@@ -1,0 +1,1231 @@
+/* ── Operation guides (/guides/*) ── */
+
+.guide-hub {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.guide-hub__masthead {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgb(var(--line));
+}
+
+.guide-hub__eyebrow {
+  font-family: var(--font-plex-mono), 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 12px;
+}
+
+.guide-hub h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.guide-hub__lede {
+  color: rgb(var(--ink-muted));
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+.guide-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.guide-hub__card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.guide-hub__card:hover {
+  border-color: rgb(var(--brand));
+  box-shadow: 0 4px 20px rgba(26, 35, 50, 0.06);
+}
+
+.guide-hub__card--student:hover {
+  border-color: #1b81c4;
+}
+
+.guide-hub__card h2 {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.guide-hub__card p {
+  font-size: 13px;
+  color: rgb(var(--ink-muted));
+  flex: 1;
+}
+
+.guide-hub__meta {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(var(--ink-faint));
+}
+
+/* ── Guide shell ── */
+
+.guide-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.guide-shell--student h1,
+.guide-shell--student .guide-shell__step-head h2 {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+}
+
+.guide-shell__header {
+  margin-bottom: 32px;
+}
+
+.guide-shell__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--ink-muted));
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.guide-shell__back:hover {
+  color: rgb(var(--brand));
+}
+
+.guide-shell__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 8px;
+}
+
+.guide-shell__masthead h1 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.guide-shell__subtitle {
+  margin-top: 8px;
+  color: rgb(var(--ink-muted));
+  max-width: 56ch;
+}
+
+.guide-shell__body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .guide-shell__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guide-shell__rail ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .guide-shell__rail ol {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 8px;
+  }
+}
+
+.guide-shell__rail-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--ink-muted));
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.guide-shell__rail-btn:hover {
+  background: rgb(var(--paper));
+}
+
+.guide-shell__rail-btn.is-active {
+  background: rgb(var(--brand-tint));
+  border-color: rgb(var(--brand));
+  color: rgb(var(--brand-ink));
+}
+
+.guide-shell__rail-btn.is-done .guide-shell__rail-num {
+  background: rgb(var(--live-tint));
+  color: rgb(var(--live));
+}
+
+.guide-shell__rail-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgb(var(--paper));
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.guide-shell__rail-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guide-shell__progress {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(var(--ink-faint));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.guide-shell__step-head h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.guide-shell__nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgb(var(--line));
+}
+
+.guide-shell__nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgb(var(--line));
+  background: rgb(var(--surface));
+  color: rgb(var(--ink));
+}
+
+.guide-shell__nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.guide-shell__nav-btn--primary {
+  background: rgb(var(--brand));
+  border-color: rgb(var(--brand));
+  color: #fff;
+}
+
+.guide-shell__nav-btn--primary:not(:disabled):hover {
+  background: rgb(var(--brand-hover));
+}
+
+/* ── Guide step ── */
+
+.guide-step {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .guide-step {
+    grid-template-columns: 1fr;
+  }
+}
+
+.guide-step__mock-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 8px;
+}
+
+.guide-step__viewport {
+  position: relative;
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgb(var(--paper));
+  min-height: 360px;
+  box-shadow:
+    0 2px 6px rgba(26, 35, 50, 0.05),
+    0 8px 24px rgba(26, 35, 50, 0.06);
+}
+
+.guide-step__viewport .mock-screen {
+  min-height: 360px;
+  height: 100%;
+}
+
+.guide-step__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.guide-step__card {
+  padding: 16px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+}
+
+.guide-step__card-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 10px;
+}
+
+.guide-step__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: rgb(var(--ink-muted));
+  line-height: 1.55;
+}
+
+.guide-step__list li + li {
+  margin-top: 6px;
+}
+
+.guide-step__try {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(var(--brand));
+  text-decoration: none;
+}
+
+.guide-step__try:hover {
+  text-decoration: underline;
+}
+
+/* ── Hotspots ── */
+
+.guide-hotspot {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.guide-hotspot__dot {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: rgb(var(--brand));
+  border: 2px solid #fff;
+  box-shadow: 0 2px 8px rgba(27, 129, 196, 0.4);
+}
+
+.guide-hotspot__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgb(var(--brand));
+  opacity: 0.35;
+  animation: guide-pulse 1.8s ease-out infinite;
+}
+
+@keyframes guide-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.guide-hotspot__tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 160px;
+  max-width: 220px;
+  padding: 8px 10px;
+  background: rgb(var(--ink));
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  border-radius: 8px;
+  text-align: left;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* ── Mock screens shared ── */
+
+.mock-screen {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.mock-mono {
+  font-family: var(--font-plex-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.mock-field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: rgb(var(--ink-muted));
+}
+
+.mock-input {
+  padding: 8px 10px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.mock-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  background: rgb(var(--paper));
+  border: 1px solid rgb(var(--line));
+  color: rgb(var(--ink));
+}
+
+.mock-btn--sm {
+  padding: 5px 10px;
+  font-size: 10px;
+}
+.mock-btn--primary {
+  background: rgb(var(--brand));
+  border-color: rgb(var(--brand));
+  color: #fff;
+}
+.mock-btn--student {
+  background: #1b81c4;
+  border-color: #1b81c4;
+  color: #fff;
+}
+.mock-btn--login {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: #1b81c4;
+  border-color: #1b81c4;
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.mock-btn--ghost {
+  background: transparent;
+}
+.mock-btn--danger {
+  background: rgb(var(--danger));
+  border-color: rgb(var(--danger));
+  color: #fff;
+}
+
+.mock-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgb(var(--paper));
+  color: rgb(var(--ink-faint));
+}
+
+.mock-badge--live {
+  background: rgb(var(--live-tint));
+  color: rgb(var(--live));
+}
+.mock-badge--brand {
+  background: rgb(var(--brand-tint));
+  color: rgb(var(--brand-ink));
+}
+
+/* Admin mock shell */
+.mock-admin {
+  display: flex;
+  min-height: 300px;
+}
+
+.mock-admin__sidebar {
+  width: 120px;
+  flex-shrink: 0;
+  background: rgb(var(--ink));
+  color: #fff;
+  padding: 12px 10px;
+}
+
+.mock-admin__logo {
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.mock-admin__sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mock-admin__sidebar nav span {
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mock-admin__sidebar nav span.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.mock-admin__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mock-admin__topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgb(var(--line));
+  background: rgb(var(--surface));
+  font-weight: 700;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+.mock-admin__content {
+  padding: 14px;
+  flex: 1;
+}
+
+.mock-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mock-toolbar--bottom {
+  margin-top: 12px;
+  margin-bottom: 0;
+  justify-content: flex-end;
+}
+
+.mock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.mock-table th,
+.mock-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid rgb(var(--line));
+}
+
+.mock-table th {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--ink-faint));
+  background: rgb(var(--paper));
+}
+
+.mock-table tr.is-highlight {
+  background: rgb(var(--brand-tint));
+}
+
+.mock-token {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgb(var(--ink-muted));
+}
+
+.mock-timer {
+  margin-left: auto;
+  font-weight: 700;
+  color: rgb(var(--ink));
+}
+
+.mock-q-card {
+  padding: 12px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.mock-q-card--faded {
+  opacity: 0.5;
+}
+
+.mock-q-num {
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 6px;
+}
+
+.mock-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.mock-options span {
+  padding: 6px 10px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 8px;
+  background: rgb(var(--paper));
+}
+
+.mock-options span.is-selected {
+  border-color: rgb(var(--brand));
+  background: rgb(var(--brand-tint));
+}
+
+.mock-dialog {
+  padding: 16px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.mock-dialog h4 {
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.mock-dialog--overlay {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+}
+
+.mock-dialog__sub {
+  font-size: 10px;
+  color: rgb(var(--ink-muted));
+  margin-bottom: 12px;
+}
+
+.mock-bank-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgb(var(--line));
+  font-size: 11px;
+}
+
+.mock-bank-row .mock-mono {
+  margin-left: auto;
+}
+
+.mock-settings {
+  max-width: 280px;
+}
+
+.mock-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(var(--line));
+  font-size: 11px;
+}
+
+.mock-switch {
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgb(var(--line));
+  position: relative;
+}
+
+.mock-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.mock-switch.is-on {
+  background: rgb(var(--live));
+}
+
+.mock-switch.is-on::after {
+  left: 16px;
+}
+
+.mock-start-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 200px;
+}
+
+.mock-sheet {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px dashed rgb(var(--line-strong));
+  border-radius: 10px;
+  background: rgb(var(--paper));
+}
+
+.mock-sheet h4 {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+/* Login page mock (student + admin) — mirrors src/app/page.jsx */
+.mock-login-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 360px;
+  height: 100%;
+  padding: 28px 20px;
+  background: url('/image/Background.svg') center center / cover no-repeat;
+}
+
+.mock-login-page__toggle {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff032d;
+  opacity: 0.35;
+  z-index: 2;
+}
+
+.mock-login-page__card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 300px;
+  padding: 28px 24px;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(26, 35, 50, 0.14);
+}
+
+.mock-login-page__title {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+  color: rgb(var(--ink));
+  margin-bottom: 4px;
+}
+
+.mock-login-page__title--admin {
+  font-family: var(--font-jakarta), 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.mock-login-page__lede {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 11px;
+  color: rgb(var(--ink-muted));
+  text-align: center;
+  line-height: 1.45;
+  margin: 8px 0 16px;
+}
+
+.mock-login-page .mock-field {
+  margin-bottom: 12px;
+}
+
+.mock-login-page .mock-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgb(var(--ink));
+}
+
+.mock-login-page .mock-input {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(26, 35, 50, 0.08);
+  font-size: 12px;
+}
+
+.mock-info-card {
+  padding: 24px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.mock-info-card h3 {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.mock-info-card ul {
+  padding-left: 18px;
+  font-size: 12px;
+  color: rgb(var(--ink-muted));
+  line-height: 1.6;
+}
+
+.mock-info-card li + li {
+  margin-top: 8px;
+}
+
+.mock-terms {
+  padding: 16px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.mock-terms__head h3 {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.mock-terms__exam {
+  font-size: 10px;
+  color: rgb(var(--ink-faint));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mock-terms__body {
+  margin: 12px 0;
+  font-size: 11px;
+  color: rgb(var(--ink-muted));
+}
+
+.mock-terms__body h4 {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 4px;
+}
+
+.mock-terms__body section + section {
+  margin-top: 10px;
+}
+
+.mock-terms__agree {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+
+.mock-exam {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  position: relative;
+}
+
+.mock-exam__head {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #1b81c4, #166aa3);
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.mock-exam__body {
+  display: flex;
+  flex: 1;
+  padding: 14px;
+  gap: 12px;
+}
+
+.mock-exam__body--center {
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-exam__question {
+  flex: 1;
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mock-options--student span {
+  font-size: 11px;
+}
+
+.mock-exam__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 28px;
+}
+
+.mock-exam__nav span {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 9px;
+  background: rgb(var(--paper));
+  border: 1px solid rgb(var(--line));
+}
+
+.mock-exam__nav .is-answered {
+  background: rgb(var(--live-tint));
+  color: rgb(var(--live));
+}
+.mock-exam__nav .is-current {
+  background: rgb(var(--brand-tint));
+  border-color: rgb(var(--brand));
+  font-weight: 700;
+}
+
+.mock-exam__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid rgb(var(--line));
+  background: rgb(var(--surface));
+  font-size: 10px;
+  font-weight: 700;
+  gap: 8px;
+}
+
+.mock-exam__foot--solo {
+  justify-content: center;
+  gap: 12px;
+}
+
+.mock-post {
+  padding: 32px 20px;
+  text-align: center;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.mock-post__icon {
+  font-size: 32px;
+}
+
+.mock-post h3 {
+  font-family: var(--font-nunito), Nunito, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.mock-post p {
+  font-size: 12px;
+  color: rgb(var(--ink-muted));
+  max-width: 260px;
+}
+
+.mock-score-card {
+  padding: 20px 32px;
+  background: rgb(var(--brand-tint));
+  border-radius: 16px;
+  border: 1px solid rgb(var(--brand));
+}
+
+.mock-score-card__label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: rgb(var(--brand-ink));
+}
+
+.mock-score-card__value {
+  font-size: 28px;
+  font-weight: 800;
+  color: rgb(var(--brand-ink));
+}
+
+.mock-score-card__pct {
+  font-size: 14px;
+  color: rgb(var(--ink-muted));
+}
+
+/* Exam day */
+.exam-day {
+  max-width: 720px;
+}
+
+.exam-day__progress {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+}
+
+.exam-day__progress-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgb(var(--ink-faint));
+}
+
+.exam-day__progress-value {
+  display: block;
+  font-family: var(--font-plex-mono), monospace;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px 0 10px;
+}
+
+.exam-day__progress-bar {
+  height: 6px;
+  background: rgb(var(--paper));
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.exam-day__progress-fill {
+  height: 100%;
+  background: rgb(var(--live));
+  border-radius: 999px;
+  transition: width 0.2s;
+}
+
+.exam-day__links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+@media (max-width: 560px) {
+  .exam-day__links {
+    grid-template-columns: 1fr;
+  }
+}
+
+.exam-day__link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  background: rgb(var(--surface));
+  border: 1px solid rgb(var(--line));
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 12px;
+}
+
+.exam-day__link-card strong {
+  font-size: 13px;
+}
+.exam-day__link-card span {
+  color: rgb(var(--ink-muted));
+}
+.exam-day__link-card:hover {
+  border-color: rgb(var(--brand));
+}
+
+.exam-day__phase {
+  margin-bottom: 24px;
+}
+
+.exam-day__phase h2 {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ink-faint));
+  margin-bottom: 10px;
+}
+
+.exam-day__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exam-day__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgb(var(--line));
+  border-radius: 10px;
+  background: rgb(var(--surface));
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  color: rgb(var(--ink));
+}
+
+.exam-day__item:hover {
+  border-color: rgb(var(--line-strong));
+}
+
+.exam-day__item.is-done {
+  background: rgb(var(--live-tint));
+  border-color: rgb(var(--live));
+  color: rgb(var(--live));
+}
+
+.exam-day__check {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.exam-day__errors h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.exam-day__table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgb(var(--line));
+  border-radius: 12px;
+}
+
+.exam-day__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.exam-day__table th,
+.exam-day__table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgb(var(--line));
+  vertical-align: top;
+}
+
+.exam-day__table th {
+  background: rgb(var(--paper));
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgb(var(--ink-faint));
+}
+
+.exam-day__table tr:last-child td {
+  border-bottom: none;
+}

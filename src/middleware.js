@@ -17,6 +17,7 @@ const PUBLIC_PATHS = [
 
 function isPublicPath(pathname) {
   if (PUBLIC_PATHS.includes(pathname)) return true;
+  if (pathname === '/guides' || pathname.startsWith('/guides/')) return true;
   if (pathname.startsWith('/api/auth/login/')) return true;
   if (pathname.startsWith('/_next')) return true;
   if (pathname.startsWith('/image')) return true;

@@ -14,6 +14,9 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import api from '@/lib/api/client';
 import Media from '@/components/Media';
+import { compressImageForUpload } from '@/lib/media/compressImage';
+import { assertUploadWithinLimit } from '@/lib/upload/validateClientFile';
+import { toast } from 'sonner';
 
 export const cardAnchor = (id) => `qc-${id}`;
 
@@ -108,17 +111,17 @@ export default function QuestionCard({
     try {
       const file = e.target.files[0];
       if (!file) return;
-      if (file.size > 1_000_000 && type === 'image') {
-        alert('Image exceeds the 1MB limit');
-        return;
+
+      let uploadBlob = file;
+      if (type === 'image') {
+        uploadBlob = await compressImageForUpload(file);
+      } else {
+        assertUploadWithinLimit(file, 'Audio file');
       }
-      if (file.size > 5_000_000 && type === 'audio') {
-        alert('Audio exceeds the 5MB limit');
-        return;
-      }
+
       setUploading(true);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', uploadBlob, uploadBlob.name || file.name);
       const res = await api.post('/file', formData);
       const fileId = res.data.id;
       setQuestions((prev) => {
@@ -130,6 +133,7 @@ export default function QuestionCard({
       handleQuestionChange();
     } catch (err) {
       console.error(err);
+      toast.error(err.message || 'Upload failed');
     } finally {
       setUploading(false);
       e.target.value = '';

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useContext, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import AuthContext from '@/contexts/AuthContext';
@@ -225,6 +226,15 @@ export default function LoginPage() {
             </form>
           )}
         </div>
+        <p className="text-center mt-6 text-sm text-ink-faint">
+          Need help?{' '}
+          <Link
+            href="/guides"
+            className="text-brand hover:underline font-semibold"
+          >
+            Operation guides
+          </Link>
+        </p>
       </div>
     </div>
   );

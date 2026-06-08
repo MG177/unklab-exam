@@ -1,3 +1,5 @@
+# Legacy CRA/nginx Docker CI — branch Deploy only.
+# Next.js production deploys via Vercel (branch main). Do not use for new releases.
 name: Docker Image CI
 
 on:

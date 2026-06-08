@@ -1,4 +1,4 @@
-# Vercel deployment (Phase 1)
+# Vercel deployment
 
 ## Link project
 
@@ -19,8 +19,23 @@ npx vercel link
 
 ## Branch deploys
 
-- Connect GitHub repo; set **Production Branch** to `Deploy` until cutover.
-- Use branch `nextjs-migration` for preview deployments during migration UAT.
+- Connect GitHub repo; set **Production Branch** to **`main`**.
+- Preview deployments: any branch/PR (use for Maam Resti UAT before prod promotion).
+- Legacy branch `Deploy` — CRA/nginx Docker CI only; **do not use for Next.js**.
+
+## Production cutover checklist (Lane M)
+
+Code cutover is complete (`/api` same-origin; no Cloud Run URL in app). Ops steps to finish migration:
+
+1. **Vercel:** Set production branch to `main`; promote latest deployment or `vercel --prod`.
+2. **Env:** Confirm `MONGO_URI` + `JWT_SECRET` on Production (and Preview if used for UAT).
+3. **Atlas:** Allow Vercel serverless egress (IP allowlist `0.0.0.0/0` or Vercel static IPs if restricted).
+4. **Smoke:** Run [`docs/testing/migration-smoke.md`](./testing/migration-smoke.md) against production URL.
+5. **DNS:** Point custom domain to Vercel if applicable.
+6. **Retire legacy:**
+   - Cloud Run service `kep-unklab-exam-api` — scale to zero or delete after sign-off.
+   - Docker Hub images `filkomunklab/kep-unklab-exam*` — archive; rotate credentials ([vault backlog](https://github.com/lumenelit/kep-unklab-exam)).
+7. **Notify:** Maam Resti / Sir George of new canonical URL.
 
 ## Commands
 

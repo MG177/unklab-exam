@@ -59,6 +59,7 @@ import AddParticipantDialog from '@/components/dashboard/AddParticipantDialog';
 import ScoreCard from '@/components/score/ScoreCard';
 import Answer from '@/components/score/Answer';
 import { cn } from '@/lib/utils';
+import { assertUploadWithinLimit } from '@/lib/upload/validateClientFile';
 
 function pad(n) {
   return String(n).padStart(2, '0');
@@ -218,8 +219,10 @@ export default function ExamDetailClient({
     e.preventDefault();
     try {
       setImporting(true);
+      const file = e.target.files[0];
+      assertUploadWithinLimit(file, 'Participant CSV');
       const formData = new FormData();
-      formData.append('file', e.target.files[0]);
+      formData.append('file', file);
       e.target.value = '';
       await api.patch(`/exam/studentList/${examId}`, formData);
       setRefreshing(true);

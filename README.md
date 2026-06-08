@@ -32,7 +32,7 @@ npm run dev                  # localhost:3000
 
 ## Repo
 
-- **App (this repo):** [`lumenelit/kep-unklab-exam`](https://github.com/lumenelit/kep-unklab-exam) — branch `nextjs-migration` (production cutover pending)
+- **App (this repo):** [`lumenelit/kep-unklab-exam`](https://github.com/lumenelit/kep-unklab-exam) — branch **`main`** (Next.js monolith; Vercel prod cutover pending Lane M)
 - **NestJS API:** **retired** — [`lumenelit/kep-unklab-exam-api`](https://github.com/lumenelit/kep-unklab-exam-api) branch `archive/retired`
 
 ## Deploy
